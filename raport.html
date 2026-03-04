@@ -11,7 +11,6 @@
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
                     // alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
                     // window.location.href = 'index.html'; 
-                    // (NOTE: Baris di atas saya komen agar Anda bisa testing langsung tanpa login portal dulu)
                 }
             } catch (error) {
                 console.error("Redirect error:", error);
@@ -26,15 +25,15 @@
         body { font-family: 'Nunito', sans-serif; background-color: #f1f5f9; }
 
         /* =========================================================
-           JURUS ANDALAN: FIX MACET & BLANK SAAT PRINT
+           CSS KHUSUS PRINT - PERBAIKAN TOTAL
            ========================================================= */
         @media print {
-            /* 1. Sembunyikan semua elemen UI, menu, dan kontrol zoom */
-            .no-print, #fab-container, .panel-kiri, .zoom-header, #toast { 
+            /* 1. Sembunyikan semua elemen UI, menu, header, dan panel kiri */
+            .no-print, #fab-container, .panel-kiri, .zoom-header, #toast, .header-dashboard { 
                 display: none !important; 
             }
             
-            /* 2. Bebaskan aturan layar utama */
+            /* 2. Bebaskan aturan layar utama agar browser leluasa merender */
             body, html { 
                 background: white !important; 
                 margin: 0 !important; 
@@ -43,8 +42,8 @@
                 overflow: visible !important; 
             }
             
-            /* 3. Hancurkan Flexbox di pembungkus kertas agar tidak error saat diprint */
-            .panel-kanan, .preview-wrapper { 
+            /* 3. Bebaskan container kanan dari Flexbox/Grid agar tidak terpotong */
+            .panel-kanan, .preview-wrapper, .grid, .lg\:col-span-7, .max-w-7xl { 
                 display: block !important; 
                 width: 100% !important; 
                 max-width: 100% !important; 
@@ -56,22 +55,26 @@
                 background: transparent !important; 
             }
             
-            /* 4. MATIKAN EFEK ZOOM SECARA PAKSA (Penyebab utama macet) */
+            /* 4. Matikan efek zoom/scale dari fitur preview saat dicetak */
             #print-container { 
                 position: static !important; 
-                transform: none !important; /* Ini kunci utamanya */
+                transform: none !important; 
                 width: 100% !important; 
                 display: block !important; 
                 margin: 0 !important; 
                 padding: 0 !important; 
             }
 
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
+            * { 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+                box-shadow: none !important; 
+            }
 
-            /* 5. Kunci ukuran kertas tepat A4 */
+            /* 5. Aturan kertas A4 */
             .kertas-raport { 
                 width: 210mm !important;
-                height: 296mm !important; /* Dikurangi 1mm agar tidak muncul lembar ekstra */
+                height: 296mm !important; 
                 margin: 0 auto !important; 
                 padding: 0 !important;
                 box-shadow: none !important; 
@@ -87,7 +90,7 @@
             @page { size: A4 portrait; margin: 0; }
         }
 
-        /* --- STYLING KERTAS (UKURAN A4 STANDARD DI PREVIEW) --- */
+        /* --- STYLING KERTAS PREVIEW --- */
         .kertas-raport {
             width: 210mm; height: 297mm; position: relative; margin: 0 auto 30px auto;
             overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
@@ -98,9 +101,7 @@
         .watermark-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60%; max-width: 400px; opacity: 0.08; z-index: 1; pointer-events: none; }
         .watermark-text-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 2; pointer-events: none; background-repeat: repeat; }
 
-        /* ==================================================================
-           TEMA HALAMAN COVER & ISI
-           ================================================================== */
+        /* --- TEMA COVER & ISI --- */
         .page-cover { background-color: #fafaf9; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40px; }
         .cover-frame-outer { position: absolute; inset: 15px; border: 4px solid #166534; z-index: 3; pointer-events: none; }
         .cover-frame-inner { position: absolute; inset: 24px; border: 1px solid #166534; z-index: 3; pointer-events: none; }
@@ -144,9 +145,7 @@
         .judul-narasi { position: absolute; top: -10px; left: 15px; background: #f59e0b; color: white; padding: 2px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; }
         .ttd-area { display: flex; justify-content: space-between; margin-top: auto; padding-top: 15px; font-size: 12px; font-weight: bold; text-align: center; position: relative; z-index: 10; width: 100%;}
 
-        /* =========================================================
-           UI DASHBOARD & SCROLLBAR
-           ========================================================= */
+        /* --- DASHBOARD UI --- */
         .tab-btn { padding: 12px 15px; font-weight: bold; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.3s; font-size: 13px;}
         .tab-btn.active { border-bottom-color: #3b82f6; color: #2563eb; background: #eff6ff;}
         .input-std { width: 100%; padding: 8px 12px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; font-weight: 600;}
@@ -166,7 +165,6 @@
         .fab-hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
         .fab-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         
-        /* Zoom Transition - diatur origin top center agar tidak melenceng saat di HP */
         #print-container { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top center;}
     </style>
 </head>
@@ -177,9 +175,9 @@
         <span id="toast-msg">Tersimpan Otomatis</span>
     </div>
 
-    <div class="max-w-7xl mx-auto p-4 md:p-6 no-print">
+    <div class="max-w-7xl mx-auto p-4 md:p-6" id="main-layout">
         
-        <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-indigo-500">
+        <div class="header-dashboard bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-indigo-500 no-print">
             <div class="text-center md:text-left w-full md:w-auto">
                 <h1 class="text-xl md:text-2xl font-extrabold text-gray-800 flex items-center justify-center md:justify-start gap-2">
                     <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -194,7 +192,7 @@
                     Portal
                 </a>
                 
-                <button onclick="cetakRaport()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md flex-1 md:flex-none text-center flex justify-center items-center gap-1 transition-transform active:scale-95">
+                <button type="button" onclick="window.print()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md flex-1 md:flex-none text-center flex justify-center items-center gap-1 transition-transform active:scale-95">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                     Cetak Raport
                 </button>
@@ -626,7 +624,6 @@
     <div id="fab-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end no-print">
         
         <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-4 origin-bottom w-48">
-            
             <button onclick="resetAllData()" class="flex items-center justify-end gap-3 group w-full outline-none">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-red-600 transition-colors">Reset Form</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-red-50 text-red-500 transition-colors shrink-0">
@@ -655,7 +652,6 @@
             <svg id="fab-icon-close" class="w-6 h-6 absolute opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </div>
-
 
     <script>
         const LOCAL_KEY = 'DataRaportTK_Pro_V19_FixPrint';
@@ -737,7 +733,6 @@
             applyImages();
         };
 
-        // --- FAB LOGIC ---
         let isFabOpen = false;
         function toggleFab() {
             const menu = document.getElementById('fab-menu');
@@ -1119,30 +1114,6 @@
             } catch(e) {
                 console.error("Terjadi masalah saat generate AI:", e);
             }
-        }
-
-        // ==========================================
-        // PERBAIKAN: FUNGSI CETAK LANGSUNG (TANPA DELAY)
-        // ==========================================
-        function cetakRaport() {
-            const container = document.getElementById('print-container');
-            
-            // 1. Simpan ukuran asli agar bisa dikembalikan nanti
-            const originalTransform = container.style.transform;
-            const originalWidth = container.style.width;
-            
-            // 2. Netralkan zoom seketika agar tidak blank/macet
-            container.style.transform = 'none';
-            container.style.width = '100%';
-            
-            // 3. Langsung panggil Print! (Tanpa setTimeout agar tidak diblokir browser)
-            window.print();
-            
-            // 4. Setelah dialog Print ditutup/selesai, kembalikan zoom-nya
-            container.style.transform = originalTransform;
-            container.style.width = originalWidth;
-        }, 500); 
-            }, 100);
         }
     </script>
 </body>
