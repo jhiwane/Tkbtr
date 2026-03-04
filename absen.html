@@ -5,18 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Absensi Guru Harian</title>
     
-    <!-- SCRIPT SATPAM PENJAGA (Mencegah Akses Tanpa Login dari Portal) -->
+    <!-- SCRIPT SATPAM PENJAGA -->
     <script>
         if (!localStorage.getItem('PortalTK_Secure_Session')) {
             try {
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
                     alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
                     window.location.href = 'index.html'; 
-                } else {
-                    console.warn("Mode pratinjau: Redirect ke index.html ditahan untuk mencegah error.");
                 }
             } catch (error) {
-                console.error("Gagal melakukan redirect:", error);
+                console.error("Redirect error:", error);
             }
         }
     </script>
@@ -25,48 +23,54 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* =========================================================
-           STYLE KHUSUS UNTUK HASIL CETAK (PRINT KERTAS) - DIPERBAIKI ANTI BLANK
+           JURUS ANDALAN: STYLE PRINT NATIVE (ANTI BLANK/KOSONG)
            ========================================================= */
         @media print {
-            /* Sembunyikan semua elemen dengan class no-print */
-            .no-print, #fab-container, #modal-edit { display: none !important; }
+            /* 1. Sembunyikan semua UI Dashboard dan Tombol */
+            .dashboard-ui, #fab-container, #modal-edit, .no-print { 
+                display: none !important; 
+            }
             
-            /* Reset body untuk print */
-            body { 
+            /* 2. Reset Body agar kertas putih bersih */
+            body, html { 
                 background: white !important; 
                 margin: 0 !important; 
                 padding: 0 !important; 
-                overflow: visible !important;
+                height: auto !important;
+                overflow: visible !important; 
             }
 
-            /* Lepas kuncian dari wrapper scrollable agar bisa diprint utuh */
+            /* 3. Lepaskan kuncian scroll dari bungkus tabel */
             .preview-wrapper { 
                 overflow: visible !important; 
-                width: auto !important; 
+                width: 100% !important; 
                 padding: 0 !important; 
                 margin: 0 !important;
-                background: transparent !important; 
+                background: transparent !important;
+                display: block !important;
             }
 
-            /* Area tabel menjadi elemen utama di layar */
+            /* 4. Tabel diposisikan normal (static/relative) BUKAN absolute */
             #print-section { 
+                display: block !important;
                 min-width: 100% !important; 
-                width: 100% !important;
+                width: 100% !important; 
                 border: none !important; 
                 box-shadow: none !important; 
                 margin: 0 !important; 
                 padding: 0 !important;
+                position: relative !important;
                 color: black !important;
             }
 
             @page {
                 size: landscape;
-                margin: 10mm 12mm;
+                margin: 10mm 15mm;
             }
         }
 
         /* =========================================================
-           STYLE TABEL ABSENSI (LAYAR & CETAK)
+           STYLE TABEL ABSENSI (LAYAR)
            ========================================================= */
         #print-section { font-family: Arial, Helvetica, sans-serif; color: black; }
         .print-header { text-align: center; font-size: 14px; line-height: 1.3; margin-bottom: 15px; text-transform: uppercase; }
@@ -111,7 +115,7 @@
 <body class="bg-gray-100 text-gray-800 font-sans pb-24 relative min-h-screen">
 
     <!-- ================= UI DASHBOARD UTAMA ================= -->
-    <div class="max-w-7xl mx-auto p-4 md:p-6 no-print">
+    <div class="max-w-7xl mx-auto p-4 md:p-6 dashboard-ui">
         
         <!-- HEADER ATAS -->
         <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-blue-500">
@@ -140,7 +144,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- PANEL KIRI: DAFTAR PEGAWAI (REALTIME ACTIONS) -->
+            <!-- PANEL KIRI: DAFTAR PEGAWAI -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm lg:col-span-8 flex flex-col max-h-[80vh] order-2 lg:order-1">
                 <div class="flex items-center justify-between border-b pb-3 mb-4">
                     <h2 class="font-bold text-gray-800 text-sm sm:text-lg flex items-center gap-2">
@@ -179,14 +183,14 @@
         </div>
     </div>
 
-    <!-- ================= AREA CETAK (SCROLLABLE PREVIEW) ================= -->
-    <div class="max-w-7xl mx-auto px-4 mt-8 no-print mb-2 flex items-center justify-between">
+    <!-- ================= AREA CETAK (SCROLLABLE PREVIEW DI LAYAR HP) ================= -->
+    <div class="max-w-7xl mx-auto px-4 mt-8 dashboard-ui mb-2 flex items-center justify-between">
         <p class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider">Preview Kertas A4 (Geser Kiri-Kanan)</p>
         <span class="text-xl animate-bounce hidden sm:inline-block">👉</span>
     </div>
 
-    <!-- WRAPPER SCROLLABLE: Kunci sukses agar layar HP tidak membesar/bocor -->
-    <div class="w-full overflow-x-auto bg-gray-200 p-2 sm:p-6 mb-10 custom-scrollbar preview-wrapper no-print">
+    <!-- WRAPPER SCROLLABLE: Agar layar HP tidak membesar -->
+    <div class="preview-wrapper w-full overflow-x-auto bg-gray-200 p-2 sm:p-6 mb-10 custom-scrollbar">
         <!-- Container khusus Print Kertas -->
         <div id="print-section" class="bg-white mx-auto p-4 sm:p-6 shadow-md" style="min-width: 1050px;">
             
@@ -233,16 +237,16 @@
         
         <!-- Menu yang tersembunyi (Akan muncul ke atas) -->
         <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-3 origin-bottom">
-            <!-- Tombol Reset Data Baru -->
-            <button onclick="resetAllData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 group">
-                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-red-600">Reset Semua</span>
-                <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+            <!-- Tombol Reset Data (Baru) -->
+            <button onclick="resetAllData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-red-100 hover:bg-red-50 active:scale-95 group transition-colors">
+                <span class="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-full group-hover:bg-red-100">Reset Semua Data</span>
+                <div class="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </div>
             </button>
-            
+
             <!-- Tombol Backup/Unduh -->
-            <button onclick="exportData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 group">
+            <button onclick="exportData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 group transition-colors">
                 <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-blue-600">Unduh (Backup)</span>
                 <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -250,12 +254,13 @@
             </button>
             
             <!-- Tombol Upload/Pindah HP -->
-            <label for="import-file" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 cursor-pointer group">
-                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-green-600">Unggah (Restore)</span>
+            <label for="import-file" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 cursor-pointer group transition-colors">
+                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-green-600">Unggah (Pindah HP)</span>
                 <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 </div>
             </label>
+            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
         </div>
         
         <!-- Tombol Pemicu Utama (Bulat Besar) -->
@@ -334,24 +339,22 @@
     </div>
 
 
-    <!-- ================= JAVASCRIPT LOGIC (PURE LOCALSTORAGE) ================= -->
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         // --- 1. PENGATURAN AWAL (STATE) ---
-        // Menaikkan versi key agar data ter-reset jika sebelumnya ada bug
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v4_Final';
+        const LOCAL_STORAGE_KEY = 'DataAbsensi_v5_FixPrint';
         
         const state = {
             judul1: "DAFTAR HADIR GURU DAN KARYAWAN",
             judul2: "TK BAITURROHMAN PULODARAT",
             judul3: "TAHUN 2025 / 2026",
-            bulan: "MARET", // Ubah sesuai bulan saat ini
-            tglCetak: "Pulodarat, 31 MARET 2026",
+            bulan: "FEBRUARI",
+            tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
             employees: [
                 { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
                 { id: 2, name: "Umniyatul Mas'udah, S.Ag.", signature: "", att: {} },
                 { id: 3, name: "Siti Mastuhah, S.Pd.", signature: "", att: {} },
-                // Tambahan nama baru sesuai permintaan
                 { id: 4, name: "Zaitun", signature: "", att: {} },
                 { id: 5, name: "Muhammad Kholilur Rohman", signature: "", att: {} }
             ]
@@ -375,10 +378,10 @@
         setInterval(updateClock, 1000);
         
         function getTodayDate() {
-            return new Date().getDate(); // Mengambil tanggal hari ini (1-31)
+            return new Date().getDate(); 
         }
 
-        // --- 3. INIT & LOAD DATA (LOCALSTORAGE) ---
+        // --- 3. INIT & LOAD DATA ---
         window.onload = () => {
             updateClock();
             
@@ -387,7 +390,6 @@
                 try { Object.assign(state, JSON.parse(savedData)); } catch (e) {}
             }
             
-            // Set kolom teks
             document.getElementById('inp-judul1').value = state.judul1;
             document.getElementById('inp-judul2').value = state.judul2;
             document.getElementById('inp-judul3').value = state.judul3;
@@ -409,7 +411,7 @@
             state[key] = value;
             saveToLocal();
             if(['judul1', 'judul2', 'judul3', 'bulan', 'tglCetak', 'kepsek'].includes(key)) {
-                renderPrintTable(); 
+                renderPrintTable();
             }
         }
 
@@ -418,7 +420,7 @@
             renderPrintTable();
         }
 
-        // --- 4. LOGIKA TOMBOL REALTIME (MASUK/PULANG) ---
+        // --- 4. LOGIKA TOMBOL REALTIME ---
         function clockAction(empId, type) {
             const today = getTodayDate();
             const now = new Date();
@@ -452,7 +454,6 @@
                 const statusParaf = emp.signature ? '<span class="text-green-600 font-extrabold">✅ Tersimpan</span>' : '<span class="text-red-500 font-extrabold">❌ Belum Ada</span>';
                 const todayAtt = emp.att[today] || { status: '', in: '', out: '' };
                 
-                // Cek Tombol Realtime
                 let btnMasuk = todayAtt.in 
                     ? `<span class="bg-green-100 text-green-800 border border-green-200 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold flex items-center shadow-sm">✅ Masuk: ${todayAtt.in}</span>`
                     : `<button onclick="clockAction(${emp.id}, 'in')" class="bg-green-500 hover:bg-green-600 text-white px-3 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95 flex-1 justify-center"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg> MASUK</button>`;
@@ -497,7 +498,7 @@
             });
         }
 
-        // --- 6. RENDER TABEL CETAK (PREVIEW BAWAH) ---
+        // --- 6. RENDER TABEL CETAK ---
         function renderPrintTable() {
             document.getElementById('print-judul1').innerText = state.judul1;
             document.getElementById('print-judul2').innerText = state.judul2;
@@ -523,12 +524,10 @@
                 });
                 const total = s + i + a;
 
-                // 1. Jam Dtg
                 rowsHTML += `<tr class="row-dtg"><td rowspan="4">${index + 1}</td><td rowspan="4" class="col-nama">${emp.name}</td><td class="col-tipe">Jam<br>Dtg</td>`;
                 days.forEach(d => rowsHTML += `<td>${emp.att[d]?.status === 'H' ? (emp.att[d].in || '') : ''}</td>`);
                 rowsHTML += `<td rowspan="4">${s||''}</td><td rowspan="4">${i||''}</td><td rowspan="4">${a||''}</td><td rowspan="4">${total||''}</td></tr>`;
 
-                // 2. Prf Dtg
                 rowsHTML += `<tr class="row-prf1"><td class="col-tipe">Prf</td>`;
                 days.forEach(d => {
                     const st = emp.att[d]?.status;
@@ -538,12 +537,10 @@
                 });
                 rowsHTML += `</tr>`;
 
-                // 3. Jam Plg
                 rowsHTML += `<tr class="row-plg"><td class="col-tipe">Jam<br>Plg</td>`;
                 days.forEach(d => rowsHTML += `<td>${emp.att[d]?.status === 'H' ? (emp.att[d].out || '') : ''}</td>`);
                 rowsHTML += `</tr>`;
 
-                // 4. Prf Plg
                 rowsHTML += `<tr class="row-prf2"><td class="col-tipe">Prf</td>`;
                 days.forEach(d => {
                     const st = emp.att[d]?.status;
@@ -556,7 +553,7 @@
             tbody.innerHTML = rowsHTML;
         }
 
-        // --- 7. LOGIKA MENU MENGAMBANG (FAB) ---
+        // --- 7. LOGIKA MENU MENGAMBANG (FAB) & FITUR MANAJEMEN DATA ---
         let isFabOpen = false;
         function toggleFab() {
             const menu = document.getElementById('fab-menu');
@@ -579,16 +576,14 @@
             }
         }
 
-        // --- FITUR RESET SEMUA DATA ---
         function resetAllData() {
             toggleFab();
-            if(confirm("AWAS! Ini akan menghapus SELURUH data absen dan mengembalikan pengaturan ke awal. Anda yakin ingin melanjutkan?")) {
+            if(confirm("AWAS! Ini akan MENGHAPUS SELURUH data absen yang tersimpan di alat ini dan mengembalikannya ke daftar nama asli. Anda yakin?")) {
                 localStorage.removeItem(LOCAL_STORAGE_KEY);
                 location.reload();
             }
         }
 
-        // --- IMPORT/EXPORT JSON ---
         function exportData() {
             toggleFab(); 
             const a = document.createElement('a');
@@ -610,9 +605,10 @@
             reader.readAsText(file);
         }
 
-        // --- 8. LOGIKA MODAL DATA ---
+        // --- 8. LOGIKA MODAL & PEGAWAI ---
         function addEmployee() {
-            state.employees.push({ id: Date.now(), name: "Pegawai Baru", signature: "", att: {} });
+            const newId = Date.now();
+            state.employees.push({ id: newId, name: "Pegawai Baru", signature: "", att: {} });
             saveToLocal(); updateAllUI();
         }
 
@@ -653,6 +649,7 @@
             if(empIndex > -1) {
                 state.employees[empIndex].name = document.getElementById('modal-emp-name').value;
                 state.employees[empIndex].att = JSON.parse(JSON.stringify(tempAtt));
+                
                 if (hasDrawing) state.employees[empIndex].signature = canvas.toDataURL('image/png');
                 else if (!state.employees[empIndex].signature) state.employees[empIndex].signature = "";
             }
@@ -661,62 +658,98 @@
 
         function renderDaysGrid() {
             const grid = document.getElementById('days-grid'); let html = '';
+            
             days.forEach(day => {
                 const dData = tempAtt[day] || { status: 'H', in: '', out: '' };
-                html += `<div class="p-2 border rounded-xl ${dData.status !== 'H' && dData.status !== '' ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200 shadow-sm'}">
-                    <div class="flex justify-between items-center border-b pb-1.5 mb-1.5"><span class="font-bold text-[11px] text-gray-700">Tgl ${day}</span>
-                    <select onchange="updateDay(${day}, 'status', this.value)" class="text-[10px] font-bold outline-none border rounded px-1 bg-transparent text-blue-600">
-                        <option value="H" ${dData.status === 'H'?'selected':''}>Hadir</option><option value="S" ${dData.status === 'S'?'selected':''}>Sakit</option>
-                        <option value="I" ${dData.status === 'I'?'selected':''}>Izin</option><option value="A" ${dData.status === 'A'?'selected':''}>Alpa</option><option value="" ${dData.status === ''?'selected':''}>Libur</option>
-                    </select></div>
-                    ${dData.status === 'H' ? `<div class="flex items-center justify-between mb-1.5"><span class="text-[10px] font-medium text-gray-500">Datang</span><input type="time" value="${dData.in||''}" onchange="updateDay(${day}, 'in', this.value)" class="text-[10px] font-mono border border-blue-100 rounded bg-blue-50 px-1 py-0.5 w-[70px]"></div><div class="flex items-center justify-between"><span class="text-[10px] font-medium text-gray-500">Pulang</span><input type="time" value="${dData.out||''}" onchange="updateDay(${day}, 'out', this.value)" class="text-[10px] font-mono border border-orange-100 rounded bg-orange-50 px-1 py-0.5 w-[70px]"></div>` : `<div class="text-center text-[10px] py-3 text-orange-600 font-extrabold uppercase tracking-widest">${dData.status||'LIBUR'}</div>`}
+                const bgClass = (dData.status !== 'H' && dData.status !== '') ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200 shadow-sm';
+
+                html += `
+                <div class="p-2 border rounded-xl ${bgClass}">
+                    <div class="flex justify-between items-center border-b pb-1.5 mb-1.5">
+                        <span class="font-bold text-[11px] text-gray-700">Tgl ${day}</span>
+                        <select onchange="updateDay(${day}, 'status', this.value)" class="text-[10px] font-bold outline-none border rounded px-1 bg-transparent text-blue-600">
+                            <option value="H" ${dData.status === 'H' ? 'selected' : ''}>Hadir</option>
+                            <option value="S" ${dData.status === 'S' ? 'selected' : ''}>Sakit</option>
+                            <option value="I" ${dData.status === 'I' ? 'selected' : ''}>Izin</option>
+                            <option value="A" ${dData.status === 'A' ? 'selected' : ''}>Alpa</option>
+                            <option value="" ${dData.status === '' ? 'selected' : ''}>Libur</option>
+                        </select>
+                    </div>
+                    ${dData.status === 'H' ? `
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-[10px] font-medium text-gray-500">Datang</span>
+                            <input type="time" value="${dData.in || ''}" onchange="updateDay(${day}, 'in', this.value)" class="text-[10px] font-mono border border-blue-100 rounded bg-blue-50 px-1 py-0.5 w-[70px]">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-medium text-gray-500">Pulang</span>
+                            <input type="time" value="${dData.out || ''}" onchange="updateDay(${day}, 'out', this.value)" class="text-[10px] font-mono border border-orange-100 rounded bg-orange-50 px-1 py-0.5 w-[70px]">
+                        </div>
+                    ` : `
+                        <div class="text-center text-[10px] py-3 text-orange-600 font-extrabold uppercase tracking-widest">
+                            ${dData.status === '' ? 'LIBUR' : dData.status}
+                        </div>
+                    `}
                 </div>`;
-            }); grid.innerHTML = html;
+            });
+            grid.innerHTML = html;
         }
 
-        function updateDay(day, field, value) { 
-            if(!tempAtt[day]) tempAtt[day] = { status: 'H', in: '', out: '' }; 
-            tempAtt[day][field] = value; 
-            if(field==='status') renderDaysGrid(); 
+        function updateDay(day, field, value) {
+            if(!tempAtt[day]) tempAtt[day] = { status: 'H', in: '', out: '' };
+            tempAtt[day][field] = value;
+            if(field === 'status') renderDaysGrid(); 
         }
 
-        function toggleQuickTime() { 
-            const d = document.getElementById('quick-status').value !== 'H'; 
-            document.getElementById('quick-in').disabled = d; 
-            document.getElementById('quick-out').disabled = d; 
+        function toggleQuickTime() {
+            const d = document.getElementById('quick-status').value !== 'H';
+            document.getElementById('quick-in').disabled = d;
+            document.getElementById('quick-out').disabled = d;
         }
 
-        function applyQuickFill() { 
+        function applyQuickFill() {
             const s = document.getElementById('quick-status').value;
             const i = document.getElementById('quick-in').value;
             const o = document.getElementById('quick-out').value;
-            days.forEach(day => { tempAtt[day] = { status: s, in: s==='H'?i:'', out: s==='H'?o:'' }; }); 
-            renderDaysGrid(); 
+            days.forEach(day => {
+                tempAtt[day] = { status: s, in: s === 'H' ? i : '', out: s === 'H' ? o : '' };
+            });
+            renderDaysGrid();
         }
 
-        // --- 9. KODE CANVAS TTD/PARAF ---
+        // --- 9. CANVAS SIGNATURE LOGIC ---
         function initCanvas() {
             ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000000';
             canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseleave', endPosition);
             canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchend', endPosition); canvas.addEventListener('touchmove', draw, {passive: false});
         }
+
         function getPointerPos(e) {
-            const rect = canvas.getBoundingClientRect(), sX = canvas.width / rect.width, sY = canvas.height / rect.height;
-            return e.touches ? { x: (e.touches[0].clientX - rect.left)*sX, y: (e.touches[0].clientY - rect.top)*sY } : { x: (e.clientX - rect.left)*sX, y: (e.clientY - rect.top)*sY };
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            if (e.touches && e.touches.length > 0) {
+                return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+            }
+            return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
         }
+
         function startPosition(e) {
             e.preventDefault(); isDrawing = true; hasDrawing = true;
             document.getElementById('canvas-placeholder').classList.add('hidden');
             const pos = getPointerPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); draw(e); 
         }
+
         function endPosition() { isDrawing = false; ctx.beginPath(); }
+
         function draw(e) {
-            if (!isDrawing) return; e.preventDefault();
+            if (!isDrawing) return;
+            e.preventDefault();
             const pos = getPointerPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
         }
+
         function clearCanvas() {
-            ctx.clearRect(0,0,canvas.width,canvas.height); hasDrawing = false;
-            if(editingId){ const emp = state.employees.find(e=>e.id===editingId); if(emp) emp.signature=""; }
+            ctx.clearRect(0, 0, canvas.width, canvas.height); hasDrawing = false;
+            if(editingId) { const emp = state.employees.find(e => e.id === editingId); if(emp) emp.signature = ""; }
             document.getElementById('canvas-placeholder').classList.remove('hidden');
         }
     </script>
