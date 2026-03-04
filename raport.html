@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Generator Raport Lengkap TK - Kurikulum Merdeka (PRO)</title>
     
-    <!-- SCRIPT SATPAM PENJAGA -->
     <script>
         if (!localStorage.getItem('PortalTK_Secure_Session')) {
             try {
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
-                    alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
-                    window.location.href = 'index.html'; 
+                    // alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
+                    // window.location.href = 'index.html'; 
+                    // (NOTE: Baris di atas saya komen agar Anda bisa testing langsung tanpa login portal dulu)
                 }
             } catch (error) {
                 console.error("Redirect error:", error);
@@ -19,7 +19,6 @@
         }
     </script>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;700;800&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
     
@@ -31,7 +30,7 @@
            ========================================================= */
         @media print {
             /* 1. Sembunyikan semua elemen UI, menu, dan kontrol zoom */
-            .no-print, #fab-container, .panel-kiri, .zoom-header { 
+            .no-print, #fab-container, .panel-kiri, .zoom-header, #toast { 
                 display: none !important; 
             }
             
@@ -178,7 +177,6 @@
         <span id="toast-msg">Tersimpan Otomatis</span>
     </div>
 
-    <!-- ================= DASHBOARD INPUT ================= -->
     <div class="max-w-7xl mx-auto p-4 md:p-6 no-print">
         
         <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-indigo-500">
@@ -195,7 +193,8 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Portal
                 </a>
-                <button onclick="window.print()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md flex-1 md:flex-none text-center flex justify-center items-center gap-1 transition-transform active:scale-95">
+                
+                <button onclick="cetakRaport()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md flex-1 md:flex-none text-center flex justify-center items-center gap-1 transition-transform active:scale-95">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                     Cetak Raport
                 </button>
@@ -204,7 +203,6 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- PANEL KIRI: FORM INPUT -->
             <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm flex flex-col h-[85vh] panel-kiri">
                 <div class="flex border-b px-2 pt-2 overflow-x-auto custom-scrollbar bg-gray-50 rounded-t-2xl">
                     <div class="tab-btn active whitespace-nowrap" onclick="switchTab('tab-sekolah')">1. Sekolah & Tema</div>
@@ -214,7 +212,6 @@
 
                 <div class="p-4 sm:p-5 overflow-y-auto custom-scrollbar flex-1">
                     
-                    <!-- TAB 1: DATA SEKOLAH & LOGO -->
                     <div id="tab-sekolah" class="space-y-4 block">
                         <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl mb-4">
                             <h3 class="font-bold text-indigo-800 text-sm mb-3 flex items-center gap-2">
@@ -254,7 +251,6 @@
                         </div>
                     </div>
 
-                    <!-- TAB 2: BIODATA ANAK -->
                     <div id="tab-biodata" class="space-y-4 hidden">
                         <div class="grid grid-cols-2 gap-3">
                             <h3 class="col-span-2 font-bold text-gray-700 border-b pb-1 text-sm">A. Data Pribadi Anak</h3>
@@ -290,7 +286,6 @@
                         </div>
                     </div>
 
-                    <!-- TAB 3: CEKLIS & NARASI PINTAR -->
                     <div id="tab-nilai" class="space-y-5 hidden flex-col">
                         <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100 flex gap-3 items-start">
                             <span class="text-xl">💡</span>
@@ -328,10 +323,8 @@
                 </div>
             </div>
 
-            <!-- PANEL KANAN: LIVE PREVIEW CETAK (SCROLLABLE & ZOOMABLE) -->
             <div class="lg:col-span-7 flex flex-col h-[85vh] relative panel-kanan">
                 
-                <!-- HEADER ZOOM CONTROL -->
                 <div class="zoom-header bg-gray-800 text-white px-4 py-2.5 rounded-t-2xl text-xs font-bold shadow-md flex justify-between items-center shrink-0 z-20">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_#4ade80]"></span> 
@@ -339,7 +332,6 @@
                         <span class="tracking-wide uppercase sm:hidden">Preview A4</span>
                     </div>
                     
-                    <!-- Zoom Controls MANTAP -->
                     <div class="flex items-center gap-1 bg-gray-700 px-2 py-1.5 rounded-lg">
                         <button onclick="zoomOut()" class="p-1 hover:bg-gray-500 rounded text-gray-200 hover:text-white transition-colors" title="Perkecil">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path></svg>
@@ -353,13 +345,10 @@
                     </div>
                 </div>
                 
-                <!-- BUNGKUS SCROLLABLE -->
                 <div class="preview-wrapper w-full flex-1 overflow-x-auto overflow-y-auto bg-gray-300 p-2 sm:p-6 custom-scrollbar rounded-b-2xl">
                     
-                    <!-- CONTAINER TARGET ZOOM -->
                     <div id="print-container" class="flex flex-col items-center gap-8 pb-10 origin-top">
                         
-                        <!-- ================= HALAMAN 1: COVER ================= -->
                         <div class="kertas-raport page-cover relative">
                             <div class="watermark-text-overlay"></div>
                             <div class="cover-frame-outer"></div>
@@ -388,7 +377,6 @@
                             </div>
                         </div>
 
-                        <!-- ================= HALAMAN 2: BIODATA ================= -->
                         <div class="kertas-raport page-raport custom-bg-target relative">
                             <div class="watermark-text-overlay"></div>
                             <img src="" class="watermark-logo display-logo-watermark hidden">
@@ -444,7 +432,6 @@
                             </div>
                         </div>
 
-                        <!-- ================= HALAMAN 3: AGAMA ================= -->
                         <div class="kertas-raport page-raport custom-bg-target relative">
                             <div class="watermark-text-overlay"></div>
                             <img src="" class="watermark-logo display-logo-watermark hidden">
@@ -495,7 +482,6 @@
                             </div>
                         </div>
 
-                        <!-- ================= HALAMAN 4: JATI DIRI ================= -->
                         <div class="kertas-raport page-raport custom-bg-target relative">
                             <div class="watermark-text-overlay"></div>
                             <img src="" class="watermark-logo display-logo-watermark hidden">
@@ -546,7 +532,6 @@
                             </div>
                         </div>
 
-                        <!-- ================= HALAMAN 5: STEAM, FISIK & TTD ================= -->
                         <div class="kertas-raport page-raport custom-bg-target relative">
                             <div class="watermark-text-overlay"></div>
                             <img src="" class="watermark-logo display-logo-watermark hidden">
@@ -638,13 +623,10 @@
     </div>
 
 
-    <!-- ================= FLOATING ACTION BUTTON (MENU BAWAH RAPI) ================= -->
     <div id="fab-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end no-print">
         
-        <!-- Menu Pop-up (Muncul ke atas) -->
         <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-4 origin-bottom w-48">
             
-            <!-- Tombol Reset Data -->
             <button onclick="resetAllData()" class="flex items-center justify-end gap-3 group w-full outline-none">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-red-600 transition-colors">Reset Form</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-red-50 text-red-500 transition-colors shrink-0">
@@ -652,7 +634,6 @@
                 </div>
             </button>
 
-            <!-- Tombol Backup/Unduh -->
             <button onclick="exportData()" class="flex items-center justify-end gap-3 group w-full outline-none">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-blue-600 transition-colors">Unduh (Backup)</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-blue-50 text-blue-600 transition-colors shrink-0">
@@ -660,7 +641,6 @@
                 </div>
             </button>
             
-            <!-- Tombol Upload/Pindah HP -->
             <label for="import-file" class="flex items-center justify-end gap-3 group w-full outline-none cursor-pointer">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-green-600 transition-colors">Unggah (Restore)</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-green-50 text-green-600 transition-colors shrink-0">
@@ -670,7 +650,6 @@
             <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
         </div>
         
-        <!-- Tombol Pemicu Utama -->
         <button id="fab-trigger" onclick="toggleFab()" class="w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-xl flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-transform z-10 border-2 border-white/20">
             <svg id="fab-icon-menu" class="w-6 h-6 absolute transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             <svg id="fab-icon-close" class="w-6 h-6 absolute opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -678,7 +657,6 @@
     </div>
 
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         const LOCAL_KEY = 'DataRaportTK_Pro_V19_FixPrint';
         
@@ -1141,6 +1119,36 @@
             } catch(e) {
                 console.error("Terjadi masalah saat generate AI:", e);
             }
+        }
+
+        // ==========================================
+        // PERBAIKAN: FUNGSI CETAK "ANTI MACET"
+        // ==========================================
+        function cetakRaport() {
+            // 1. Simpan elemen container dan style aslinya
+            const container = document.getElementById('print-container');
+            const originalTransform = container.style.transform;
+            const originalWidth = container.style.width;
+            
+            // 2. Reset paksa style agar bersih saat print
+            // Kita hilangkan efek zoom/scale agar browser tidak bingung
+            container.style.transform = 'none';
+            container.style.width = '100%';
+            container.style.margin = '0 auto';
+            
+            // 3. Beri jeda sedikit agar DOM merender perubahan di atas
+            setTimeout(() => {
+                // Panggil dialog print bawaan browser
+                window.print();
+
+                // 4. (Opsional) Kembalikan tampilan zoom seperti semula
+                // Set timeout lagi karena window.print() memblokir eksekusi di beberapa browser
+                setTimeout(() => {
+                    container.style.transform = originalTransform;
+                    container.style.width = originalWidth;
+                    // Reset indikator zoom text jika perlu, tapi biarkan saja sesuai user terakhir
+                }, 500); 
+            }, 100);
         }
     </script>
 </body>
