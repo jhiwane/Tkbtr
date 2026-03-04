@@ -5,159 +5,316 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Guru TK - Sistem Terpadu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            /* Background gradasi biru gelap premium */
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            margin: 0;
+            overflow: hidden;
         }
-        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); width: 100%; max-width: 400px; overflow: hidden; transition: all 0.4s ease; }
-        .fade-enter { animation: fadeIn 0.5s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .input-login { width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-weight: 600; outline: none; transition: 0.3s; }
-        .input-login:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-        .menu-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px; margin-bottom: 12px; background: white; border: 2px solid #e2e8f0; border-radius: 16px; font-weight: 700; color: #1e293b; text-decoration: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .menu-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: #4f46e5; }
-        .icon-box { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; }
+
+        /* Hiasan Background */
+        .bg-circle-1 { position: absolute; width: 300px; height: 300px; background: rgba(59, 130, 246, 0.3); border-radius: 50%; filter: blur(60px); top: -100px; left: -100px; z-index: 0; }
+        .bg-circle-2 { position: absolute; width: 400px; height: 400px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; filter: blur(80px); bottom: -150px; right: -100px; z-index: 0; }
+
+        /* =========================================================
+           ANIMASI BORDER BERJALAN (GLOWING ANGEL EFFECT)
+           ========================================================= */
+        .animated-box-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 28px;
+            /* Menyembunyikan gradasi yang meluber */
+            overflow: hidden; 
+            padding: 4px; /* Ketebalan garis bersinar */
+            z-index: 10;
+        }
+
+        /* Kotak gradasi yang berputar di belakang */
+        .animated-box-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(
+                transparent, 
+                transparent, 
+                transparent, 
+                #38bdf8, /* Light Blue */
+                #818cf8, /* Indigo */
+                #c084fc, /* Purple */
+                #38bdf8
+            );
+            animation: rotate-glow 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate-glow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Kotak Putih Utama (Menutupi tengahnya sehingga yang terlihat hanya garis tepinya) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        /* Transisi Halaman */
+        .fade-in { animation: fadeIn 0.6s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* Form Input */
+        .input-login {
+            width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 16px;
+            font-size: 14px; font-weight: 700; outline: none; transition: all 0.3s;
+            background: #f8fafc; color: #1e293b;
+        }
+        .input-login:focus { border-color: #6366f1; background: #fff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
+
+        /* Tombol Linktree Menu */
+        .menu-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; padding: 18px 20px; margin-bottom: 15px;
+            background: white; border: 2px solid #f1f5f9; border-radius: 20px;
+            font-weight: 800; color: #1e293b; text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: relative; overflow: hidden;
+        }
+        .menu-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+        }
+        .icon-box {
+            display: flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px; border-radius: 14px; transition: 0.3s;
+        }
+
+        /* Profil Image */
+        .profile-img {
+            width: 80px; height: 80px; border-radius: 50%; object-fit: cover;
+            border: 4px solid white; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ================= HALAMAN LOGIN ================= -->
-    <div id="login-view" class="glass-panel p-8 fade-enter">
-        <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-600/30 transform rotate-3">
-                <svg class="w-10 h-10 text-white transform -rotate-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+    <!-- Lingkaran Dekorasi Background -->
+    <div class="bg-circle-1"></div>
+    <div class="bg-circle-2"></div>
+
+    <!-- WRAPPER DENGAN ANIMASI GARIS BERJALAN -->
+    <div class="animated-box-wrapper fade-in" id="main-wrapper">
+        
+        <!-- ================= HALAMAN LOGIN ================= -->
+        <div id="login-view" class="glass-panel p-8">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-[20px] flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-500/40">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h1 class="text-2xl font-extrabold text-gray-800 tracking-tight">Sistem Terpadu TK</h1>
+                <p class="text-gray-500 text-sm mt-1 font-medium">Akses Aman Terenkripsi</p>
             </div>
-            <h1 class="text-2xl font-extrabold text-gray-800 tracking-tight">Portal Sekolah</h1>
-            <p class="text-gray-500 text-sm mt-1 font-medium">Sistem diamankan dengan Enkripsi Vercel.</p>
+
+            <form id="login-form" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider ml-1">Email Pengguna</label>
+                    <input type="email" id="email-input" placeholder="contoh: kepsek@tk.com" required class="input-login">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wider ml-1">Kata Sandi / PIN</label>
+                    <input type="password" id="pass-input" placeholder="••••••••" required class="input-login">
+                </div>
+                <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-extrabold py-4 rounded-xl mt-6 transition-all shadow-xl flex justify-center items-center gap-2 transform active:scale-95">
+                    <span id="btn-text">Verifikasi Masuk</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
+            
+            <!-- Pesan Error -->
+            <div id="error-msg" class="bg-red-50 border-l-4 border-red-500 text-red-700 text-sm font-bold text-center p-3 rounded mt-5 hidden animate-pulse">
+                Data tidak ditemukan atau sandi salah!
+            </div>
         </div>
 
-        <form id="login-form" class="space-y-4">
-            <div>
-                <label class="block text-xs font-bold text-gray-600 mb-1 ml-1 uppercase tracking-wide">Alamat Email</label>
-                <input type="email" id="email-input" placeholder="Masukkan email admin" required class="input-login">
+        <!-- ================= HALAMAN MENU UTAMA ================= -->
+        <div id="menu-view" class="glass-panel hidden">
+            <!-- Header Profile -->
+            <div class="bg-gradient-to-b from-indigo-50 to-white p-8 text-center relative border-b border-gray-100 rounded-t-[24px]">
+                <button onclick="logout()" class="absolute top-5 right-5 text-gray-400 hover:text-red-500 transition-colors p-2 bg-white rounded-full shadow-sm" title="Keluar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                </button>
+                
+                <!-- Kotak Foto Profil -->
+                <div class="mb-4 relative inline-block">
+                    <img id="user-display-img" src="" alt="Profile" class="profile-img">
+                    <div class="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+                
+                <h2 class="text-xl font-extrabold text-gray-800" id="user-display-name">Selamat Datang!</h2>
+                <p class="text-sm text-indigo-600 font-bold mt-1" id="user-display-jabatan">Akses Diverifikasi</p>
             </div>
-            <div>
-                <label class="block text-xs font-bold text-gray-600 mb-1 ml-1 uppercase tracking-wide">Kata Sandi / PIN</label>
-                <input type="password" id="pass-input" placeholder="••••••••" required class="input-login">
+
+            <!-- Daftar Menu Layanan -->
+            <div class="p-6 bg-white rounded-b-[24px]">
+                <p class="text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-4 ml-1">Pilih Aplikasi</p>
+                
+                <!-- Tombol 1: Absensi -->
+                <a href="absen.html" class="menu-btn group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="text-left">
+                            <div class="font-extrabold text-gray-800 text-sm group-hover:text-blue-600 transition-colors">Absensi Harian</div>
+                            <div class="text-[11px] text-gray-500 font-bold mt-0.5">Jam Masuk & Pulang</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+
+                <!-- Tombol 2: Raport -->
+                <a href="raport.html" class="menu-btn group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box bg-emerald-100 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
+                        <div class="text-left">
+                            <div class="font-extrabold text-gray-800 text-sm group-hover:text-emerald-600 transition-colors">Cetak Raport AI</div>
+                            <div class="text-[11px] text-gray-500 font-bold mt-0.5">Narasi otomatis AI</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-emerald-500 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+
+                <!-- Tombol 3: Ijazah -->
+                <a href="ijazah.html" class="menu-btn group">
+                    <div class="flex items-center gap-4">
+                        <div class="icon-box bg-amber-100 text-amber-600 group-hover:bg-amber-500 group-hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                        </div>
+                        <div class="text-left">
+                            <div class="font-extrabold text-gray-800 text-sm group-hover:text-amber-600 transition-colors">Cetak Ijazah</div>
+                            <div class="text-[11px] text-gray-500 font-bold mt-0.5">Sertifikat eksklusif</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-amber-500 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
             </div>
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl mt-4 transition-colors shadow-md flex justify-center items-center gap-2">
-                <span id="btn-text">Verifikasi & Masuk</span>
-            </button>
-        </form>
-        <div id="error-msg" class="bg-red-50 border border-red-200 text-red-600 text-xs font-bold text-center p-3 rounded-lg mt-4 hidden"></div>
+            
+        </div>
     </div>
 
-    <!-- ================= HALAMAN MENU ================= -->
-    <div id="menu-view" class="glass-panel fade-enter hidden">
-        <div class="bg-gray-50 p-6 border-b border-gray-100 text-center relative">
-            <button onclick="logout()" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors p-1" title="Keluar">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-            </button>
-            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-indigo-200">
-                <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            </div>
-            <h2 class="text-lg font-extrabold text-gray-800" id="user-display-name">Selamat Datang!</h2>
-            <p class="text-xs text-gray-500 font-medium" id="user-display-jabatan">Akses Aman Terverifikasi</p>
-            <span class="inline-block mt-2 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-green-200">Koneksi Aman</span>
-        </div>
-
-        <div class="p-6">
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">Layanan Terpadu</p>
-            <a href="absen.html" class="menu-btn group">
-                <div class="flex items-center gap-3">
-                    <div class="icon-box bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div class="text-left"><div class="font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Absensi Guru</div><div class="text-[10px] text-gray-400 font-medium">Sistem hadir & pulang real-time</div></div>
-                </div>
-            </a>
-            <a href="raport.html" class="menu-btn group">
-                <div class="flex items-center gap-3">
-                    <div class="icon-box bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    </div>
-                    <div class="text-left"><div class="font-bold text-gray-800 group-hover:text-green-600 transition-colors">Generator Raport</div><div class="text-[10px] text-gray-400 font-medium">Buat narasi rapor otomatis</div></div>
-                </div>
-            </a>
-            <a href="ijazah.html" class="menu-btn group">
-                <div class="flex items-center gap-3">
-                    <div class="icon-box bg-yellow-50 text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
-                    </div>
-                    <div class="text-left"><div class="font-bold text-gray-800 group-hover:text-yellow-600 transition-colors">Cetak Ijazah TK</div><div class="text-[10px] text-gray-400 font-medium">Desain premium & elegan</div></div>
-                </div>
-            </a>
-        </div>
-    </div>
-
+    <!-- ================= JAVASCRIPT LOGIC (SISTEM AUTENTIKASI CLIENT) ================= -->
     <script>
+        // Kunci Rahasia Sesi (Harus sama dengan yang dicek oleh Satpam di file lain)
         const SESSION_KEY = 'PortalTK_Secure_Session';
 
-        window.onload = () => { checkSession(); };
+        // DATABASE INTERNAL PORTAL
+        // Anda bebas mengubah data ini sebelum diupload ke Vercel
+        const DATABASE_GURU = [
+            {
+                email: "kepsek@tk.com",
+                pin: "123456", 
+                nama: "Bunda Rosy",
+                jabatan: "Kepala Sekolah",
+                // Menggunakan link gambar yang Anda minta khusus untuk Kepsek
+                foto: "https://res.cloudinary.com/dt1786fxf/image/upload/v1769268810/bh1uiioasoeixveozil7.jpg"
+            },
+            {
+                email: "guru1@tk.com",
+                pin: "1111", 
+                nama: "Bunda Umni",
+                jabatan: "Guru Kelas",
+                // Foto default jika tidak ada
+                foto: "https://ui-avatars.com/api/?name=Bunda+Umni&background=818cf8&color=fff&size=150"
+            }
+        ];
+
+        window.onload = () => {
+            checkSession();
+        };
 
         function checkSession() {
             const savedUserStr = localStorage.getItem(SESSION_KEY);
             const loginView = document.getElementById('login-view');
             const menuView = document.getElementById('menu-view');
+            const wrapper = document.getElementById('main-wrapper');
 
             if (savedUserStr) {
+                // Terapkan Data User ke Tampilan
                 const user = JSON.parse(savedUserStr);
                 document.getElementById('user-display-name').innerText = `Halo, ${user.nama}!`;
+                document.getElementById('user-display-jabatan').innerText = user.jabatan;
+                document.getElementById('user-display-img').src = user.foto;
+
+                // Sembunyikan Animasi Garis Saat di Menu agar lebih bersih
+                wrapper.classList.remove('animated-box-wrapper');
+
                 loginView.classList.add('hidden');
                 menuView.classList.remove('hidden');
             } else {
+                // Tampilkan Animasi Garis untuk Login
+                wrapper.classList.add('animated-box-wrapper');
+                
                 loginView.classList.remove('hidden');
                 menuView.classList.add('hidden');
             }
         }
 
-        // PENGIRIMAN DATA KE VERCEL API (AMAN)
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
+        document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            
             const emailInput = document.getElementById('email-input').value;
             const passInput = document.getElementById('pass-input').value;
             const errorMsg = document.getElementById('error-msg');
             const btnText = document.getElementById('btn-text');
-            
-            errorMsg.classList.add('hidden');
-            btnText.innerHTML = "Memeriksa ke Server...";
 
-            try {
-                // Mengetuk pintu server belakang (api/login.js)
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: emailInput, pin: passInput })
-                });
+            // Cek kecocokan di Database Internal
+            const matchedUser = DATABASE_GURU.find(guru => guru.email === emailInput && guru.pin === passInput);
 
-                const data = await response.json();
+            if (matchedUser) {
+                errorMsg.classList.add('hidden');
+                btnText.innerHTML = "Memuat Data...";
+                
+                // Beri jeda animasi sedikit
+                setTimeout(() => {
+                    // Simpan identitas user yang berhasil login sebagai tiket masuk
+                    localStorage.setItem(SESSION_KEY, JSON.stringify(matchedUser));
+                    btnText.innerHTML = "Verifikasi Masuk";
+                    checkSession(); 
+                }, 800);
 
-                if (response.ok && data.success) {
-                    // Berhasil masuk
-                    localStorage.setItem(SESSION_KEY, JSON.stringify(data.user));
-                    checkSession();
-                } else {
-                    // Ditolak
-                    errorMsg.innerText = data.message || "Akses Ditolak!";
-                    errorMsg.classList.remove('hidden');
-                }
-            } catch (err) {
-                errorMsg.innerText = "Tidak dapat terhubung ke server Vercel.";
+            } else {
                 errorMsg.classList.remove('hidden');
-            } finally {
-                btnText.innerHTML = "Verifikasi & Masuk";
+                // Guncang kotak sedikit jika salah password
+                document.getElementById('login-view').animate([
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 400 });
             }
         });
 
         function logout() {
-            if(confirm("Keluar dari portal aman?")) {
+            if(confirm("Apakah Anda yakin ingin keluar dari portal aman?")) {
                 localStorage.removeItem(SESSION_KEY);
                 document.getElementById('email-input').value = '';
                 document.getElementById('pass-input').value = '';
