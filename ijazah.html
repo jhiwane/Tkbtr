@@ -1,1 +1,612 @@
-lagi dikembangkan kembali nanti
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Cetak Ijazah TK Premium</title>
+
+    <!-- SCRIPT SATPAM PENJAGA -->
+    <script>
+        if (!localStorage.getItem('PortalTK_Secure_Session')) {
+            try {
+                if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+                    alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
+                    window.location.href = 'index.html'; 
+                }
+            } catch (error) { console.error("Redirect error:", error); }
+        }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Khusus Ijazah) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,600&family=Great+Vibes&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Nunito', sans-serif; background-color: #f1f5f9; }
+
+        /* =========================================================
+           STYLE KHUSUS PRINT NATIVE (ANTI BLANK)
+           ========================================================= */
+        @media print {
+            .dashboard-ui, #fab-container, .no-print { display: none !important; }
+            body, html { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; overflow: visible !important; }
+            .panel-kanan, .preview-wrapper { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; position: static !important; background: transparent !important; }
+            #print-container { position: static !important; transform: none !important; width: 100% !important; display: block !important; margin: 0 !important; padding: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
+
+            .kertas-ijazah { 
+                width: 297mm !important; 
+                height: 209mm !important; /* A4 Landscape (dikurangi 1mm) */
+                margin: 0 auto !important; 
+                padding: 0 !important;
+                box-shadow: none !important; 
+                border: none !important;
+                page-break-after: always !important; 
+                page-break-inside: avoid !important;
+                transform: none !important; 
+                overflow: hidden !important; 
+                position: relative !important;
+            }
+            @page { size: A4 landscape; margin: 0; }
+        }
+
+        /* --- STYLING KERTAS (PREVIEW LAYAR) --- */
+        .kertas-ijazah {
+            width: 297mm; height: 210mm; position: relative; margin: 0 auto 30px auto;
+            overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background-color: #fdfcf6; 
+            background-image: radial-gradient(circle, transparent 20%, #fdfcf6 20%, #fdfcf6 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #fdfcf6 20%, #fdfcf6 80%, transparent 80%, transparent) 25px 25px, linear-gradient(#faf8ef 2px, transparent 2px) 0 -1px, linear-gradient(90deg, #faf8ef 2px, #fdfcf6 2px) -1px 0;
+            background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
+            box-sizing: border-box;
+        }
+
+        /* WATERMARK TENGAH */
+        .watermark-logo { 
+            position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 400px; height: 400px; 
+            object-fit: contain; 
+            opacity: 0.08; 
+            z-index: 1; 
+            pointer-events: none; 
+            filter: grayscale(100%) contrast(150%);
+        }
+
+        /* BINGKAI / FRAME PREMIUM */
+        .frame-luar { position: absolute; inset: 12px; border: 12px solid #1e293b; z-index: 2; pointer-events: none; outline: 3px solid #b45309; outline-offset: -18px;}
+        .frame-dalam { position: absolute; inset: 36px; border: 2px solid #b45309; z-index: 2; pointer-events: none; }
+        .frame-pola { position: absolute; inset: 40px; border: 1px dashed #d97706; z-index: 2; pointer-events: none; }
+        
+        /* ORNAMEN POJOK (CSS Pure) */
+        .frame-luar::before { content: ''; position: absolute; top: -12px; left: -12px; width: 40px; height: 40px; background: #b45309; clip-path: polygon(0 0, 100% 0, 0 100%); }
+        .frame-luar::after { content: ''; position: absolute; bottom: -12px; right: -12px; width: 40px; height: 40px; background: #b45309; clip-path: polygon(100% 100%, 0 100%, 100% 0); }
+
+        /* KONTEN UTAMA IJAZAH */
+        .konten-ijazah {
+            position: relative; z-index: 10;
+            width: 100%; height: 100%;
+            /* KUNCI UTAMA: Padding bawah diubah menjadi 85px agar elemen didongkrak naik menjauhi frame */
+            padding: 55px 70px 85px 70px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Kop Surat */
+        .kop-surat { text-align: center; margin-bottom: 20px; width: 100%; position: relative;}
+        .kop-logo { position: absolute; left: 10px; top: -10px; width: 90px; height: 90px; object-fit: contain;}
+        .kop-judul { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #1f2937; letter-spacing: 1.5px; margin-bottom: 2px; text-transform: uppercase;}
+        .kop-sekolah { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; color: #b45309; letter-spacing: 3px; margin-bottom: 2px; text-transform: uppercase; text-shadow: 1px 1px 0px rgba(0,0,0,0.1);}
+        .kop-alamat { font-size: 13px; color: #374151; font-family: 'Nunito', sans-serif;}
+        .garis-kop { width: 100%; border-bottom: 4px double #1f2937; margin-top: 15px;}
+
+        /* Judul Sertifikat */
+        .judul-ijazah { font-family: 'Great Vibes', cursive; font-size: 60px; font-weight: normal; color: #1e293b; margin-top: 10px; margin-bottom: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);}
+        .nomor-ijazah { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #4b5563; margin-bottom: 25px; letter-spacing: 2px;}
+
+        .teks-pengantar { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: #1f2937; margin-bottom: 15px; }
+        
+        /* Nama Siswa */
+        .nama-siswa { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: #b45309; text-transform: uppercase; margin-bottom: 15px; padding: 0 40px; display: inline-block; letter-spacing: 2px;}
+        
+        /* Detail Siswa */
+        .biodata-tabel { font-family: 'Playfair Display', serif; font-size: 17px; color: #1f2937; margin-bottom: 20px; text-align: left; font-weight: 500;}
+        .biodata-tabel td { padding: 5px 15px; }
+        .biodata-tabel td:nth-child(3) { border-bottom: 1px dotted #9ca3af; }
+        
+        /* Teks Kelulusan */
+        .teks-penutup { font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; text-align: center; max-width: 85%; line-height: 1.6; font-style: italic;}
+
+        /* FOTO DAN TTD (Posisi Terangkat Ke Atas) */
+        .ijazah-footer {
+            margin-top: auto; 
+            margin-bottom: 10px; /* Tambahan margin dorong dari padding induk */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            padding: 0 50px;
+            position: relative;
+        }
+
+        /* Pas Foto Siswa */
+        .box-foto { 
+            width: 3cm; height: 4cm; 
+            border: 3px double #1f2937; 
+            display: flex; align-items: center; justify-content: center; 
+            font-family: 'Nunito', sans-serif; font-size: 11px; color: #6b7280; font-weight: bold; 
+            background-color: white; padding: 2px;
+            position: relative; overflow: hidden;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .img-foto { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Tanda Tangan */
+        .box-ttd { text-align: center; font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; min-width: 250px;}
+
+        /* Segel/Stempel Emas Dekoratif */
+        .gold-seal {
+            position: absolute; bottom: 10px; left: 160px;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, #fcd34d 0%, #b45309 100%);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            color: white; font-family: 'Playfair Display', serif; font-weight: bold; font-size: 10px; text-align: center;
+            border: 2px dashed #fef3c7; outline: 3px solid #b45309; outline-offset: -1px;
+        }
+        .gold-seal::after {
+            content: ''; position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+            border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 40px solid #b45309; z-index: -1;
+        }
+
+        /* =========================================================
+           UI DASHBOARD 
+           ========================================================= */
+        .input-std { width: 100%; padding: 10px 14px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; transition: 0.2s; font-weight: 600;}
+        .input-std:focus { border-color: #b45309; background: #fff; box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.15); }
+        .status-toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 100;}
+        .status-toast.show { transform: translateY(0); opacity: 1; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .fab-menu-anim { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fab-hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
+        .fab-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        
+        #print-container { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top center;}
+    </style>
+</head>
+<body class="text-gray-800 pb-20">
+
+    <div id="toast" class="status-toast flex items-center gap-2 no-print">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toast-msg">Tersimpan Otomatis</span>
+    </div>
+
+    <!-- ================= DASHBOARD INPUT ================= -->
+    <div class="max-w-7xl mx-auto p-4 md:p-6 dashboard-ui">
+        
+        <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-amber-600">
+            <div class="text-center md:text-left w-full md:w-auto">
+                <h1 class="text-xl md:text-2xl font-extrabold text-gray-800 flex items-center justify-center md:justify-start gap-2">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                    Generator Ijazah TK
+                </h1>
+                <p class="text-gray-500 text-sm mt-1 font-medium">Sistem pembuatan sertifikat kelulusan elegan.</p>
+            </div>
+            
+            <div class="w-full md:w-auto flex gap-2">
+                <a href="index.html" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 rounded-xl font-bold text-xs sm:text-sm flex-1 md:flex-none text-center flex justify-center items-center gap-1 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Portal
+                </a>
+                <button onclick="window.print()" class="bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md flex-1 md:flex-none text-center flex justify-center items-center gap-1 transition-transform active:scale-95">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Cetak Ijazah
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- PANEL KIRI: FORM INPUT -->
+            <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm flex flex-col h-auto lg:h-[80vh] panel-kiri overflow-y-auto custom-scrollbar">
+                <div class="p-5 space-y-6">
+                    
+                    <!-- UPLOAD MEDIA (Logo & Foto) -->
+                    <div class="bg-amber-50 border border-amber-100 p-4 rounded-xl">
+                        <h3 class="font-bold text-amber-800 text-sm mb-3 flex items-center gap-2">Logo & Foto Siswa</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-wider">Logo Lembaga (Tengah & Atas)</label>
+                                <input type="file" accept="image/*" onchange="handleImageUpload(event, 'logo')" class="text-xs w-full file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-200 file:text-amber-800 hover:file:bg-amber-300 cursor-pointer">
+                                <button type="button" onclick="clearImage('logo')" class="text-[10px] text-red-500 hover:text-red-700 font-bold mt-1 hidden" id="btn-clear-logo">Hapus Logo</button>
+                            </div>
+                            <div class="pt-2 border-t border-amber-200">
+                                <label class="block text-[10px] font-bold text-blue-500 mb-1 uppercase tracking-wider">Upload Pas Foto Siswa (3x4)</label>
+                                <input type="file" accept="image/*" onchange="handleImageUpload(event, 'fotoSiswa')" class="text-xs w-full file:mr-4 file:py-1.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer">
+                                <button type="button" onclick="clearImage('fotoSiswa')" class="text-[10px] text-red-500 hover:text-red-700 font-bold mt-1 hidden" id="btn-clear-fotoSiswa">Hapus Pas Foto</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Sekolah -->
+                    <div>
+                        <h3 class="font-extrabold text-gray-800 border-b pb-2 mb-3">1. Identitas Lembaga</h3>
+                        <div class="space-y-3">
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Teks Kop Surat (Baris 1)</label><input type="text" id="inp-kop1" value="KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI" class="input-std"></div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Nama Lembaga</label><input type="text" id="inp-sekolah" value="TK BAITURROHMAN" class="input-std font-bold text-amber-800"></div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Alamat Lembaga</label><textarea id="inp-alamat" rows="2" class="input-std resize-none">Jl. Raya Pulodarat No. 12, Kec. Pecangaan, Kab. Jepara, Jawa Tengah</textarea></div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">NPSN</label><input type="text" id="inp-npsn" value="20345678" class="input-std"></div>
+                        </div>
+                    </div>
+
+                    <!-- Data Siswa -->
+                    <div>
+                        <h3 class="font-extrabold text-gray-800 border-b pb-2 mb-3">2. Identitas Siswa</h3>
+                        <div class="space-y-3">
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">No. Seri Ijazah</label><input type="text" id="inp-no-ijazah" value="TK-B/2026/001" class="input-std font-mono text-blue-600"></div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Nama Lengkap Siswa</label><input type="text" id="inp-nama" value="AHMAD RAFFASYA" class="input-std font-bold text-lg text-amber-900"></div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Tempat Lahir</label><input type="text" id="inp-tempat" value="Jepara" class="input-std"></div>
+                                <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Tanggal Lahir</label><input type="text" id="inp-tgl-lahir" value="12 April 2019" class="input-std"></div>
+                            </div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Nomor Induk Siswa (NIS)</label><input type="text" id="inp-nis" value="23001" class="input-std"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pengesahan -->
+                    <div>
+                        <h3 class="font-extrabold text-gray-800 border-b pb-2 mb-3">3. Pengesahan</h3>
+                        <div class="space-y-3">
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Teks Kelulusan</label><textarea id="inp-lulus" rows="3" class="input-std resize-none leading-relaxed">Telah menyelesaikan masa pendidikan dan dengan ini dinyatakan LULUS dari jenjang pendidikan Taman Kanak-Kanak (TK) Baiturrohman pada Tahun Ajaran 2025/2026.</textarea></div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Tempat & Tgl Penetapan</label><input type="text" id="inp-tglcetak" value="Jepara, 15 Juni 2026" class="input-std"></div>
+                            <div><label class="block text-[11px] font-bold text-gray-500 mb-1 uppercase">Nama Kepala Sekolah</label><input type="text" id="inp-kepsek" value="Rosydianah, S.Ag." class="input-std font-bold"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PANEL KANAN: LIVE PREVIEW CETAK (ZOOMABLE) -->
+            <div class="lg:col-span-8 flex flex-col h-auto lg:h-[80vh] relative panel-kanan">
+                
+                <!-- HEADER ZOOM CONTROL -->
+                <div class="zoom-header bg-gray-800 text-white px-4 py-2.5 rounded-t-2xl text-xs font-bold shadow-md flex justify-between items-center shrink-0 z-20">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#fbbf24]"></span> 
+                        <span class="tracking-wide uppercase hidden sm:inline">Preview Kertas A4 (Landscape)</span>
+                        <span class="tracking-wide uppercase sm:hidden">Preview A4</span>
+                    </div>
+                    
+                    <!-- Zoom Controls -->
+                    <div class="flex items-center gap-1 bg-gray-700 px-2 py-1.5 rounded-lg">
+                        <button onclick="zoomOut()" class="p-1 hover:bg-gray-500 rounded text-gray-200 hover:text-white transition-colors" title="Perkecil">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path></svg>
+                        </button>
+                        <span id="zoom-level-text" class="w-10 text-center text-[10px] font-mono tracking-widest">100%</span>
+                        <button onclick="zoomIn()" class="p-1 hover:bg-gray-500 rounded text-gray-200 hover:text-white transition-colors" title="Perbesar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                        </button>
+                        <div class="w-px h-4 bg-gray-500 mx-1"></div>
+                        <button onclick="resetZoom()" class="text-[10px] px-2 py-1 rounded hover:bg-gray-500 text-gray-300 hover:text-white transition-colors font-bold">RESET</button>
+                    </div>
+                </div>
+                
+                <!-- BUNGKUS SCROLLABLE -->
+                <div class="preview-wrapper w-full flex-1 overflow-x-auto overflow-y-auto bg-gray-300 p-2 sm:p-6 custom-scrollbar rounded-b-2xl">
+                    
+                    <!-- CONTAINER TARGET ZOOM -->
+                    <div id="print-container" class="flex flex-col items-center pb-10 origin-top">
+                        
+                        <!-- ================= HALAMAN IJAZAH (LANDSCAPE) ================= -->
+                        <div class="kertas-ijazah relative">
+                            
+                            <!-- LOGO WATERMARK DI TENGAH -->
+                            <img id="watermark-logo" src="" class="watermark-logo hidden">
+                            
+                            <!-- Dekorasi Frame -->
+                            <div class="frame-luar"></div>
+                            <div class="frame-dalam"></div>
+                            <div class="frame-pola"></div>
+
+                            <div class="konten-ijazah">
+                                
+                                <!-- Header / Kop -->
+                                <div class="kop-surat">
+                                    <img id="logo-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23b45309' stroke-width='1.5'><circle cx='12' cy='12' r='10'/><path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/><path d='M2 12h20'/></svg>" alt="Logo" class="kop-logo">
+                                    <div class="kop-judul" id="prev-kop1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI</div>
+                                    <div class="kop-sekolah" id="prev-sekolah">TK BAITURROHMAN</div>
+                                    <div class="kop-alamat" id="prev-alamat">Jl. Raya Pulodarat No. 12, Kec. Pecangaan, Kab. Jepara, Jawa Tengah</div>
+                                    <div class="garis-kop"></div>
+                                </div>
+
+                                <!-- Judul Ijazah -->
+                                <h1 class="judul-ijazah">Sertifikat Kelulusan</h1>
+                                <div class="nomor-ijazah">Nomor: <span id="prev-no-ijazah">TK-B/2026/001</span></div>
+
+                                <div class="teks-pengantar">Diberikan dengan penuh rasa bangga kepada:</div>
+                                
+                                <!-- Nama Siswa -->
+                                <div class="nama-siswa" id="prev-nama">AHMAD RAFFASYA</div>
+                                
+                                <!-- Detail Siswa -->
+                                <table class="biodata-tabel">
+                                    <tr>
+                                        <td>Lahir di</td>
+                                        <td>:</td>
+                                        <td><span id="prev-tempat">Jepara</span>, <span id="prev-tgl-lahir">12 April 2019</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nomor Induk Siswa</td>
+                                        <td>:</td>
+                                        <td id="prev-nis">23001</td>
+                                    </tr>
+                                </table>
+
+                                <!-- Teks Kelulusan -->
+                                <div class="teks-penutup" id="prev-lulus">
+                                    Telah menyelesaikan masa pendidikan dan dengan ini dinyatakan LULUS dari jenjang pendidikan Taman Kanak-Kanak (TK) Baiturrohman pada Tahun Ajaran 2025/2026.
+                                </div>
+
+                                <!-- FOTO DAN TANDA TANGAN (Sudah didongkrak ke atas agar tidak kena frame bawah) -->
+                                <div class="ijazah-footer">
+                                    
+                                    <!-- Area Pas Foto -->
+                                    <div class="box-foto">
+                                        <span id="text-placeholder-foto" class="text-center leading-tight opacity-50">Pas Foto<br>3 x 4</span>
+                                        <img id="prev-foto-siswa" src="" class="img-foto hidden absolute inset-0">
+                                    </div>
+                                    
+                                    <!-- Area Tanda Tangan (Margin bawah dirapatkan) -->
+                                    <div class="box-ttd">
+                                        <p id="prev-tglcetak" style="margin-bottom: 5px;">Jepara, 15 Juni 2026</p>
+                                        <p style="margin-bottom: 55px;">Kepala Sekolah,</p>
+                                        <p id="prev-kepsek" style="font-weight: 800; border-bottom: 1.5px solid #1f2937; display: inline-block; padding: 0 10px;">Rosydianah, S.Ag.</p>
+                                        <p style="font-size: 13px; font-family: 'Nunito', sans-serif; margin-top: 3px;">NPSN: <span id="prev-npsn">20345678</span></p>
+                                    </div>
+
+                                    <!-- Stempel Emas CSS -->
+                                    <div class="gold-seal">LULUS</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= FAB MENU BAWAH ================= -->
+    <div id="fab-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end no-print">
+        <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-4 origin-bottom w-48">
+            <button onclick="resetAllData()" class="flex items-center justify-end gap-3 group w-full outline-none">
+                <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-red-600 transition-colors">Kosongkan Form</span>
+                <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-red-50 text-red-500 transition-colors shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+            </button>
+            <button onclick="exportData()" class="flex items-center justify-end gap-3 group w-full outline-none">
+                <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-amber-600 transition-colors">Unduh Data (.json)</span>
+                <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-amber-50 text-amber-600 transition-colors shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </div>
+            </button>
+            <label for="import-file" class="flex items-center justify-end gap-3 group w-full outline-none cursor-pointer">
+                <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-green-600 transition-colors">Unggah Data (.json)</span>
+                <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-green-50 text-green-600 transition-colors shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                </div>
+            </label>
+            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
+        </div>
+        <button id="fab-trigger" onclick="toggleFab()" class="w-14 h-14 bg-gradient-to-r from-amber-500 to-amber-700 rounded-full shadow-xl flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-transform z-10 border-2 border-white/20">
+            <svg id="fab-icon-menu" class="w-6 h-6 absolute transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="fab-icon-close" class="w-6 h-6 absolute opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        const LOCAL_KEY = 'DataIjazah_TK_Premium_V3_FixMargin';
+        
+        let state = {
+            inputs: {}, 
+            images: { logo: '', fotoSiswa: '' }
+        };
+
+        // --- ZOOM LOGIC ---
+        let currentZoom = window.innerWidth < 1024 ? 0.45 : 0.85;
+        function setZoom(val) {
+            currentZoom = val;
+            const container = document.getElementById('print-container');
+            if (container) { container.style.transform = `scale(${currentZoom})`; }
+            const zoomText = document.getElementById('zoom-level-text');
+            if (zoomText) { zoomText.innerText = Math.round(currentZoom * 100) + '%'; }
+        }
+        function zoomIn() { setZoom(Math.min(currentZoom + 0.1, 1.5)); }
+        function zoomOut() { setZoom(Math.max(currentZoom - 0.1, 0.3)); }
+        function resetZoom() { setZoom(window.innerWidth < 1024 ? 0.45 : 0.85); }
+
+        window.onload = () => {
+            loadData(); 
+            setZoom(currentZoom);
+            
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+                if(el.id && el.type !== 'file') {
+                    el.addEventListener('input', () => {
+                        state.inputs[el.id] = el.value;
+                        autoSave();
+                        updatePreview();
+                    });
+                }
+            });
+
+            Object.keys(state.inputs).forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = state.inputs[id];
+            });
+
+            updatePreview();
+            applyImages();
+        };
+
+        // --- FAB LOGIC ---
+        let isFabOpen = false;
+        function toggleFab() {
+            const menu = document.getElementById('fab-menu');
+            const iconMenu = document.getElementById('fab-icon-menu');
+            const iconClose = document.getElementById('fab-icon-close');
+            
+            isFabOpen = !isFabOpen;
+            if(isFabOpen) {
+                menu.classList.remove('fab-hidden'); menu.classList.add('fab-visible');
+                iconMenu.classList.add('opacity-0', 'scale-50', '-rotate-90');
+                iconClose.classList.remove('opacity-0', 'scale-50'); iconClose.classList.add('rotate-90');
+            } else {
+                menu.classList.add('fab-hidden'); menu.classList.remove('fab-visible');
+                iconMenu.classList.remove('opacity-0', 'scale-50', '-rotate-90');
+                iconClose.classList.add('opacity-0', 'scale-50'); iconClose.classList.remove('rotate-90');
+            }
+        }
+
+        function resetAllData() {
+            toggleFab();
+            if(confirm("AWAS! Ini akan mengosongkan seluruh form inputan ijazah. Lanjutkan?")) {
+                localStorage.removeItem(LOCAL_KEY);
+                location.reload();
+            }
+        }
+
+        function autoSave() {
+            localStorage.setItem(LOCAL_KEY, JSON.stringify(state));
+            showToast();
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem(LOCAL_KEY);
+            if(saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                    if(!state.inputs) state.inputs = {};
+                    if(!state.images) state.images = { logo: '', fotoSiswa: '' };
+                } catch(e) { console.error("Gagal meload data", e); }
+            }
+        }
+
+        function exportData() {
+            toggleFab();
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Data_Ijazah_${state.inputs['inp-nama'] || 'Siswa'}.json`;
+            a.click();
+        }
+
+        function importData(event) {
+            toggleFab();
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    state = { ...state, ...parsed };
+                    autoSave(); location.reload();
+                } catch(err) { alert("Gagal membaca file JSON!"); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            if (t) {
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 2000);
+            }
+        }
+
+        // --- IMAGE HANDLING (LOGO & FOTO SISWA) ---
+        function handleImageUpload(e, type) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                state.images[type] = ev.target.result;
+                autoSave();
+                applyImages();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImage(type) {
+            state.images[type] = '';
+            autoSave();
+            applyImages();
+        }
+
+        function applyImages() {
+            // Terapkan Logo (Header & Watermark)
+            if(state.images.logo) {
+                const logoPreview = document.getElementById('logo-preview');
+                if (logoPreview) logoPreview.src = state.images.logo;
+                
+                const watermarkLogo = document.getElementById('watermark-logo');
+                if (watermarkLogo) { 
+                    watermarkLogo.src = state.images.logo; 
+                    watermarkLogo.classList.remove('hidden'); 
+                }
+                
+                document.getElementById('btn-clear-logo').classList.remove('hidden');
+            } else {
+                const watermarkLogo = document.getElementById('watermark-logo');
+                if (watermarkLogo) watermarkLogo.classList.add('hidden');
+                document.getElementById('btn-clear-logo').classList.add('hidden');
+            }
+
+            // Terapkan Foto Siswa
+            if(state.images.fotoSiswa) {
+                const imgFoto = document.getElementById('prev-foto-siswa');
+                if(imgFoto) {
+                    imgFoto.src = state.images.fotoSiswa;
+                    imgFoto.classList.remove('hidden');
+                    document.getElementById('text-placeholder-foto').classList.add('hidden');
+                    document.getElementById('btn-clear-fotoSiswa').classList.remove('hidden');
+                }
+            } else {
+                const imgFoto = document.getElementById('prev-foto-siswa');
+                if(imgFoto) imgFoto.classList.add('hidden');
+                document.getElementById('text-placeholder-foto').classList.remove('hidden');
+                document.getElementById('btn-clear-fotoSiswa').classList.add('hidden');
+            }
+        }
+
+        function updatePreview() {
+            const v = id => state.inputs[id] || document.getElementById(id)?.value || '';
+            const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
+
+            setTxt('prev-kop1', v('inp-kop1'));
+            setTxt('prev-sekolah', v('inp-sekolah'));
+            setTxt('prev-alamat', v('inp-alamat'));
+            setTxt('prev-no-ijazah', v('inp-no-ijazah'));
+            setTxt('prev-nama', v('inp-nama'));
+            setTxt('prev-tempat', v('inp-tempat'));
+            setTxt('prev-tgl-lahir', v('inp-tgl-lahir'));
+            setTxt('prev-nis', v('inp-nis'));
+            setTxt('prev-lulus', v('inp-lulus'));
+            setTxt('prev-tglcetak', v('inp-tglcetak'));
+            setTxt('prev-kepsek', v('inp-kepsek'));
+            setTxt('prev-npsn', v('inp-npsn'));
+        }
+    </script>
+</body>
+</html>
