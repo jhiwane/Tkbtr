@@ -26,12 +26,10 @@
            JURUS ANDALAN: STYLE PRINT NATIVE (ANTI BLANK/KOSONG)
            ========================================================= */
         @media print {
-            /* 1. Sembunyikan semua UI Dashboard dan Tombol */
             .dashboard-ui, #fab-container, #modal-edit, .no-print { 
                 display: none !important; 
             }
             
-            /* 2. Reset Body agar kertas putih bersih */
             body, html { 
                 background: white !important; 
                 margin: 0 !important; 
@@ -40,7 +38,6 @@
                 overflow: visible !important; 
             }
 
-            /* 3. Lepaskan kuncian scroll dari bungkus tabel */
             .preview-wrapper { 
                 overflow: visible !important; 
                 width: 100% !important; 
@@ -50,7 +47,6 @@
                 display: block !important;
             }
 
-            /* 4. Tabel diposisikan normal (static/relative) BUKAN absolute */
             #print-section { 
                 display: block !important;
                 min-width: 100% !important; 
@@ -70,7 +66,7 @@
         }
 
         /* =========================================================
-           STYLE TABEL ABSENSI (LAYAR)
+           STYLE TABEL ABSENSI (LAYAR & CETAK)
            ========================================================= */
         #print-section { font-family: Arial, Helvetica, sans-serif; color: black; }
         .print-header { text-align: center; font-size: 14px; line-height: 1.3; margin-bottom: 15px; text-transform: uppercase; }
@@ -79,7 +75,6 @@
         .table-absensi { width: 100%; border-collapse: collapse; font-size: 10px; border: 2px solid black; background: white;}
         .table-absensi th, .table-absensi td { border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; }
 
-        /* Lebar Kolom Spesifik */
         .col-no { width: 2%; }
         .col-nama { width: 14%; text-align: left !important; padding-left: 5px !important; }
         .col-tipe { width: 3%; text-align: left !important; padding-left: 2px !important; font-size: 8px; line-height: 1.1; }
@@ -100,13 +95,11 @@
         .canvas-container { border: 2px dashed #cbd5e1; background-color: #f8fafc; border-radius: 0.5rem; position: relative; overflow: hidden; }
         canvas { touch-action: none; width: 100%; height: 150px; cursor: crosshair; }
         
-        /* Scrollbar cantik agar elegan di HP */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Animasi Menu Mengambang (FAB) */
         .fab-menu-anim { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .fab-hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
         .fab-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
@@ -232,31 +225,32 @@
     </div>
 
 
-    <!-- ================= FLOATING ACTION BUTTON (MENU BAWAH) ================= -->
+    <!-- ================= FLOATING ACTION BUTTON (MENU BAWAH DIPERBAIKI UI-NYA) ================= -->
     <div id="fab-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         
         <!-- Menu yang tersembunyi (Akan muncul ke atas) -->
-        <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-3 origin-bottom">
-            <!-- Tombol Reset Data (Baru) -->
-            <button onclick="resetAllData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-red-100 hover:bg-red-50 active:scale-95 group transition-colors">
-                <span class="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-full group-hover:bg-red-100">Reset Semua Data</span>
-                <div class="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center shadow-sm">
+        <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-4 origin-bottom w-48">
+            
+            <!-- Tombol Reset Data -->
+            <button onclick="resetAllData()" class="flex items-center justify-end gap-3 group w-full outline-none">
+                <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-red-600 transition-colors">Reset Semua</span>
+                <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-red-50 text-red-500 transition-colors shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </div>
             </button>
 
             <!-- Tombol Backup/Unduh -->
-            <button onclick="exportData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 group transition-colors">
-                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-blue-600">Unduh (Backup)</span>
-                <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+            <button onclick="exportData()" class="flex items-center justify-end gap-3 group w-full outline-none">
+                <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-blue-600 transition-colors">Unduh (Backup)</span>
+                <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-blue-50 text-blue-600 transition-colors shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </div>
             </button>
             
             <!-- Tombol Upload/Pindah HP -->
-            <label for="import-file" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 cursor-pointer group transition-colors">
-                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-green-600">Unggah (Pindah HP)</span>
-                <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+            <label for="import-file" class="flex items-center justify-end gap-3 group w-full outline-none cursor-pointer">
+                <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-green-600 transition-colors">Gabung Data (Unggah)</span>
+                <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-green-50 text-green-600 transition-colors shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 </div>
             </label>
@@ -342,14 +336,14 @@
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         // --- 1. PENGATURAN AWAL (STATE) ---
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v5_FixPrint';
+        const LOCAL_STORAGE_KEY = 'DataAbsensi_v6_Merge';
         
         const state = {
             judul1: "DAFTAR HADIR GURU DAN KARYAWAN",
             judul2: "TK BAITURROHMAN PULODARAT",
             judul3: "TAHUN 2025 / 2026",
-            bulan: "FEBRUARI",
-            tglCetak: "Pulodarat, 28 FEBRUARI 2026",
+            bulan: "MARET", 
+            tglCetak: "Pulodarat, 31 MARET 2026",
             kepsek: "Rosydianah, S.Ag.",
             employees: [
                 { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
@@ -578,7 +572,7 @@
 
         function resetAllData() {
             toggleFab();
-            if(confirm("AWAS! Ini akan MENGHAPUS SELURUH data absen yang tersimpan di alat ini dan mengembalikannya ke daftar nama asli. Anda yakin?")) {
+            if(confirm("AWAS! Ini akan MENGHAPUS SELURUH data absen yang tersimpan di alat ini dan mengembalikannya ke daftar asli. Anda yakin?")) {
                 localStorage.removeItem(LOCAL_STORAGE_KEY);
                 location.reload();
             }
@@ -591,18 +585,58 @@
             a.download = `Backup_Absensi_${state.bulan}.json`; a.click();
         }
 
+        // LOGIKA BARU: MENGGABUNGKAN (MERGE) DATA IMPORT
         function importData(event) {
             toggleFab();
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
+            
             reader.onload = function(e) {
                 try {
-                    Object.assign(state, JSON.parse(e.target.result));
-                    saveToLocal(); location.reload();
-                } catch(err) { alert("File tidak valid!"); }
+                    const parsed = JSON.parse(e.target.result);
+                    
+                    if (parsed && parsed.employees) {
+                        let countUpdated = 0;
+                        let countAdded = 0;
+
+                        // Looping setiap pegawai dari file yang diupload
+                        parsed.employees.forEach(newEmp => {
+                            // Cari apakah nama pegawai sudah ada di sistem saat ini (Pencarian kebal huruf besar/kecil)
+                            const existingIndex = state.employees.findIndex(
+                                emp => emp.name.trim().toLowerCase() === newEmp.name.trim().toLowerCase()
+                            );
+
+                            if (existingIndex > -1) {
+                                // JIKA SUDAH ADA: Gabungkan data absennya
+                                state.employees[existingIndex].att = { ...state.employees[existingIndex].att, ...newEmp.att };
+                                // Timpa paraf jika file yang diupload punya paraf
+                                if (newEmp.signature) {
+                                    state.employees[existingIndex].signature = newEmp.signature;
+                                }
+                                countUpdated++;
+                            } else {
+                                // JIKA NAMA BARU: Tambahkan ke daftar
+                                // Beri ID unik baru agar tidak bentrok
+                                newEmp.id = Date.now() + Math.random(); 
+                                state.employees.push(newEmp);
+                                countAdded++;
+                            }
+                        });
+
+                        saveToLocal(); 
+                        updateAllUI();
+                        
+                        alert(`Data berhasil digabungkan!\n- ${countUpdated} data guru diupdate.\n- ${countAdded} guru baru ditambahkan.`);
+                    } else {
+                        alert("Format file tidak dikenali!");
+                    }
+                } catch(err) { 
+                    alert("Gagal membaca file JSON!"); 
+                }
             };
             reader.readAsText(file);
+            event.target.value = ''; // Reset input agar bisa upload file yang sama berkali-kali
         }
 
         // --- 8. LOGIKA MODAL & PEGAWAI ---
