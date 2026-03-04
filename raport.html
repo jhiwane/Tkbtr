@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Generator Raport Lengkap TK - Kurikulum Merdeka (PRO)</title>
     
-    <!-- SCRIPT SATPAM PENJAGA (Mencegah Akses Tanpa Login dari Portal) -->
+    <!-- SCRIPT SATPAM PENJAGA -->
     <script>
         if (!localStorage.getItem('PortalTK_Secure_Session')) {
             try {
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
                     alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
                     window.location.href = 'index.html'; 
-                } else {
-                    console.warn("Mode pratinjau: Redirect ke index.html ditahan.");
                 }
             } catch (error) {
                 console.error("Redirect error:", error);
@@ -30,24 +28,40 @@
         body { font-family: 'Nunito', sans-serif; background-color: #f1f5f9; }
 
         /* =========================================================
-           STYLE KHUSUS UNTUK HASIL CETAK (PRINT) - MUTLAK 5 HALAMAN
+           STYLE KHUSUS UNTUK HASIL CETAK (PRINT) - FIX MACET/BLANK
            ========================================================= */
         @media print {
-            body, html { background: white !important; margin: 0 !important; padding: 0 !important; }
+            body, html { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; }
             .no-print, #fab-container { display: none !important; }
             
-            .max-w-7xl, .grid, .lg\:col-span-7 { display: block !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; transform: none !important; position: static !important; background: transparent !important; }
+            /* Sembunyikan panel form input sebelah kiri */
+            .panel-kiri { display: none !important; }
+            
+            /* Buat panel kanan (kertas) menjadi ukuran penuh saat diprint */
+            .max-w-7xl, .grid, .panel-kanan { 
+                display: block !important; 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                transform: none !important; 
+                position: static !important; 
+                background: transparent !important; 
+                height: auto !important;
+            }
             
             /* Lepaskan kuncian scroll dari bungkus preview */
-            .preview-wrapper { overflow: visible !important; width: 100% !important; padding: 0 !important; margin: 0 !important; background: transparent !important; display: block !important;}
+            .preview-wrapper { overflow: visible !important; width: 100% !important; padding: 0 !important; margin: 0 !important; background: transparent !important; display: block !important; height: auto !important;}
+            
+            /* Reset zoom transform saat dicetak */
             #print-container { position: static !important; transform: none !important; width: 100% !important; display: block !important; padding: 0 !important; margin: 0 !important; gap: 0 !important; min-width: auto !important;}
 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
 
             .kertas-raport { 
                 width: 210mm !important;
-                height: 297mm !important; /* Kunci Mutlak agar tidak meluber ke page berikutnya */
-                margin: 0 !important; 
+                height: 296mm !important; /* Kunci Mutlak A4 (Dikurangi 1mm agar tidak blank page extra) */
+                margin: 0 auto !important; 
                 padding: 0 !important;
                 box-shadow: none !important; 
                 border: none !important;
@@ -146,25 +160,24 @@
         .status-toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 100;}
         .status-toast.show { transform: translateY(0); opacity: 1; }
         
-        /* Animasi Transisi Narasi Textarea */
         .textarea-flash { animation: flashText 0.5s ease-in-out; }
         @keyframes flashText { 0% { background-color: #fef08a; } 100% { background-color: #f8fafc; } }
 
-        /* Scrollbar cantik agar elegan di HP */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Animasi Menu Mengambang (FAB) */
         .fab-menu-anim { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .fab-hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
         .fab-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        
+        /* Zoom Transition */
+        #print-container { transition: transform 0.3s ease-out; transform-origin: top left;}
     </style>
 </head>
 <body class="text-gray-800 pb-20">
 
-    <!-- Toast Notification -->
     <div id="toast" class="status-toast flex items-center gap-2 no-print">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         <span id="toast-msg">Tersimpan Otomatis</span>
@@ -173,7 +186,6 @@
     <!-- ================= DASHBOARD INPUT ================= -->
     <div class="max-w-7xl mx-auto p-4 md:p-6 no-print">
         
-        <!-- Header Aplikasi -->
         <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-indigo-500">
             <div class="text-center md:text-left w-full md:w-auto">
                 <h1 class="text-xl md:text-2xl font-extrabold text-gray-800 flex items-center justify-center md:justify-start gap-2">
@@ -198,8 +210,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- PANEL KIRI: FORM INPUT -->
-            <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm flex flex-col h-[85vh]">
-                <!-- Tabs Navigation -->
+            <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm flex flex-col h-[85vh] panel-kiri">
                 <div class="flex border-b px-2 pt-2 overflow-x-auto custom-scrollbar bg-gray-50 rounded-t-2xl">
                     <div class="tab-btn active whitespace-nowrap" onclick="switchTab('tab-sekolah')">1. Sekolah & Tema</div>
                     <div class="tab-btn whitespace-nowrap" onclick="switchTab('tab-biodata')">2. Biodata Lengkap</div>
@@ -210,7 +221,6 @@
                     
                     <!-- TAB 1: DATA SEKOLAH & LOGO -->
                     <div id="tab-sekolah" class="space-y-4 block">
-                        <!-- UPLOAD LOGO, BG, & WATERMARK TEXT -->
                         <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl mb-4">
                             <h3 class="font-bold text-indigo-800 text-sm mb-3 flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -323,23 +333,36 @@
                 </div>
             </div>
 
-            <!-- PANEL KANAN: LIVE PREVIEW CETAK (SCROLLABLE) -->
-            <div class="lg:col-span-7 flex flex-col h-[85vh] relative no-print">
+            <!-- PANEL KANAN: LIVE PREVIEW CETAK -->
+            <div class="lg:col-span-7 flex flex-col h-[85vh] relative panel-kanan">
                 
-                <div class="bg-gray-800 text-white px-4 py-2.5 rounded-t-2xl text-xs font-bold shadow-md flex justify-between items-center shrink-0 z-20">
+                <!-- HEADER ZOOM CONTROL -->
+                <div class="bg-gray-800 text-white px-4 py-2.5 rounded-t-2xl text-xs font-bold shadow-md flex justify-between items-center shrink-0 z-20 no-print">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_#4ade80]"></span> 
-                        <span class="tracking-wide uppercase">Preview Cetak (Geser Kiri-Kanan)</span>
+                        <span class="tracking-wide uppercase hidden sm:inline">Preview Kertas A4</span>
+                        <span class="tracking-wide uppercase sm:hidden">Preview A4</span>
                     </div>
-                    <span class="text-lg animate-bounce hidden sm:inline-block">👉</span>
+                    
+                    <!-- Zoom Controls -->
+                    <div class="flex items-center gap-1 bg-gray-700 px-2 py-1 rounded-lg">
+                        <button onclick="zoomOut()" class="p-1 hover:bg-gray-500 rounded text-gray-200 hover:text-white transition-colors" title="Perkecil">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path></svg>
+                        </button>
+                        <span id="zoom-level-text" class="w-10 text-center text-[10px] font-mono">100%</span>
+                        <button onclick="zoomIn()" class="p-1 hover:bg-gray-500 rounded text-gray-200 hover:text-white transition-colors" title="Perbesar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                        </button>
+                        <div class="w-px h-4 bg-gray-500 mx-1"></div>
+                        <button onclick="resetZoom()" class="text-[10px] px-1.5 py-0.5 rounded hover:bg-gray-500 text-gray-300 hover:text-white transition-colors">Reset</button>
+                    </div>
                 </div>
                 
-                <!-- BUNGKUS SCROLLABLE AGAR TIDAK BOCOR DI HP -->
+                <!-- BUNGKUS SCROLLABLE -->
                 <div class="preview-wrapper w-full flex-1 overflow-x-auto overflow-y-auto bg-gray-300 p-2 sm:p-6 custom-scrollbar rounded-b-2xl">
                     
                     <!-- KUMPULAN 5 HALAMAN A4 -->
-                    <!-- Gunakan min-width agar kertas A4 tidak menyusut saat dilhat di HP -->
-                    <div id="print-container" class="flex flex-col items-center gap-8 pb-10" style="min-width: 820px;">
+                    <div id="print-container" class="flex flex-col items-center gap-8 pb-10">
                         
                         <!-- ================= HALAMAN 1: COVER ================= -->
                         <div class="kertas-raport page-cover relative">
@@ -623,13 +646,11 @@
     </div>
 
 
-    <!-- ================= FLOATING ACTION BUTTON (MENU BAWAH UI RAPI) ================= -->
+    <!-- ================= FLOATING ACTION BUTTON (MENU BAWAH) ================= -->
     <div id="fab-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end no-print">
         
-        <!-- Menu Pop-up (Akan muncul ke atas) -->
         <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-4 origin-bottom w-48">
             
-            <!-- Tombol Reset Data -->
             <button onclick="resetAllData()" class="flex items-center justify-end gap-3 group w-full outline-none">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-red-600 transition-colors">Reset Form</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-red-50 text-red-500 transition-colors shrink-0">
@@ -637,7 +658,6 @@
                 </div>
             </button>
 
-            <!-- Tombol Backup/Unduh -->
             <button onclick="exportData()" class="flex items-center justify-end gap-3 group w-full outline-none">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-blue-600 transition-colors">Unduh (Backup)</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-blue-50 text-blue-600 transition-colors shrink-0">
@@ -645,16 +665,15 @@
                 </div>
             </button>
             
-            <!-- Tombol Upload/Pindah HP -->
             <label for="import-file" class="flex items-center justify-end gap-3 group w-full outline-none cursor-pointer">
                 <span class="text-xs font-bold text-gray-700 bg-white px-3 py-1.5 rounded-lg shadow-md border border-gray-100 group-hover:text-green-600 transition-colors">Unggah (Restore)</span>
                 <div class="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center group-hover:bg-green-50 text-green-600 transition-colors shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 </div>
             </label>
+            <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
         </div>
         
-        <!-- Tombol Pemicu Utama (Bulat Besar) -->
         <button id="fab-trigger" onclick="toggleFab()" class="w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-xl flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-transform z-10 border-2 border-white/20">
             <svg id="fab-icon-menu" class="w-6 h-6 absolute transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             <svg id="fab-icon-close" class="w-6 h-6 absolute opacity-0 scale-50 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -664,7 +683,7 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        const LOCAL_KEY = 'DataRaportTK_Pro_V17_FAB';
+        const LOCAL_KEY = 'DataRaportTK_Pro_V18_FixZoom';
         
         const defaultDataCP = {
             agama: [
@@ -700,8 +719,27 @@
             dataCP: JSON.parse(JSON.stringify(defaultDataCP)) 
         };
 
+        // --- ZOOM LOGIC ---
+        let currentZoom = window.innerWidth < 1024 ? 0.55 : 0.85;
+
+        function setZoom(val) {
+            currentZoom = val;
+            const container = document.getElementById('print-container');
+            if (container) {
+                container.style.transform = `scale(${currentZoom})`;
+            }
+            const zoomText = document.getElementById('zoom-level-text');
+            if (zoomText) {
+                zoomText.innerText = Math.round(currentZoom * 100) + '%';
+            }
+        }
+        function zoomIn() { setZoom(Math.min(currentZoom + 0.1, 1.5)); }
+        function zoomOut() { setZoom(Math.max(currentZoom - 0.1, 0.3)); }
+        function resetZoom() { setZoom(window.innerWidth < 1024 ? 0.55 : 0.85); }
+
         window.onload = () => {
             loadData(); 
+            setZoom(currentZoom);
             
             document.querySelectorAll('input[type="text"], input[type="number"], select, textarea').forEach(el => {
                 if(el.id && el.type !== 'file' && !el.classList.contains('indikator-input')) {
