@@ -29,13 +29,10 @@
            JURUS ANDALAN: PRINT NATIVE 100% ANTI BLANK / MACET
            ========================================================= */
         @media print {
-            /* Sembunyikan dengan aman HANYA menu & tombol */
             .no-print, #fab-container, .panel-kiri, .zoom-header, #toast { display: none !important; }
             
-            /* Kembalikan ukuran asli body */
             body, html { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; overflow: visible !important; }
             
-            /* HANCURKAN KUNCIAN SCROLL & ZOOM SAAT DICETAK */
             .panel-kanan, .preview-wrapper { 
                 display: block !important; 
                 width: 100% !important; 
@@ -48,7 +45,6 @@
                 background: transparent !important; 
             }
             
-            /* INI KUNCI UTAMA: Hilangkan Transform (Zoom) agar print tidak blank */
             #print-container { 
                 position: static !important; 
                 transform: none !important; 
@@ -62,7 +58,7 @@
 
             .kertas-ijazah { 
                 width: 297mm !important; 
-                height: 209mm !important; /* A4 Landscape dikurangi 1mm agar pas 1 halaman */
+                height: 209mm !important; 
                 margin: 0 auto !important; 
                 padding: 0 !important;
                 box-shadow: none !important; 
@@ -95,8 +91,8 @@
             transform: translate(-50%, -50%); 
             width: 400px; height: 400px; 
             object-fit: contain; 
-            opacity: 0.08; /* Transparan elegan */
-            z-index: 1; /* Di bawah teks, di atas background */
+            opacity: 0.08; 
+            z-index: 1; 
             pointer-events: none; 
             filter: grayscale(100%) contrast(150%);
         }
@@ -113,10 +109,8 @@
         .konten-ijazah {
             position: relative; z-index: 10;
             width: 100%; height: 100%;
-            /* PADDING BAWAH SANGAT BESAR (100px) 
-               Ini adalah kunci agar konten TTD dan Foto terdorong naik dan tidak menyentuh frame bawah!
-            */
-            padding: 50px 70px 100px 70px;
+            /* Padding disesuaikan, tidak perlu terlalu besar di bawah karena kita akan pakai absolute untuk footer */
+            padding: 50px 70px;
             display: flex; flex-direction: column; align-items: center;
         }
 
@@ -129,13 +123,13 @@
         .garis-kop { width: 100%; border-bottom: 4px double #1f2937; margin-top: 15px;}
 
         /* Judul Sertifikat */
-        .judul-ijazah { font-family: 'Great Vibes', cursive; font-size: 60px; font-weight: normal; color: #1e293b; margin-top: 10px; margin-bottom: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);}
-        .nomor-ijazah { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #4b5563; margin-bottom: 25px; letter-spacing: 2px;}
+        .judul-ijazah { font-family: 'Great Vibes', cursive; font-size: 60px; font-weight: normal; color: #1e293b; margin-top: 5px; margin-bottom: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);}
+        .nomor-ijazah { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #4b5563; margin-bottom: 20px; letter-spacing: 2px;}
 
-        .teks-pengantar { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: #1f2937; margin-bottom: 15px; }
+        .teks-pengantar { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: #1f2937; margin-bottom: 10px; }
         
         /* Nama Siswa */
-        .nama-siswa { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: #b45309; text-transform: uppercase; margin-bottom: 15px; padding: 0 40px; display: inline-block; letter-spacing: 2px;}
+        .nama-siswa { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: #b45309; text-transform: uppercase; margin-bottom: 15px; padding: 0 40px; display: inline-block; letter-spacing: 2px; border-bottom: 1px dashed #b45309;}
         
         /* Detail Siswa */
         .biodata-tabel { font-family: 'Playfair Display', serif; font-size: 17px; color: #1f2937; margin-bottom: 20px; text-align: left; font-weight: 500;}
@@ -146,17 +140,18 @@
         .teks-penutup { font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; text-align: center; max-width: 85%; line-height: 1.6; font-style: italic;}
 
         /* =================================================================
-           FOTO DAN TTD (Posisi Terangkat Ke Atas & Jarak Aman)
+           FOTO DAN TTD (MENGGUNAKAN POSITION ABSOLUTE)
+           INI SOLUSI PASTI AGAR TIDAK HILANG SAAT PRINT PREVIEW
            ================================================================= */
         .ijazah-footer {
-            margin-top: auto; 
-            margin-bottom: 15px; /* Memberi ekstra jarak dorong ke atas dari padding 100px */
+            position: absolute;
+            bottom: 80px; /* Jarak PASTI dari bawah kertas, menjauhi frame (40px frame + 40px aman) */
+            left: 110px; /* Jarak PASTI dari kiri kertas */
+            right: 110px; /* Jarak PASTI dari kanan kertas */
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            width: 100%;
-            padding: 0 40px;
-            position: relative;
+            z-index: 20;
         }
 
         /* Pas Foto Siswa */
@@ -168,17 +163,20 @@
             background-color: white; padding: 2px;
             position: relative; overflow: hidden;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            /* Pastikan ukurannya fixed agar tidak collaps saat print */
+            min-width: 3cm;
+            min-height: 4cm;
         }
         .img-foto { width: 100%; height: 100%; object-fit: cover; }
 
         /* Tanda Tangan */
-        .box-ttd { text-align: center; font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; min-width: 250px;}
+        .box-ttd { text-align: center; font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; width: 250px;}
 
-        /* Segel/Stempel Emas Dekoratif (Jarak Diperlebar Menjauhi Foto) */
+        /* Segel/Stempel Emas Dekoratif */
         .gold-seal {
             position: absolute; 
-            bottom: 5px; 
-            left: 220px; /* <--- Jarak Icon Lulus dengan Foto diperlebar */
+            bottom: -10px; /* Menempel relatif terhadap ijazah-footer */
+            left: 140px; /* Jarak yang pas di sebelah foto */
             width: 80px; height: 80px;
             background: radial-gradient(circle, #fcd34d 0%, #b45309 100%);
             border-radius: 50%;
@@ -186,6 +184,7 @@
             box-shadow: 0 5px 10px rgba(0,0,0,0.2);
             color: white; font-family: 'Playfair Display', serif; font-weight: bold; font-size: 10px; text-align: center;
             border: 2px dashed #fef3c7; outline: 3px solid #b45309; outline-offset: -1px;
+            z-index: 21;
         }
         .gold-seal::after {
             content: ''; position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
@@ -384,31 +383,30 @@
                                 <div class="teks-penutup" id="prev-lulus">
                                     Telah menyelesaikan masa pendidikan dan dengan ini dinyatakan LULUS dari jenjang pendidikan Taman Kanak-Kanak (TK) Baiturrohman pada Tahun Ajaran 2025/2026.
                                 </div>
-
-                                <!-- FOTO DAN TANDA TANGAN (Sudah dinaikkan dengan padding bottom 100px) -->
-                                <div class="ijazah-footer">
-                                    
-                                    <!-- Area Pas Foto -->
-                                    <div class="box-foto">
-                                        <span id="text-placeholder-foto" class="text-center leading-tight opacity-50">Pas Foto<br>3 x 4</span>
-                                        <img id="prev-foto-siswa" src="" class="img-foto hidden absolute inset-0">
-                                    </div>
-                                    
-                                    <!-- Area Tanda Tangan -->
-                                    <div class="box-ttd">
-                                        <p id="prev-tglcetak" style="margin-bottom: 5px;">Jepara, 15 Juni 2026</p>
-                                        <p style="margin-bottom: 55px;">Kepala Sekolah,</p>
-                                        <p id="prev-kepsek" style="font-weight: 800; border-bottom: 1.5px solid #1f2937; display: inline-block; padding: 0 10px;">Rosydianah, S.Ag.</p>
-                                        <p style="font-size: 13px; font-family: 'Nunito', sans-serif; margin-top: 3px;">NPSN: <span id="prev-npsn">20345678</span></p>
-                                    </div>
-
-                                    <!-- Stempel Emas CSS (Jarak dengan foto diperlebar) -->
-                                    <div class="gold-seal">LULUS</div>
-                                </div>
-
                             </div>
-                        </div>
+                            
+                            <!-- FOTO DAN TANDA TANGAN (MEMAKAI POSITION ABSOLUTE AGAR TIDAK HILANG SAAT PRINT) -->
+                            <div class="ijazah-footer">
+                                
+                                <!-- Area Pas Foto -->
+                                <div class="box-foto">
+                                    <span id="text-placeholder-foto" class="text-center leading-tight opacity-50">Pas Foto<br>3 x 4</span>
+                                    <img id="prev-foto-siswa" src="" class="img-foto hidden absolute inset-0">
+                                </div>
+                                
+                                <!-- Stempel Emas CSS -->
+                                <div class="gold-seal">LULUS</div>
+                                
+                                <!-- Area Tanda Tangan -->
+                                <div class="box-ttd">
+                                    <p id="prev-tglcetak" style="margin-bottom: 5px;">Jepara, 15 Juni 2026</p>
+                                    <p style="margin-bottom: 55px;">Kepala Sekolah,</p>
+                                    <p id="prev-kepsek" style="font-weight: 800; border-bottom: 1.5px solid #1f2937; display: inline-block; padding: 0 10px;">Rosydianah, S.Ag.</p>
+                                    <p style="font-size: 13px; font-family: 'Nunito', sans-serif; margin-top: 3px;">NPSN: <span id="prev-npsn">20345678</span></p>
+                                </div>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -447,7 +445,7 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        const LOCAL_KEY = 'DataIjazah_TK_Premium_V5_FixSemua';
+        const LOCAL_KEY = 'DataIjazah_TK_Premium_V6_AntiBlank';
         
         let state = {
             inputs: {}, 
