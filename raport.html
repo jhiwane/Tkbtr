@@ -1122,32 +1122,26 @@
         }
 
         // ==========================================
-        // PERBAIKAN: FUNGSI CETAK "ANTI MACET"
+        // PERBAIKAN: FUNGSI CETAK LANGSUNG (TANPA DELAY)
         // ==========================================
         function cetakRaport() {
-            // 1. Simpan elemen container dan style aslinya
             const container = document.getElementById('print-container');
+            
+            // 1. Simpan ukuran asli agar bisa dikembalikan nanti
             const originalTransform = container.style.transform;
             const originalWidth = container.style.width;
             
-            // 2. Reset paksa style agar bersih saat print
-            // Kita hilangkan efek zoom/scale agar browser tidak bingung
+            // 2. Netralkan zoom seketika agar tidak blank/macet
             container.style.transform = 'none';
             container.style.width = '100%';
-            container.style.margin = '0 auto';
             
-            // 3. Beri jeda sedikit agar DOM merender perubahan di atas
-            setTimeout(() => {
-                // Panggil dialog print bawaan browser
-                window.print();
-
-                // 4. (Opsional) Kembalikan tampilan zoom seperti semula
-                // Set timeout lagi karena window.print() memblokir eksekusi di beberapa browser
-                setTimeout(() => {
-                    container.style.transform = originalTransform;
-                    container.style.width = originalWidth;
-                    // Reset indikator zoom text jika perlu, tapi biarkan saja sesuai user terakhir
-                }, 500); 
+            // 3. Langsung panggil Print! (Tanpa setTimeout agar tidak diblokir browser)
+            window.print();
+            
+            // 4. Setelah dialog Print ditutup/selesai, kembalikan zoom-nya
+            container.style.transform = originalTransform;
+            container.style.width = originalWidth;
+        }, 500); 
             }, 100);
         }
     </script>
