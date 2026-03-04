@@ -26,44 +26,18 @@
         body { font-family: 'Nunito', sans-serif; background-color: #f1f5f9; }
 
         /* =========================================================
-           JURUS ANDALAN: STYLE PRINT NATIVE (ANTI BLANK/KOSONG)
+           STYLE KHUSUS PRINT NATIVE (ANTI BLANK)
            ========================================================= */
         @media print {
-            /* 1. Sembunyikan elemen non-cetak (Panel kiri, menu, FAB) */
-            .no-print, #fab-container, #toast { display: none !important; }
-            
-            /* 2. Bebaskan ukuran tubuh halaman */
+            .dashboard-ui, #fab-container, .no-print { display: none !important; }
             body, html { background: white !important; margin: 0 !important; padding: 0 !important; height: auto !important; overflow: visible !important; }
-            
-            /* 3. Lepaskan kuncian dari grid dan wrapper agar tidak error di printer */
-            .max-w-7xl, .grid, .panel-kanan, .preview-wrapper { 
-                display: block !important; 
-                width: 100% !important; 
-                max-width: 100% !important; 
-                height: auto !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                overflow: visible !important; 
-                position: static !important; 
-                background: transparent !important; 
-            }
-            
-            /* 4. Matikan efek zoom paksa dari CSS yang bikin macet */
-            #print-container { 
-                position: static !important; 
-                transform: none !important; 
-                width: 100% !important; 
-                display: block !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-            }
-            
+            .panel-kanan, .preview-wrapper { display: block !important; width: 100% !important; max-width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; position: static !important; background: transparent !important; }
+            #print-container { position: static !important; transform: none !important; width: 100% !important; display: block !important; margin: 0 !important; padding: 0 !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
 
-            /* 5. Kunci Mutlak Ukuran Kertas Ijazah */
             .kertas-ijazah { 
                 width: 297mm !important; 
-                height: 209mm !important; /* A4 Landscape (dikurangi 1mm agar pas) */
+                height: 209mm !important; /* A4 Landscape (dikurangi 1mm) */
                 margin: 0 auto !important; 
                 padding: 0 !important;
                 box-shadow: none !important; 
@@ -118,8 +92,8 @@
         .konten-ijazah {
             position: relative; z-index: 10;
             width: 100%; height: 100%;
-            /* Padding bawah 85px agar elemen didongkrak naik menjauhi frame */
-            padding: 55px 70px 85px 70px;
+            /* BANTALAN BAWAH (Dinaikkan menjadi 80px agar elemen semakin jauh dari garis frame) */
+            padding: 55px 70px 80px 70px;
             display: flex; flex-direction: column; align-items: center;
         }
 
@@ -148,10 +122,12 @@
         /* Teks Kelulusan */
         .teks-penutup { font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; text-align: center; max-width: 85%; line-height: 1.6; font-style: italic;}
 
-        /* FOTO DAN TTD (Posisi Terangkat Ke Atas Menjauhi Garis) */
+        /* =================================================================
+           FOTO DAN TTD (Posisi Terangkat Ke Atas & Jarak Aman)
+           ================================================================= */
         .ijazah-footer {
             margin-top: auto; 
-            margin-bottom: 10px; /* Tambahan margin dorong dari padding induk */
+            margin-bottom: 25px; /* MARGIN EKSTRA agar Foto & TTD menjauhi bingkai bawah */
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -175,9 +151,10 @@
         /* Tanda Tangan */
         .box-ttd { text-align: center; font-family: 'Playfair Display', serif; font-size: 16px; color: #1f2937; min-width: 250px;}
 
-        /* Segel/Stempel Emas Dekoratif (Kiri Bawah) */
+        /* Segel/Stempel Emas Dekoratif (Jarak Diperlebar) */
         .gold-seal {
-            position: absolute; bottom: 10px; left: 160px;
+            position: absolute; bottom: 10px; 
+            left: 210px; /* DARI 160px JADI 210px -> JARAK AMAN DARI KOTAK FOTO */
             width: 80px; height: 80px;
             background: radial-gradient(circle, #fcd34d 0%, #b45309 100%);
             border-radius: 50%;
@@ -207,7 +184,6 @@
         .fab-hidden { opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; }
         .fab-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         
-        /* Titik tumpu zoom dikunci di tengah atas agar rapi */
         #print-container { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top center;}
     </style>
 </head>
@@ -219,10 +195,10 @@
     </div>
 
     <!-- ================= DASHBOARD INPUT ================= -->
-    <div class="max-w-7xl mx-auto p-4 md:p-6">
+    <div class="max-w-7xl mx-auto p-4 md:p-6 dashboard-ui">
         
         <!-- Header Aplikasi -->
-        <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-amber-600 no-print">
+        <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-l-4 border-amber-600">
             <div class="text-center md:text-left w-full md:w-auto">
                 <h1 class="text-xl md:text-2xl font-extrabold text-gray-800 flex items-center justify-center md:justify-start gap-2">
                     <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
@@ -246,7 +222,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- PANEL KIRI: FORM INPUT -->
-            <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm flex flex-col h-auto lg:h-[80vh] overflow-y-auto custom-scrollbar panel-kiri no-print">
+            <div class="lg:col-span-4 bg-white rounded-2xl shadow-sm flex flex-col h-auto lg:h-[80vh] panel-kiri overflow-y-auto custom-scrollbar">
                 <div class="p-5 space-y-6">
                     
                     <!-- UPLOAD MEDIA (Logo & Foto) -->
@@ -308,7 +284,7 @@
             <div class="lg:col-span-8 flex flex-col h-auto lg:h-[80vh] relative panel-kanan">
                 
                 <!-- HEADER ZOOM CONTROL -->
-                <div class="zoom-header bg-gray-800 text-white px-4 py-2.5 rounded-t-2xl text-xs font-bold shadow-md flex justify-between items-center shrink-0 z-20 no-print">
+                <div class="zoom-header bg-gray-800 text-white px-4 py-2.5 rounded-t-2xl text-xs font-bold shadow-md flex justify-between items-center shrink-0 z-20">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#fbbf24]"></span> 
                         <span class="tracking-wide uppercase hidden sm:inline">Preview Kertas A4 (Landscape)</span>
@@ -385,7 +361,7 @@
                                     Telah menyelesaikan masa pendidikan dan dengan ini dinyatakan LULUS dari jenjang pendidikan Taman Kanak-Kanak (TK) Baiturrohman pada Tahun Ajaran 2025/2026.
                                 </div>
 
-                                <!-- FOTO DAN TANDA TANGAN (Sudah didongkrak ke atas agar tidak kena frame bawah) -->
+                                <!-- FOTO DAN TANDA TANGAN (Sudah dinaikkan agar aman dari frame bawah) -->
                                 <div class="ijazah-footer">
                                     
                                     <!-- Area Pas Foto -->
@@ -394,7 +370,7 @@
                                         <img id="prev-foto-siswa" src="" class="img-foto hidden absolute inset-0">
                                     </div>
                                     
-                                    <!-- Area Tanda Tangan (Margin bawah dirapatkan) -->
+                                    <!-- Area Tanda Tangan -->
                                     <div class="box-ttd">
                                         <p id="prev-tglcetak" style="margin-bottom: 5px;">Jepara, 15 Juni 2026</p>
                                         <p style="margin-bottom: 55px;">Kepala Sekolah,</p>
@@ -402,7 +378,7 @@
                                         <p style="font-size: 13px; font-family: 'Nunito', sans-serif; margin-top: 3px;">NPSN: <span id="prev-npsn">20345678</span></p>
                                     </div>
 
-                                    <!-- Stempel Emas CSS -->
+                                    <!-- Stempel Emas CSS (Jarak dengan foto diperlebar) -->
                                     <div class="gold-seal">LULUS</div>
                                 </div>
 
@@ -447,7 +423,7 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        const LOCAL_KEY = 'DataIjazah_TK_Premium_V4_FixPrint';
+        const LOCAL_KEY = 'DataIjazah_TK_Premium_V4_FixLayout';
         
         let state = {
             inputs: {}, 
@@ -567,7 +543,7 @@
             }
         }
 
-        // --- IMAGE HANDLING (LOGO & FOTO SISWA) ---
+        // --- IMAGE HANDLING ---
         function handleImageUpload(e, type) {
             const file = e.target.files[0];
             if(!file) return;
@@ -587,6 +563,7 @@
         }
 
         function applyImages() {
+            // Terapkan Logo (Header & Watermark)
             if(state.images.logo) {
                 const logoPreview = document.getElementById('logo-preview');
                 if (logoPreview) logoPreview.src = state.images.logo;
@@ -604,6 +581,7 @@
                 document.getElementById('btn-clear-logo').classList.add('hidden');
             }
 
+            // Terapkan Foto Siswa
             if(state.images.fotoSiswa) {
                 const imgFoto = document.getElementById('prev-foto-siswa');
                 if(imgFoto) {
