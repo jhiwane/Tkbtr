@@ -8,11 +8,9 @@
     <!-- SCRIPT SATPAM PENJAGA (Mencegah Akses Tanpa Login dari Portal) -->
     <script>
         if (!localStorage.getItem('PortalTK_Secure_Session')) {
-            alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
             try {
-                // Memastikan redirect hanya berjalan di server sesungguhnya (http/https) 
-                // untuk mencegah SyntaxError di lingkungan sandbox/preview (blob:/about:)
                 if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+                    alert("Akses Ditolak! Silakan Login melalui Portal terlebih dahulu.");
                     window.location.href = 'index.html'; 
                 } else {
                     console.warn("Mode pratinjau: Redirect ke index.html ditahan untuk mencegah error.");
@@ -27,32 +25,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* =========================================================
-           STYLE KHUSUS UNTUK HASIL CETAK (PRINT KERTAS)
+           STYLE KHUSUS UNTUK HASIL CETAK (PRINT KERTAS) - DIPERBAIKI ANTI BLANK
            ========================================================= */
         @media print {
-            body * { visibility: hidden; }
-            /* Membuat wrapper preview melepas kunci gulirnya saat dicetak */
-            .preview-wrapper { overflow: visible !important; width: auto !important; padding: 0 !important; background: transparent !important; }
-            #print-section, #print-section * { visibility: visible; color: #000 !important; }
-            #print-section {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                background: white;
-                border: none !important; 
-                min-width: auto !important; /* Hapus min-width saat print */
+            /* Sembunyikan semua elemen dengan class no-print */
+            .no-print, #fab-container, #modal-edit { display: none !important; }
+            
+            /* Reset body untuk print */
+            body { 
+                background: white !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                overflow: visible !important;
             }
+
+            /* Lepas kuncian dari wrapper scrollable agar bisa diprint utuh */
+            .preview-wrapper { 
+                overflow: visible !important; 
+                width: auto !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                background: transparent !important; 
+            }
+
+            /* Area tabel menjadi elemen utama di layar */
+            #print-section { 
+                min-width: 100% !important; 
+                width: 100% !important;
+                border: none !important; 
+                box-shadow: none !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                color: black !important;
+            }
+
             @page {
                 size: landscape;
-                margin: 10mm 15mm;
+                margin: 10mm 12mm;
             }
-            .no-print, #fab-container { display: none !important; }
-            body { background: white; }
         }
 
         /* =========================================================
-           STYLE TABEL ABSENSI
+           STYLE TABEL ABSENSI (LAYAR & CETAK)
            ========================================================= */
         #print-section { font-family: Arial, Helvetica, sans-serif; color: black; }
         .print-header { text-align: center; font-size: 14px; line-height: 1.3; margin-bottom: 15px; text-transform: uppercase; }
@@ -127,7 +141,6 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- PANEL KIRI: DAFTAR PEGAWAI (REALTIME ACTIONS) -->
-            <!-- Dipindah ke kiri/atas agar di HP muncul duluan -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm lg:col-span-8 flex flex-col max-h-[80vh] order-2 lg:order-1">
                 <div class="flex items-center justify-between border-b pb-3 mb-4">
                     <h2 class="font-bold text-gray-800 text-sm sm:text-lg flex items-center gap-2">
@@ -174,8 +187,8 @@
 
     <!-- WRAPPER SCROLLABLE: Kunci sukses agar layar HP tidak membesar/bocor -->
     <div class="w-full overflow-x-auto bg-gray-200 p-2 sm:p-6 mb-10 custom-scrollbar preview-wrapper no-print">
-        <!-- Container khusus Print Kertas (Ukurannya dibikin minimal 1000px agar tidak penyok di HP) -->
-        <div id="print-section" class="bg-white mx-auto p-4 sm:p-6 shadow-md print:shadow-none" style="min-width: 1050px;">
+        <!-- Container khusus Print Kertas -->
+        <div id="print-section" class="bg-white mx-auto p-4 sm:p-6 shadow-md" style="min-width: 1050px;">
             
             <div class="print-header">
                 <div id="print-judul1">DAFTAR HADIR GURU DAN KARYAWAN</div>
@@ -213,10 +226,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Elemen Bayangan Cetak (Ini yang benar-benar tercetak di kertas, sama persis dengan atas) -->
-    <!-- Supaya saat Ctrl+P tidak error karena dibungkus overflow -->
-    <div id="print-section-clone" class="hidden print:block bg-white w-full"></div>
 
 
     <!-- ================= FLOATING ACTION BUTTON (MENU BAWAH) ================= -->
@@ -224,9 +233,17 @@
         
         <!-- Menu yang tersembunyi (Akan muncul ke atas) -->
         <div id="fab-menu" class="fab-hidden fab-menu-anim flex flex-col gap-3 mb-3 origin-bottom">
+            <!-- Tombol Reset Data Baru -->
+            <button onclick="resetAllData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 group">
+                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-red-600">Reset Semua</span>
+                <div class="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+            </button>
+            
             <!-- Tombol Backup/Unduh -->
             <button onclick="exportData()" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 group">
-                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-blue-600">Backup Data</span>
+                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-blue-600">Unduh (Backup)</span>
                 <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </div>
@@ -234,7 +251,7 @@
             
             <!-- Tombol Upload/Pindah HP -->
             <label for="import-file" class="flex items-center gap-3 bg-white p-2 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 active:scale-95 cursor-pointer group">
-                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-green-600">Pindah Alat (Upload)</span>
+                <span class="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full group-hover:text-green-600">Unggah (Restore)</span>
                 <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 </div>
@@ -320,19 +337,23 @@
     <!-- ================= JAVASCRIPT LOGIC (PURE LOCALSTORAGE) ================= -->
     <script>
         // --- 1. PENGATURAN AWAL (STATE) ---
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v3_Mobile';
+        // Menaikkan versi key agar data ter-reset jika sebelumnya ada bug
+        const LOCAL_STORAGE_KEY = 'DataAbsensi_v4_Final';
         
         const state = {
             judul1: "DAFTAR HADIR GURU DAN KARYAWAN",
             judul2: "TK BAITURROHMAN PULODARAT",
             judul3: "TAHUN 2025 / 2026",
-            bulan: "FEBRUARI",
-            tglCetak: "Pulodarat, 28 FEBRUARI 2026",
+            bulan: "MARET", // Ubah sesuai bulan saat ini
+            tglCetak: "Pulodarat, 31 MARET 2026",
             kepsek: "Rosydianah, S.Ag.",
             employees: [
                 { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
                 { id: 2, name: "Umniyatul Mas'udah, S.Ag.", signature: "", att: {} },
-                { id: 3, name: "Siti Mastuhah, S.Pd.", signature: "", att: {} }
+                { id: 3, name: "Siti Mastuhah, S.Pd.", signature: "", att: {} },
+                // Tambahan nama baru sesuai permintaan
+                { id: 4, name: "Zaitun", signature: "", att: {} },
+                { id: 5, name: "Muhammad Kholilur Rohman", signature: "", att: {} }
             ]
         };
 
@@ -361,7 +382,6 @@
         window.onload = () => {
             updateClock();
             
-            // Cek data di HP/Laptop
             const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
             if (savedData) {
                 try { Object.assign(state, JSON.parse(savedData)); } catch (e) {}
@@ -381,7 +401,6 @@
             initCanvas();
         };
 
-        // Fungsi Simpan ke Memori HP
         function saveToLocal() { 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); 
         }
@@ -390,7 +409,7 @@
             state[key] = value;
             saveToLocal();
             if(['judul1', 'judul2', 'judul3', 'bulan', 'tglCetak', 'kepsek'].includes(key)) {
-                renderPrintTable(); // Update clone print
+                renderPrintTable(); 
             }
         }
 
@@ -418,7 +437,7 @@
                 if(type === 'out') state.employees[empIndex].att[today].out = timeStr;
 
                 saveToLocal();
-                updateAllUI(); // Refresh layar
+                updateAllUI(); 
             }
         }
 
@@ -480,7 +499,6 @@
 
         // --- 6. RENDER TABEL CETAK (PREVIEW BAWAH) ---
         function renderPrintTable() {
-            // Update teks statis
             document.getElementById('print-judul1').innerText = state.judul1;
             document.getElementById('print-judul2').innerText = state.judul2;
             document.getElementById('print-judul3').innerText = state.judul3;
@@ -488,14 +506,12 @@
             document.getElementById('print-tglcetak').innerText = state.tglCetak;
             document.getElementById('print-kepsek').innerText = state.kepsek;
 
-            // Render Header Angka
             const tglHeader = document.getElementById('print-tgl-header');
             let tglHTML = '';
             days.forEach(d => tglHTML += `<th>${d}</th>`);
             tglHTML += `<th>S</th><th>I</th><th>A</th>`;
             tglHeader.innerHTML = tglHTML;
 
-            // Render Body Absen
             const tbody = document.getElementById('print-table-body');
             let rowsHTML = '';
 
@@ -538,14 +554,43 @@
                 rowsHTML += `</tr>`;
             });
             tbody.innerHTML = rowsHTML;
-
-            // Kloning struktur asli ke div khusus print agar tidak error saat overflow dicetak
-            document.getElementById('print-section-clone').innerHTML = document.getElementById('print-section').innerHTML;
         }
 
-        // --- 7. IMPORT/EXPORT JSON & MODAL LOGIC ---
+        // --- 7. LOGIKA MENU MENGAMBANG (FAB) ---
+        let isFabOpen = false;
+        function toggleFab() {
+            const menu = document.getElementById('fab-menu');
+            const iconMenu = document.getElementById('fab-icon-menu');
+            const iconClose = document.getElementById('fab-icon-close');
+            
+            isFabOpen = !isFabOpen;
+            if(isFabOpen) {
+                menu.classList.remove('fab-hidden');
+                menu.classList.add('fab-visible');
+                iconMenu.classList.add('opacity-0', 'scale-50', '-rotate-90');
+                iconClose.classList.remove('opacity-0', 'scale-50');
+                iconClose.classList.add('rotate-90');
+            } else {
+                menu.classList.add('fab-hidden');
+                menu.classList.remove('fab-visible');
+                iconMenu.classList.remove('opacity-0', 'scale-50', '-rotate-90');
+                iconClose.classList.add('opacity-0', 'scale-50');
+                iconClose.classList.remove('rotate-90');
+            }
+        }
+
+        // --- FITUR RESET SEMUA DATA ---
+        function resetAllData() {
+            toggleFab();
+            if(confirm("AWAS! Ini akan menghapus SELURUH data absen dan mengembalikan pengaturan ke awal. Anda yakin ingin melanjutkan?")) {
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        // --- IMPORT/EXPORT JSON ---
         function exportData() {
-            toggleFab(); // Tutup menu jika terbuka
+            toggleFab(); 
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], { type: "application/json" }));
             a.download = `Backup_Absensi_${state.bulan}.json`; a.click();
@@ -565,6 +610,7 @@
             reader.readAsText(file);
         }
 
+        // --- 8. LOGIKA MODAL DATA ---
         function addEmployee() {
             state.employees.push({ id: Date.now(), name: "Pegawai Baru", signature: "", att: {} });
             saveToLocal(); updateAllUI();
@@ -646,29 +692,6 @@
             const o = document.getElementById('quick-out').value;
             days.forEach(day => { tempAtt[day] = { status: s, in: s==='H'?i:'', out: s==='H'?o:'' }; }); 
             renderDaysGrid(); 
-        }
-
-        // --- 8. LOGIKA MENU MENGAMBANG (FAB) ---
-        let isFabOpen = false;
-        function toggleFab() {
-            const menu = document.getElementById('fab-menu');
-            const iconMenu = document.getElementById('fab-icon-menu');
-            const iconClose = document.getElementById('fab-icon-close');
-            
-            isFabOpen = !isFabOpen;
-            if(isFabOpen) {
-                menu.classList.remove('fab-hidden');
-                menu.classList.add('fab-visible');
-                iconMenu.classList.add('opacity-0', 'scale-50', '-rotate-90');
-                iconClose.classList.remove('opacity-0', 'scale-50');
-                iconClose.classList.add('rotate-90');
-            } else {
-                menu.classList.add('fab-hidden');
-                menu.classList.remove('fab-visible');
-                iconMenu.classList.remove('opacity-0', 'scale-50', '-rotate-90');
-                iconClose.classList.add('opacity-0', 'scale-50');
-                iconClose.classList.remove('rotate-90');
-            }
         }
 
         // --- 9. KODE CANVAS TTD/PARAF ---
