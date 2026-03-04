@@ -288,6 +288,11 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
+        <!-- SCRIPT SATPAM PENJAGA -->
+
+    if (!localStorage.getItem('PortalTK_Secure_Session')) {
+        window.location.href = 'index.html'; // Pentalin kembali ke halaman login!
+    }
         // --- STATE MANAGEMENT ---
         const LOCAL_STORAGE_KEY = 'DataAbsensi_v2_Realtime';
         
@@ -638,4 +643,5 @@
         }
     </script>
 </body>
+
 </html>
