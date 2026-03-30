@@ -13,189 +13,313 @@
            STYLE KHUSUS UNTUK HASIL CETAK (PRINT)
            ========================================================= */
         @media print {
-            body * { visibility: hidden; }
-            #print-section, #print-section * { visibility: visible; color: #000 !important; }
-            #print-section {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                background: white;
-                border: none !important; 
-                margin: 0 !important;
-                padding: 0 !important;
-                min-width: 100% !important;
-            }
-            @page {
-                size: landscape;
-                margin: 10mm 15mm;
-            }
-            .no-print { display: none !important; }
-            body { background: white; }
+            @page { size: landscape; margin: 10mm 15mm; }
+            body { background: white !important; margin: 0 !important; padding: 0 !important; }
             
-            /* Sembunyikan pembungkus scroll saat print */
-            .scroll-wrapper { overflow: visible !important; }
+            /* Sembunyikan elemen UI yang tidak perlu dicetak */
+            #landing-view, #dashboard-controls, #toast-container, #modal-edit, .no-print { 
+                display: none !important; 
+            }
+
+            /* Tampilkan tabel dengan lebar penuh (overflow dimatikan agar tidak terpotong) */
+            #dashboard-view { display: block !important; visibility: visible !important; }
+            #print-wrapper {
+                display: block !important; visibility: visible !important; overflow: visible !important; 
+                position: absolute !important; top: 0 !important; left: 0 !important;
+                width: 100% !important; margin: 0 !important; padding: 0 !important;
+            }
+            #print-section {
+                border: none !important; box-shadow: none !important; width: 100% !important;
+                max-width: 100% !important; min-width: 100% !important; color: black !important;
+            }
+            #print-section * { color: black !important; }
+            
+            .table-absensi { width: 100%; border-collapse: collapse; font-size: 10px; border: 2px solid black; }
+            .table-absensi th, .table-absensi td { border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; }
+            .row-dtg td { border-bottom: 1px dashed black !important; }
+            .row-prf1 td { border-bottom: 1px dashed black !important; border-top: 1px dashed black !important; }
+            .row-plg td { border-bottom: 1px dashed black !important; border-top: 1px dashed black !important; }
+            .row-prf2 td { border-bottom: 1px solid black !important; border-top: 1px dashed black !important; }
+            .row-dtg td[rowspan] { border-bottom: 1px solid black !important; border-top: 1px solid black !important; }
         }
 
-        /* Tipografi & Layout Print */
+        /* Tipografi & Layout Umum Print */
         #print-section { font-family: Arial, Helvetica, sans-serif; color: black; }
         .print-header { text-align: center; font-size: 14px; line-height: 1.3; margin-bottom: 15px; text-transform: uppercase; }
         .print-bulan { font-size: 12px; margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
-
-        /* Tabel Absensi Print */
+        
         .table-absensi { width: 100%; border-collapse: collapse; font-size: 10px; border: 2px solid black; }
         .table-absensi th, .table-absensi td { border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; }
-
-        /* Lebar Kolom Spesifik */
         .col-no { width: 2%; }
         .col-nama { width: 14%; text-align: left !important; padding-left: 5px !important; }
         .col-tipe { width: 3%; text-align: left !important; padding-left: 2px !important; font-size: 8px; line-height: 1.1; }
         .col-tgl { width: 2.1%; }
         .col-ket { width: 2%; }
         .col-jml { width: 2.5%; }
+        .row-dtg td { border-bottom: 1px dashed black; }
+        .row-prf1 td { border-bottom: 1px dashed black; border-top: 1px dashed black; }
+        .row-plg td { border-bottom: 1px dashed black; border-top: 1px dashed black; }
+        .row-prf2 td { border-bottom: 1px solid black; border-top: 1px dashed black; }
+        .row-dtg td[rowspan] { border-bottom: 1px solid black; border-top: 1px solid black; }
 
-        /* Kustomisasi Garis Baris (Dashed & Solid) */
-        .row-dtg td { border-bottom: 1px dashed black !important; }
-        .row-prf1 td { border-bottom: 1px dashed black !important; border-top: 1px dashed black !important; }
-        .row-plg td { border-bottom: 1px dashed black !important; border-top: 1px dashed black !important; }
-        .row-prf2 td { border-bottom: 1px solid black !important; border-top: 1px dashed black !important; }
-        
-        .row-dtg td[rowspan] { border-bottom: 1px solid black !important; border-top: 1px solid black !important; }
-
-        .paraf-img {
-            max-height: 18px; 
-            max-width: 100%;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* Tanda Tangan Bawah */
+        .paraf-img { max-height: 18px; max-width: 100%; object-fit: contain; display: block; margin: 0 auto; }
         .print-footer { margin-top: 15px; display: flex; justify-content: flex-end; font-size: 12px; }
         .ttd-box { width: 250px; text-align: center; }
 
         /* UI Dashboard Styles */
         .canvas-container { border: 2px dashed #cbd5e1; background-color: #f8fafc; border-radius: 0.5rem; position: relative; overflow: hidden; }
-        canvas { touch-action: none; width: 100%; height: 150px; cursor: crosshair; }
+        #signature-pad { touch-action: none; width: 100%; height: 150px; cursor: crosshair; }
         
-        /* Custom Scrollbar Umum */
         .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* =========================================================
+           STYLE LANDING PAGE (LUXURIOUS & ANIMATED)
+           ========================================================= */
+        #bg-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .orbit-container {
+            position: relative; width: 280px; height: 280px; margin: 2rem auto;
+            border-radius: 50%; border: 2px dashed rgba(212, 175, 55, 0.3);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .orbit-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 140px; height: 140px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, rgba(15,23,42,0.8) 80%);
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; color: white; font-weight: bold;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            z-index: 10; padding: 10px; word-break: break-word; font-size: 13px;
+        }
+
+        .orbit-wrapper {
+            position: absolute; top: 50%; left: 50%;
+            width: 80px; height: 80px; margin: -40px 0 0 -40px; z-index: 20;
+        }
+
+        .orbit-btn {
+            width: 100%; height: 100%; border-radius: 50%; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.4); border: 2px solid transparent;
+        }
+        .orbit-btn img { width: 45px; height: 45px; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5)); }
+        .orbit-btn span { color: #fff; font-size: 10px; font-weight: bold; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .orbit-btn:hover {
+            transform: scale(1.15); background: rgba(255,255,255,0.1);
+            border-color: rgba(212, 175, 55, 0.8); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+        .orbit-btn:active { transform: scale(0.95); }
+
+        .masuk-wrapper { animation: orbit-masuk 15s linear infinite; }
+        .pulang-wrapper { animation: orbit-pulang 15s linear infinite; }
+
+        @keyframes orbit-masuk { 0% { transform: rotate(0deg) translateX(140px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(140px) rotate(-360deg); } }
+        @keyframes orbit-pulang { 0% { transform: rotate(180deg) translateX(140px) rotate(-180deg); } 100% { transform: rotate(540deg) translateX(140px) rotate(-540deg); } }
+
+        #search-results { max-height: 200px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(212, 175, 55, 0.5) transparent; }
+        
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast-enter { animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans pb-20">
+<body class="bg-gray-100 text-gray-800 font-sans">
 
-    <!-- ================= UI DASHBOARD (TIDAK IKUT TERCETAK) ================= -->
-    <div class="max-w-7xl mx-auto p-4 md:p-6 no-print">
-        
-        <div class="bg-white p-6 rounded-xl shadow-sm mb-6 flex flex-col md:flex-row justify-between md:items-center gap-4 border-l-4 border-blue-500">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    Sistem Absensi Guru
-                </h1>
-                <div class="flex items-center gap-3 mt-2">
-                    <p class="text-gray-500 text-sm hidden sm:block">Tekan Masuk/Pulang untuk absen hari ini.</p>
-                    <div id="live-clock" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold font-mono tracking-widest border border-blue-200">
-                        00:00:00
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ================= VIEW 1: LANDING PAGE MEWAH ================= -->
+    <div id="landing-view" class="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-slate-900">
+        <canvas id="bg-canvas"></canvas>
+
+        <button onclick="toggleView('dashboard')" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-3 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-lg group" title="Pengaturan Data">
+            <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        </button>
+
+        <div class="glass-panel p-8 rounded-3xl w-11/12 max-w-md z-10 flex flex-col items-center relative">
+            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 tracking-wide text-center drop-shadow-lg">SISTEM ABSENSI</h1>
+            <div id="landing-clock" class="text-white/90 text-xl font-mono tracking-widest mb-6 border-b border-white/20 pb-2">00:00:00</div>
+
+            <div class="w-full relative mb-8">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
-                    <div id="sync-status" class="text-[10px] font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700 max-w-[200px] truncate" title="Status Database">Menghubungkan Database...</div>
+                    <input type="text" id="landing-search" autocomplete="off" placeholder="Cari Nama Guru..." oninput="handleSearch(this.value)" onfocus="document.getElementById('search-results').classList.remove('hidden')" class="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all shadow-inner">
                 </div>
+                <div id="search-results" class="absolute w-full mt-2 bg-slate-800/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl hidden z-50 overflow-hidden"></div>
             </div>
-            
-            <!-- TOMBOL AKSI -->
-            <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                <label for="import-file" class="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2.5 rounded-lg font-bold shadow-sm flex items-center justify-center gap-2 transition-all text-sm flex-1 md:flex-none">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    Upload Data
-                </label>
-                <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
 
-                <button onclick="exportData()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg font-bold shadow-sm flex items-center justify-center gap-2 transition-all text-sm flex-1 md:flex-none">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Backup Data
-                </button>
-
-                <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold shadow-md flex items-center justify-center gap-2 transition-all flex-1 md:flex-none">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    Cetak Tabel
-                </button>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <!-- PANEL KIRI: PENGATURAN TEKS -->
-            <div class="bg-white p-5 rounded-xl shadow-sm lg:col-span-4 space-y-5 h-fit">
-                <h2 class="font-bold text-gray-700 border-b pb-2 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                    Teks Kop & Laporan
-                </h2>
+            <div class="orbit-container">
+                <div class="orbit-center" id="orbit-center-text">SILAKAN PILIH NAMA</div>
                 
-                <div class="space-y-3">
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1">Baris 1 (Judul)</label><input type="text" id="inp-judul1" oninput="updateState('judul1', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1">Baris 2 (Nama Sekolah)</label><input type="text" id="inp-judul2" oninput="updateState('judul2', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1">Baris 3 (Tahun Ajaran)</label><input type="text" id="inp-judul3" oninput="updateState('judul3', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1">Bulan Absensi</label><input type="text" id="inp-bulan" oninput="updateState('bulan', this.value.toUpperCase())" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 uppercase bg-gray-50 font-bold text-blue-700"></div>
-                </div>
-
-                <h2 class="font-bold text-gray-700 border-b pb-2 pt-4 flex items-center gap-2">
-                    Tanda Tangan Pengesahan
-                </h2>
-                <div class="space-y-3">
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1">Tempat & Tanggal</label><input type="text" id="inp-tglcetak" oninput="updateState('tglCetak', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
-                    <div><label class="block text-xs font-semibold text-gray-600 mb-1">Nama Kepala Sekolah</label><input type="text" id="inp-kepsek" oninput="updateState('kepsek', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50 font-bold"></div>
-                </div>
-            </div>
-
-            <!-- PANEL KANAN: DAFTAR PEGAWAI (REALTIME ACTIONS) -->
-            <div class="bg-white p-5 rounded-xl shadow-sm lg:col-span-8 flex flex-col max-h-[85vh]">
-                <div class="flex items-center justify-between border-b pb-3 mb-4">
-                    <h2 class="font-bold text-gray-700 text-lg flex items-center gap-2">
-                        Daftar Pegawai
-                        <span id="badge-hari-ini" class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest"></span>
-                    </h2>
-                    <button onclick="addEmployee()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded text-sm font-bold flex items-center gap-1 transition-colors">
-                        + Tambah Pegawai
+                <div class="orbit-wrapper masuk-wrapper">
+                    <button class="orbit-btn" onclick="landingAction('in')" title="Absen Masuk">
+                        <img src="https://media.giphy.com/media/KL4x5vlDBLDFYBzV8N/giphy.gif" alt="Masuk">
+                        <span>MASUK</span>
                     </button>
                 </div>
-                
-                <div id="employee-list" class="space-y-4 overflow-y-auto custom-scrollbar pr-2 flex-1 pb-4">
-                    <!-- List pegawai dirender di sini -->
+
+                <div class="orbit-wrapper pulang-wrapper">
+                    <button class="orbit-btn" onclick="landingAction('out')" title="Absen Pulang">
+                        <img src="https://media.giphy.com/media/1xdwrnfnyfeIL8GriN/giphy.gif" alt="Pulang">
+                        <span>PULANG</span>
+                    </button>
                 </div>
             </div>
+            
+            <div id="landing-status" class="mt-4 text-xs text-white/50 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">Menghubungkan...</div>
         </div>
     </div>
 
+
+    <!-- ================= VIEW 2: DASHBOARD ADMIN ================= -->
+    <div id="dashboard-view" class="hidden pb-20">
+        <div id="dashboard-controls" class="max-w-7xl mx-auto p-4 md:p-6 no-print">
+            <button onclick="toggleView('landing')" class="mb-4 flex items-center gap-2 text-blue-600 hover:text-blue-800 font-bold transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Halaman Depan
+            </button>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm mb-6 flex flex-col md:flex-row justify-between md:items-center gap-4 border-l-4 border-blue-500">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        Admin - Manajemen Data
+                    </h1>
+                    <div class="flex items-center gap-3 mt-2">
+                        <div id="dash-clock" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold font-mono tracking-widest border border-blue-200">00:00:00</div>
+                        <div id="sync-status" class="text-[10px] font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700 max-w-[200px] truncate" title="Status Database">Menghubungkan...</div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <label for="import-file" class="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2.5 rounded-lg font-bold shadow-sm flex items-center justify-center gap-2 transition-all text-sm flex-1 md:flex-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Upload
+                    </label>
+                    <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
+
+                    <button onclick="exportData()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2.5 rounded-lg font-bold shadow-sm flex items-center justify-center gap-2 transition-all text-sm flex-1 md:flex-none">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Backup
+                    </button>
+
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold shadow-md flex items-center justify-center gap-2 transition-all flex-1 md:flex-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Cetak Laporan
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- PANEL PENGATURAN TEKS -->
+                <div class="bg-white p-5 rounded-xl shadow-sm lg:col-span-4 space-y-5 h-fit">
+                    <h2 class="font-bold text-gray-700 border-b pb-2 flex items-center gap-2">Teks Kop & Laporan</h2>
+                    <div class="space-y-3">
+                        <div><label class="block text-xs font-semibold text-gray-600 mb-1">Baris 1 (Judul)</label><input type="text" id="inp-judul1" oninput="updateState('judul1', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
+                        <div><label class="block text-xs font-semibold text-gray-600 mb-1">Baris 2 (Nama Sekolah)</label><input type="text" id="inp-judul2" oninput="updateState('judul2', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
+                        <div><label class="block text-xs font-semibold text-gray-600 mb-1">Baris 3 (Tahun Ajaran)</label><input type="text" id="inp-judul3" oninput="updateState('judul3', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
+                        <div><label class="block text-xs font-semibold text-gray-600 mb-1">Bulan Absensi</label><input type="text" id="inp-bulan" oninput="updateState('bulan', this.value.toUpperCase())" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 uppercase bg-gray-50 font-bold text-blue-700"></div>
+                    </div>
+                    <h2 class="font-bold text-gray-700 border-b pb-2 pt-4 flex items-center gap-2">Tanda Tangan Pengesahan</h2>
+                    <div class="space-y-3">
+                        <div><label class="block text-xs font-semibold text-gray-600 mb-1">Tempat & Tanggal</label><input type="text" id="inp-tglcetak" oninput="updateState('tglCetak', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50"></div>
+                        <div><label class="block text-xs font-semibold text-gray-600 mb-1">Nama Kepala Sekolah</label><input type="text" id="inp-kepsek" oninput="updateState('kepsek', this.value)" class="w-full p-2 border rounded-md text-sm outline-none focus:border-blue-500 bg-gray-50 font-bold"></div>
+                    </div>
+                </div>
+
+                <!-- PANEL DAFTAR PEGAWAI -->
+                <div class="bg-white p-5 rounded-xl shadow-sm lg:col-span-8 flex flex-col max-h-[85vh]">
+                    <div class="flex items-center justify-between border-b pb-3 mb-4">
+                        <h2 class="font-bold text-gray-700 text-lg flex items-center gap-2">
+                            Daftar Pegawai
+                            <span id="badge-hari-ini" class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest"></span>
+                        </h2>
+                        <button onclick="addEmployee()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded text-sm font-bold flex items-center gap-1 transition-colors">+ Tambah</button>
+                    </div>
+                    <div id="employee-list" class="space-y-4 overflow-y-auto custom-scrollbar pr-2 flex-1 pb-4">
+                        <!-- List pegawai dirender di sini -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-10 mb-2 flex items-center justify-between">
+                <h3 class="text-sm font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Preview Kertas A4
+                </h3>
+                <p class="text-xs text-gray-400 md:hidden">Geser tabel ➡️</p>
+            </div>
+        </div>
+
+        <!-- Container Cetak (Wrapper ini akan tampil full saat di print) -->
+        <div id="print-wrapper" class="w-full overflow-x-auto pb-8 custom-scrollbar px-4 md:px-6">
+            <div id="print-section" class="bg-white min-w-[1122px] max-w-[297mm] mx-auto p-6 md:p-8 border border-gray-300 shadow-sm mb-10">
+                <div class="print-header">
+                    <div id="print-judul1">DAFTAR HADIR GURU DAN KARYAWAN</div>
+                    <div id="print-judul2">TK BAITURROHMAN PULODARAT</div>
+                    <div id="print-judul3">TAHUN 2025 / 2026</div>
+                </div>
+                <div class="print-bulan" id="print-bulan">BULAN : FEBRUARI</div>
+                <table class="table-absensi">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="col-no">No</th>
+                            <th rowspan="2" class="col-nama">NAMA</th>
+                            <th rowspan="2" class="col-tipe"></th> 
+                            <th colspan="31">TANGGAL</th>
+                            <th colspan="3">KET</th>
+                            <th rowspan="2" class="col-jml">JML</th>
+                        </tr>
+                        <tr id="print-tgl-header"></tr>
+                    </thead>
+                    <tbody id="print-table-body"></tbody>
+                </table>
+                <div class="print-footer">
+                    <div class="ttd-box">
+                        <p style="margin-bottom: 2px;" id="print-tglcetak">Pulodarat, 28 FEBRUARI 2026</p>
+                        <p style="margin-bottom: 60px;">Kepala Sekolah</p>
+                        <p style="margin-bottom: 0; font-weight: bold; text-decoration: underline;" id="print-kepsek">Rosydianah, S.Ag.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End Dashboard View -->
+
     <!-- ================= MODAL INPUT DATA MANUAL & PARAF ================= -->
-    <div id="modal-edit" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden no-print backdrop-blur-sm">
+    <div id="modal-edit" class="fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 hidden no-print backdrop-blur-sm">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden">
-            <!-- Header Modal -->
             <div class="p-4 border-b flex justify-between items-center bg-gray-50">
                 <h2 class="text-lg font-bold text-gray-800" id="modal-title">Kelola Data Manual</h2>
                 <button onclick="closeModal()" class="text-gray-500 hover:text-red-500 bg-white p-1 rounded shadow-sm">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-
-            <!-- Body Modal -->
             <div class="p-5 overflow-y-auto flex-1 bg-gray-50">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Kolom Kiri: Canvas & Quick Fill -->
                     <div class="lg:col-span-1 space-y-5">
                         <div class="bg-white p-4 border rounded-xl shadow-sm">
                             <label class="block text-xs font-bold text-gray-600 mb-2">Edit Nama Pegawai</label>
                             <input type="text" id="modal-emp-name" class="w-full p-2 border rounded font-bold text-sm outline-none focus:border-blue-500 mb-4 bg-blue-50">
-
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="font-bold text-sm text-gray-800">1. Gambar Paraf</h3>
-                                <button onclick="clearCanvas()" class="text-[11px] text-red-500 hover:underline">Hapus</button>
+                                <!-- FIX BUG: Menggunakan clearSignatureCanvas() -->
+                                <button onclick="clearSignatureCanvas()" class="text-[11px] text-red-500 hover:underline font-bold px-2 py-1 bg-red-50 rounded">Hapus TTD</button>
                             </div>
-                            <p class="text-[11px] text-gray-500 mb-2">Paraf akan otomatis di-stamp ke seluruh tanggal jika hadir.</p>
-                            
                             <div class="canvas-container">
                                 <canvas id="signature-pad" width="400" height="150"></canvas>
                                 <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
@@ -203,221 +327,338 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Quick Fill -->
                         <div class="bg-white p-4 border rounded-xl shadow-sm">
                             <h3 class="font-bold text-sm text-gray-800 mb-3">2. Isi Cepat (Tgl 1-31)</h3>
                             <div class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-600 mb-1">Status</label>
-                                    <select id="quick-status" class="w-full p-2 border rounded text-sm bg-gray-50 outline-none" onchange="toggleQuickTime()">
-                                        <option value="H">Hadir</option>
-                                        <option value="S">Sakit (S)</option>
-                                        <option value="I">Izin (I)</option>
-                                        <option value="A">Alpa (A)</option>
-                                        <option value="">Kosong / Libur</option>
-                                    </select>
-                                </div>
+                                <select id="quick-status" class="w-full p-2 border rounded text-sm bg-gray-50 outline-none" onchange="toggleQuickTime()">
+                                    <option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Libur</option>
+                                </select>
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Jam Datang</label><input type="time" id="quick-in" value="07:00" class="w-full p-2 border rounded text-sm outline-none"></div>
-                                    <div><label class="block text-xs font-medium text-gray-600 mb-1">Jam Pulang</label><input type="time" id="quick-out" value="16:00" class="w-full p-2 border rounded text-sm outline-none"></div>
+                                    <input type="time" id="quick-in" value="07:00" class="w-full p-2 border rounded text-sm outline-none">
+                                    <input type="time" id="quick-out" value="16:00" class="w-full p-2 border rounded text-sm outline-none">
                                 </div>
-                                <button onclick="applyQuickFill()" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 py-2 rounded text-sm font-bold transition-colors mt-2">
-                                    Terapkan ke Semua
-                                </button>
+                                <button onclick="applyQuickFill()" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 py-2 rounded text-sm font-bold transition-colors">Terapkan ke Semua</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Kolom Kanan: Penyesuaian Harian -->
                     <div class="lg:col-span-2 bg-white p-4 border rounded-xl shadow-sm">
-                        <h3 class="font-bold text-sm text-gray-800 mb-3">3. Edit Jam Manual per Hari</h3>
-                        <div id="days-grid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                            <!-- Grid dirender JS -->
-                        </div>
+                        <h3 class="font-bold text-sm text-gray-800 mb-3">3. Edit Jam Manual</h3>
+                        <div id="days-grid" class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
                     </div>
-
                 </div>
             </div>
-
-            <!-- Footer Modal -->
             <div class="p-4 border-t bg-white flex justify-end gap-3 items-center">
-                <span id="warning-sig" class="text-xs text-red-500 font-medium mr-auto hidden">*Paraf belum digambar.</span>
                 <button onclick="closeModal()" class="px-5 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg font-bold transition-colors">Batal</button>
                 <button onclick="saveModalData()" class="px-6 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-bold shadow-sm transition-colors">Simpan Perubahan</button>
             </div>
         </div>
     </div>
 
-
-    <!-- ================= AREA CETAK (PRINT PREVIEW) ================= -->
-    <div class="max-w-7xl mx-auto px-4 md:px-6 mt-10 no-print mb-2 flex items-center justify-between">
-        <h3 class="text-sm font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-            Preview Kertas A4
-        </h3>
-        <p class="text-xs text-gray-400 md:hidden">Geser tabel ➡️</p>
-    </div>
-
-    <!-- Container khusus Print dibungkus Overflow (Agar Mobile bisa Scroll Kanan/Kiri) -->
-    <div class="w-full overflow-x-auto pb-8 custom-scrollbar scroll-wrapper px-4 md:px-6">
-        <!-- min-w-[1122px] memaksa lebar menjadi standard A4 landscape di layar kecil -->
-        <div id="print-section" class="bg-white min-w-[1122px] max-w-[297mm] mx-auto p-6 md:p-8 border border-gray-300 print:border-none shadow-sm print:shadow-none mb-10">
-            
-            <div class="print-header">
-                <div id="print-judul1">DAFTAR HADIR GURU DAN KARYAWAN</div>
-                <div id="print-judul2">TK BAITURROHMAN PULODARAT</div>
-                <div id="print-judul3">TAHUN 2025 / 2026</div>
-            </div>
-            
-            <div class="print-bulan" id="print-bulan">BULAN : FEBRUARI</div>
-
-            <table class="table-absensi">
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="col-no">No</th>
-                        <th rowspan="2" class="col-nama">NAMA</th>
-                        <th rowspan="2" class="col-tipe"></th> 
-                        <th colspan="31">TANGGAL</th>
-                        <th colspan="3">KET</th>
-                        <th rowspan="2" class="col-jml">JML</th>
-                    </tr>
-                    <tr id="print-tgl-header">
-                        <!-- Diisi JS -->
-                    </tr>
-                </thead>
-                <tbody id="print-table-body">
-                    <!-- Diisi JS -->
-                </tbody>
-            </table>
-
-            <div class="print-footer">
-                <div class="ttd-box">
-                    <p style="margin-bottom: 2px;" id="print-tglcetak">Pulodarat, 28 FEBRUARI 2026</p>
-                    <p style="margin-bottom: 60px;">Kepala Sekolah</p>
-                    <p style="margin-bottom: 0; font-weight: bold; text-decoration: underline;" id="print-kepsek">Rosydianah, S.Ag.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         // --- KONFIGURASI SUPABASE ---
         const SUPABASE_URL = 'https://mmhayivbzlwfzbuyjall.supabase.co';
-        // API Key menggunakan yang Anda sampaikan sebelumnya
         const SUPABASE_ANON_KEY = 'sb_publishable_2Egzr9VZhclbrQg7x_vMMg_htBetvrs'; 
-        
-        // Inisialisasi Klien Supabase
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // --- STATE MANAGEMENT ---
         const LOCAL_STORAGE_KEY = 'DataAbsensi_v2_Realtime';
         
-        const state = {
+        // Penambahan Zaitun dan Muhammad Kholilur Rohman
+        const defaultEmployeesList = [
+            { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
+            { id: 2, name: "Umniyatul Mas'udah, S.Ag.", signature: "", att: {} },
+            { id: 3, name: "Siti Mastuhah, S.Pd.", signature: "", att: {} },
+            { id: 4, name: "Zaitun", signature: "", att: {} },
+            { id: 5, name: "Muhammad Kholilur Rohman", signature: "", att: {} }
+        ];
+
+        let state = {
             judul1: "DAFTAR HADIR GURU DAN KARYAWAN",
             judul2: "TK BAITURROHMAN PULODARAT",
             judul3: "TAHUN 2025 / 2026",
             bulan: "FEBRUARI",
             tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
-            employees: [
-                { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
-                { id: 2, name: "Umniyatul Mas'udah, S.Ag.", signature: "", att: {} },
-                { id: 3, name: "Siti Mastuhah, S.Pd.", signature: "", att: {} }
-            ]
+            employees: JSON.parse(JSON.stringify(defaultEmployeesList))
         };
 
-        // Fungsi menyimpan data ke LocalStorage & Supabase
+        // --- AUDIO & TEXT-TO-SPEECH (TTS) ---
+        let myAudioCtx;
+
+        function initAudio() {
+            if (!myAudioCtx) {
+                myAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (myAudioCtx.state === 'suspended') {
+                myAudioCtx.resume();
+            }
+        }
+        document.addEventListener('click', initAudio, { once: true });
+        document.addEventListener('touchstart', initAudio, { once: true });
+
+        // Efek Suara Imut (Bloop)
+        function playCuteSound() {
+            try {
+                if (!myAudioCtx) initAudio();
+                const osc = myAudioCtx.createOscillator();
+                const gainNode = myAudioCtx.createGain();
+                
+                osc.connect(gainNode);
+                gainNode.connect(myAudioCtx.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, myAudioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, myAudioCtx.currentTime + 0.1);
+                
+                gainNode.gain.setValueAtTime(0.3, myAudioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, myAudioCtx.currentTime + 0.1);
+                
+                osc.start(myAudioCtx.currentTime);
+                osc.stop(myAudioCtx.currentTime + 0.1);
+            } catch(e) { console.log("Web Audio API not ready", e); }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        // TTS Google Lemah Lembut
+        function speakSoftly(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); 
+                const msg = new SpeechSynthesisUtterance(text);
+                
+                msg.lang = 'id-ID';
+                msg.pitch = 1.1; 
+                msg.rate = 0.85; 
+                
+                const voices = window.speechSynthesis.getVoices();
+                const googleVoice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google'));
+                const anyIndoVoice = voices.find(v => v.lang === 'id-ID');
+                
+                if (googleVoice) msg.voice = googleVoice;
+                else if (anyIndoVoice) msg.voice = anyIndoVoice;
+                
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        // --- UI View Management ---
+        let currentSelectedLandingId = null;
+        let isModalEditOpen = false;
+
+        function toggleView(view) {
+            if(view === 'dashboard') {
+                document.getElementById('landing-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+            } else {
+                document.getElementById('dashboard-view').classList.add('hidden');
+                document.getElementById('landing-view').classList.remove('hidden');
+            }
+        }
+
+        function showToast(message, isSuccess = true) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = isSuccess ? 'bg-green-600' : 'bg-red-600';
+            toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${bgClass} border border-white/20 backdrop-blur-md`;
+            toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        // --- LANDING PAGE LOGIC ---
+        function updateLandingStatus(msg) {
+            const landingStatus = document.getElementById('landing-status');
+            if (landingStatus) landingStatus.innerText = msg;
+        }
+
+        function handleSearch(query) {
+            const resultBox = document.getElementById('search-results');
+            if(!resultBox) return;
+            resultBox.innerHTML = '';
+            
+            if(!query) {
+                state.employees.slice(0,5).forEach(emp => resultBox.appendChild(createResultItem(emp)));
+                return;
+            }
+
+            const filtered = state.employees.filter(e => e.name.toLowerCase().includes(query.toLowerCase()));
+            if(filtered.length === 0) {
+                resultBox.innerHTML = '<div class="p-3 text-sm text-gray-400 text-center">Tidak ditemukan</div>';
+                return;
+            }
+            
+            filtered.forEach(emp => resultBox.appendChild(createResultItem(emp)));
+        }
+
+        function createResultItem(emp) {
+            const div = document.createElement('div');
+            div.className = "px-4 py-3 hover:bg-white/10 cursor-pointer text-white border-b border-white/5 transition-colors text-sm font-medium";
+            div.innerText = emp.name;
+            div.onclick = () => {
+                currentSelectedLandingId = emp.id;
+                document.getElementById('landing-search').value = emp.name;
+                document.getElementById('search-results').classList.add('hidden');
+                document.getElementById('orbit-center-text').innerText = emp.name.toUpperCase();
+            };
+            return div;
+        }
+
+        function landingAction(type) {
+            if(!currentSelectedLandingId) {
+                showToast("Silakan cari dan pilih nama Anda terlebih dahulu!", false);
+                return;
+            }
+            
+            playCuteSound();
+            clockAction(currentSelectedLandingId, type);
+            
+            const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name;
+            const actionText = type === 'in' ? 'MASUK' : 'PULANG';
+            
+            let panggilNama = empName.split(',')[0];
+            let kalimatSapaan = type === 'in' 
+                ? `Selamat bertugas, ${panggilNama}, semoga harinya menyenangkan.` 
+                : `Terima kasih atas kerja kerasnya hari ini, ${panggilNama}. Hati-hati di jalan.`;
+            speakSoftly(kalimatSapaan);
+
+            showToast(`Sukses Absen ${actionText} - ${empName}`);
+            
+            setTimeout(() => {
+                currentSelectedLandingId = null;
+                const landingSearch = document.getElementById('landing-search');
+                const orbitCenter = document.getElementById('orbit-center-text');
+                if (landingSearch) landingSearch.value = "";
+                if (orbitCenter) orbitCenter.innerText = "SILAKAN PILIH NAMA";
+            }, 2500);
+        }
+
+        document.addEventListener('click', (e) => {
+            const searchResults = document.getElementById('search-results');
+            if(searchResults && !e.target.closest('#landing-search') && !e.target.closest('#search-results')) {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        // --- ANIMASI CANVAS BACKGROUND ---
+        function initCanvasBackground() {
+            const c = document.getElementById('bg-canvas');
+            if(!c) return;
+            const ctx = c.getContext('2d');
+            
+            function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+            window.addEventListener('resize', resize);
+            resize();
+
+            let particles = [];
+            for(let i=0; i<60; i++) {
+                particles.push({
+                    x: Math.random() * c.width,
+                    y: Math.random() * c.height,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    r: Math.random() * 1.5 + 0.5
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, c.width, c.height);
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x < 0 || p.x > c.width) p.vx *= -1;
+                    if(p.y < 0 || p.y > c.height) p.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(212, 175, 55, 0.6)'; 
+                    ctx.fill();
+
+                    for(let j=i+1; j<particles.length; j++) {
+                        const dx = particles[j].x - p.x;
+                        const dy = particles[j].y - p.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if(dist < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(212, 175, 55, ${0.15 - dist/1000})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function ensureDefaultEmployees() {
+            let needsSave = false;
+            defaultEmployeesList.forEach(defEmp => {
+                if(!state.employees.find(e => e.name === defEmp.name)) {
+                    state.employees.push(defEmp);
+                    needsSave = true;
+                }
+            });
+            return needsSave;
+        }
+
+        // --- DATA SYNC SUPABASE ---
         async function saveData() {
-            // Selalu simpan ke local sebagai backup
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
 
             const statusEl = document.getElementById('sync-status');
             if (statusEl) {
-                statusEl.innerText = "Menyimpan ke Database...";
+                statusEl.innerText = "Menyimpan...";
                 statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-blue-100 text-blue-700 max-w-[200px] truncate";
             }
+            updateLandingStatus("Menyimpan ke Cloud...");
             
             try {
-                // Menyimpan semua konfigurasi ke dalam tabel 'Tkbtrr' dengan ID 1
-                const { error } = await supabaseClient
-                    .from('Tkbtrr')
-                    .upsert({ id: 1, data: state });
-                
-                // Jika error, lemparkan agar tertangkap oleh catch
+                const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state });
                 if(error) throw error;
                 
                 if (statusEl) {
-                    statusEl.innerText = "Data tersinkronisasi ✅";
-                    statusEl.title = "Berhasil disimpan ke Cloud";
-                    statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-green-100 text-green-700 max-w-[200px] truncate cursor-help";
+                    statusEl.innerText = "Tersinkronisasi ✅";
+                    statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-green-100 text-green-700 max-w-[200px] truncate";
                 }
+                updateLandingStatus("Online / Tersinkronisasi ✅");
             } catch (err) {
-                console.error("Gagal simpan ke Supabase:", err);
+                console.error("Gagal simpan:", err);
                 if (statusEl) {
-                    let errMsg = err.message || "Gagal Akses Cloud";
-                    
-                    // PENANGANAN KHUSUS UNTUK ERROR RLS (42501)
-                    if (err.code === '42501' || errMsg.toLowerCase().includes('row-level security')) {
-                        errMsg = "Akses Ditolak: Matikan RLS di Supabase!";
-                    }
-
+                    let errMsg = err.code === '42501' ? "Akses Ditolak: Matikan RLS!" : (err.message || "Gagal Cloud");
                     statusEl.innerText = "Error: " + errMsg;
-                    statusEl.title = err.message + " - Buka Supabase, ke Table Editor, lalu klik 'Disable RLS' pada tabel Tkbtrr.";
-                    statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-700 max-w-[250px] truncate cursor-help";
+                    statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-700 max-w-[250px] truncate";
                 }
+                updateLandingStatus("Offline / Error ⚠️");
             }
         }
 
-        // Fungsi memuat data dari Supabase atau LocalStorage
         async function loadData() {
-            const statusEl = document.getElementById('sync-status');
             let dataLoadedFromCloud = false;
+            updateLandingStatus("Menghubungkan Database...");
 
             try {
-                // Menggunakan maybeSingle() agar tidak error "0 rows" ketika database masih kosong
-                const { data, error } = await supabaseClient
-                    .from('Tkbtrr')
-                    .select('data')
-                    .eq('id', 1)
-                    .maybeSingle(); 
-
+                const { data, error } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle(); 
                 if (error) throw error;
 
-                // Jika data ada (tidak null)
                 if(data && data.data) {
                     Object.assign(state, data.data);
                     dataLoadedFromCloud = true;
-                    if (statusEl) {
-                        statusEl.innerText = "Data dari Cloud ☁️";
-                        statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-green-100 text-green-700 max-w-[200px] truncate cursor-help";
+                    const syncStatus = document.getElementById('sync-status');
+                    if (syncStatus) {
+                        syncStatus.innerText = "Data Cloud ☁️";
+                        syncStatus.className = "text-[10px] font-bold px-2 py-1 rounded bg-green-100 text-green-700";
                     }
-                } else {
-                    // Jika data null (belum pernah disave)
-                    if (statusEl) {
-                        statusEl.innerText = "Menunggu Simpan Pertama";
-                        statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700 max-w-[200px] truncate cursor-help";
-                    }
+                    updateLandingStatus("Online / Data Terbaru ✅");
                 }
             } catch (err) {
-                console.error("Gagal load dari Supabase:", err);
-                if (statusEl) {
-                    let errMsg = err.message || "Tabel belum dibuat";
-                    
-                    // Cek jika errornya karena RLS juga
-                    if (err.code === '42501' || errMsg.toLowerCase().includes('row-level security')) {
-                        errMsg = "Matikan RLS di tabel Tkbtrr";
-                    }
-
-                    statusEl.innerText = "Error Load: " + errMsg;
-                    statusEl.title = err.message;
-                    statusEl.className = "text-[10px] font-bold px-2 py-1 rounded bg-orange-100 text-orange-700 max-w-[250px] truncate cursor-help";
-                }
+                console.error("Gagal load:", err);
+                updateLandingStatus("Data Lokal (Offline)");
             }
             
-            // Jika gagal load atau database masih kosong, pakai local storage sebagai fallback
             if(!dataLoadedFromCloud) {
                 const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (savedData) {
@@ -425,54 +666,88 @@
                 }
             }
 
-            // Inisialisasi tampilan UI setelah data diload
-            document.getElementById('inp-judul1').value = state.judul1 || "";
-            document.getElementById('inp-judul2').value = state.judul2 || "";
-            document.getElementById('inp-judul3').value = state.judul3 || "";
-            document.getElementById('inp-bulan').value = state.bulan || "";
-            document.getElementById('inp-tglcetak').value = state.tglCetak || "";
-            document.getElementById('inp-kepsek').value = state.kepsek || "";
+            if(ensureDefaultEmployees()) {
+                saveData();
+            }
+
+            const inps = ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-bulan', 'inp-tglcetak', 'inp-kepsek'];
+            inps.forEach(id => {
+                const el = document.getElementById(id);
+                if(el && state[id.replace('inp-','')]) el.value = state[id.replace('inp-','')];
+            });
 
             renderEmployeeList();
             renderPrintHeader();
             renderPrintTable();
+            
+            const landingSearch = document.getElementById('landing-search');
+            if (landingSearch) handleSearch(landingSearch.value);
         }
 
+        // --- AUTO-SYNC (POLLING TIAP 10 DETIK) ---
+        // Agar data terupdate otomatis jika guru lain melakukan absen tanpa perlu refresh browser
+        setInterval(async () => {
+            if(isModalEditOpen) return; // Jangan sinkronisasi otomatis kalau Admin sedang asik ngedit manual!
+            try {
+                const { data, error } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
+                if(data && data.data) {
+                    const serverDataStr = JSON.stringify(data.data);
+                    const localDataStr = JSON.stringify(state);
+                    
+                    if(serverDataStr !== localDataStr) {
+                        Object.assign(state, data.data);
+                        ensureDefaultEmployees();
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+                        
+                        renderEmployeeList();
+                        renderPrintHeader();
+                        renderPrintTable();
+                        
+                        const landingSearch = document.getElementById('landing-search');
+                        if (landingSearch) handleSearch(landingSearch.value);
+                        
+                        const syncStatus = document.getElementById('sync-status');
+                        if (syncStatus) {
+                            syncStatus.innerText = "Terupdate Otomatis ⚡";
+                            setTimeout(() => { syncStatus.innerText = "Data Cloud ☁️"; }, 3000);
+                        }
+                    }
+                }
+            } catch(e) {}
+        }, 10000);
+
+        // --- CORE LOGIC & INITIALIZATION ---
+        const days = Array.from({length: 31}, (_, i) => i + 1);
         let editingId = null;
         let tempAtt = {};
-        const days = Array.from({length: 31}, (_, i) => i + 1);
 
-        // --- CLOCK & DATE LOGIC ---
         function updateClock() {
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById('live-clock').innerText = timeStr.replace(/\./g, ':');
+            const dashClock = document.getElementById('dash-clock');
+            const landingClock = document.getElementById('landing-clock');
+            if (dashClock) dashClock.innerText = timeStr.replace(/\./g, ':');
+            if (landingClock) landingClock.innerText = timeStr.replace(/\./g, ':');
         }
         
-        function getTodayDate() {
-            return new Date().getDate();
-        }
+        function getTodayDate() { return new Date().getDate(); }
 
-        // --- INITIALIZATION ---
         window.onload = async () => {
-            document.getElementById('badge-hari-ini').innerText = `TGL ${getTodayDate()}`;
-            setInterval(updateClock, 1000);
+            const badgeHariIni = document.getElementById('badge-hari-ini');
+            if (badgeHariIni) badgeHariIni.innerText = `TGL ${getTodayDate()}`;
+            setInterval(updateClock, 1000); 
             updateClock();
-            initCanvas();
-
-            // Panggil Load Data (Supabase & Lokal)
+            initSignatureCanvas();
+            initCanvasBackground();
             await loadData();
         };
 
         function updateState(key, value) {
             state[key] = value;
-            if(['judul1', 'judul2', 'judul3', 'bulan', 'tglCetak', 'kepsek'].includes(key)) {
-                renderPrintHeader();
-            }
+            if(['judul1', 'judul2', 'judul3', 'bulan', 'tglCetak', 'kepsek'].includes(key)) renderPrintHeader();
             saveData();
         }
 
-        // --- REALTIME ACTION LOGIC ---
         function clockAction(empId, type) {
             const today = getTodayDate();
             const now = new Date();
@@ -481,8 +756,6 @@
             const emp = state.employees.find(e => e.id === empId);
             if(emp) {
                 if(!emp.att[today]) emp.att[today] = { status: '', in: '', out: '' };
-                
-                // Set default status Hadir
                 if(!emp.att[today].status) emp.att[today].status = 'H';
 
                 if(type === 'in') emp.att[today].in = timeStr;
@@ -494,97 +767,81 @@
             }
         }
 
-        // --- UI RENDERING ---
         function renderEmployeeList() {
             const list = document.getElementById('employee-list');
+            if(!list) return;
             list.innerHTML = '';
-            
             const today = getTodayDate();
 
             state.employees.forEach((emp, index) => {
                 const statusParaf = emp.signature ? '<span class="text-green-600 font-bold">✅ Ada</span>' : '<span class="text-red-500 font-bold">❌ Kosong</span>';
-                
-                // Cek status hari ini
                 const todayAtt = emp.att[today] || { status: '', in: '', out: '' };
                 
                 let btnMasuk = todayAtt.in 
-                    ? `<span class="bg-green-100 text-green-800 border border-green-200 px-3 py-1.5 rounded-md text-[11px] font-bold flex items-center gap-1 shadow-sm">✅ Masuk: ${todayAtt.in}</span>`
-                    : `<button onclick="clockAction(${emp.id}, 'in')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg> MASUK</button>`;
+                    ? `<span class="bg-green-100 text-green-800 border border-green-200 px-3 py-1.5 rounded-md text-[11px] font-bold">✅ Masuk: ${todayAtt.in}</span>`
+                    : `<button onclick="clockAction(${emp.id}, 'in'); showToast('Berhasil Absen Masuk via Admin');" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1.5 rounded-md text-xs font-bold active:scale-95">MASUK</button>`;
 
                 let btnPulang = todayAtt.out 
-                    ? `<span class="bg-orange-100 text-orange-800 border border-orange-200 px-3 py-1.5 rounded-md text-[11px] font-bold flex items-center gap-1 shadow-sm">✅ Pulang: ${todayAtt.out}</span>`
-                    : `<button onclick="clockAction(${emp.id}, 'out')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg> PULANG</button>`;
+                    ? `<span class="bg-orange-100 text-orange-800 border border-orange-200 px-3 py-1.5 rounded-md text-[11px] font-bold">✅ Pulang: ${todayAtt.out}</span>`
+                    : `<button onclick="clockAction(${emp.id}, 'out'); showToast('Berhasil Absen Pulang via Admin');" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1.5 rounded-md text-xs font-bold active:scale-95">PULANG</button>`;
 
                 list.innerHTML += `
-                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm flex flex-col gap-4 transition-all hover:border-blue-300">
-                        <div class="flex justify-between items-start sm:items-center flex-col sm:flex-row gap-3">
+                    <div class="border border-gray-200 rounded-xl p-4 bg-white shadow-sm flex flex-col gap-4">
+                        <div class="flex justify-between items-center gap-3">
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold text-sm border border-blue-200">${index + 1}</div>
-                                <div>
-                                    <span class="font-bold text-gray-800 text-sm tracking-wide">${emp.name}</span>
-                                    <div class="text-[11px] text-gray-500 mt-0.5">Status Paraf: ${statusParaf}</div>
-                                </div>
+                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold text-sm">${index + 1}</div>
+                                <div><span class="font-bold text-gray-800 text-sm">${emp.name}</span><div class="text-[11px] text-gray-500 mt-0.5">Status Paraf: ${statusParaf}</div></div>
                             </div>
-                            <div class="flex gap-2 self-end sm:self-auto">
-                                <button onclick="openModal(${emp.id})" class="px-3 py-1.5 border-2 border-blue-500 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg> Edit Manual
-                                </button>
-                                <button onclick="deleteEmployee(${emp.id})" class="px-2 py-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Hapus">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
+                            <div class="flex gap-2">
+                                <button onclick="openModal(${emp.id})" class="px-3 py-1.5 border-2 border-blue-500 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg text-xs font-bold">Edit Manual</button>
+                                <button onclick="deleteEmployee(${emp.id})" class="px-2 py-1.5 text-red-500 hover:bg-red-50 rounded-lg">🗑️</button>
                             </div>
                         </div>
-                        
-                        <!-- Area Aksi Realtime -->
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50 border border-gray-100 p-3 rounded-lg gap-3">
-                            <div class="text-xs font-bold text-gray-500 flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                ABSEN HARI INI (TGL ${today}):
-                            </div>
-                            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                                ${btnMasuk}
-                                ${btnPulang}
-                            </div>
+                        <div class="flex justify-between items-center bg-gray-50 border p-3 rounded-lg gap-3">
+                            <div class="text-xs font-bold text-gray-500">ABSEN HARI INI:</div>
+                            <div class="flex gap-2">${btnMasuk}${btnPulang}</div>
                         </div>
                     </div>
                 `;
             });
+            const landingSearch = document.getElementById('landing-search');
+            if(landingSearch) handleSearch(landingSearch.value); 
         }
 
-        // --- PRINT RENDERERS ---
+        // --- CETAK/PRINT RENDERING ---
         function renderPrintHeader() {
-            document.getElementById('print-judul1').innerText = state.judul1;
-            document.getElementById('print-judul2').innerText = state.judul2;
-            document.getElementById('print-judul3').innerText = state.judul3;
-            document.getElementById('print-bulan').innerText = "BULAN : " + state.bulan;
-            document.getElementById('print-tglcetak').innerText = state.tglCetak;
-            document.getElementById('print-kepsek').innerText = state.kepsek;
+            const mappings = {
+                'print-judul1': state.judul1,
+                'print-judul2': state.judul2,
+                'print-judul3': state.judul3,
+                'print-bulan': "BULAN : " + state.bulan,
+                'print-tglcetak': state.tglCetak,
+                'print-kepsek': state.kepsek
+            };
+            for(let id in mappings) {
+                const el = document.getElementById(id);
+                if(el) el.innerText = mappings[id];
+            }
         }
 
         function renderPrintTable() {
             const tglHeader = document.getElementById('print-tgl-header');
+            if(!tglHeader) return;
+            
             let tglHeaderHTML = '';
             days.forEach(d => tglHeaderHTML += `<th>${d}</th>`);
             tglHeaderHTML += `<th>S</th><th>I</th><th>A</th>`;
             tglHeader.innerHTML = tglHeaderHTML;
 
-            const tbody = document.getElementById('print-table-body');
             let rowsHTML = '';
-
             state.employees.forEach((emp, index) => {
                 let s = 0, i = 0, a = 0;
-                days.forEach(d => {
-                    const st = emp.att[d]?.status;
-                    if(st === 'S') s++; if(st === 'I') i++; if(st === 'A') a++;
-                });
-                const total = s + i + a;
-
-                // Baris 1: Jam Datang
+                days.forEach(d => { const st = emp.att[d]?.status; if(st === 'S') s++; if(st === 'I') i++; if(st === 'A') a++; });
+                
                 rowsHTML += `<tr class="row-dtg"><td rowspan="4">${index + 1}</td><td rowspan="4" class="col-nama">${emp.name}</td><td class="col-tipe">Jam<br>Dtg</td>`;
-                days.forEach(d => { rowsHTML += `<td>${emp.att[d]?.status === 'H' ? (emp.att[d].in || '') : ''}</td>`; });
-                rowsHTML += `<td rowspan="4">${s || ''}</td><td rowspan="4">${i || ''}</td><td rowspan="4">${a || ''}</td><td rowspan="4">${total || ''}</td></tr>`;
+                days.forEach(d => rowsHTML += `<td>${emp.att[d]?.status === 'H' ? (emp.att[d].in || '') : ''}</td>`);
+                rowsHTML += `<td rowspan="4">${s || ''}</td><td rowspan="4">${i || ''}</td><td rowspan="4">${a || ''}</td><td rowspan="4">${s+i+a || ''}</td></tr>`;
 
-                // Baris 2: Paraf Datang
                 rowsHTML += `<tr class="row-prf1"><td class="col-tipe">Prf</td>`;
                 days.forEach(d => {
                     const st = emp.att[d]?.status;
@@ -594,12 +851,10 @@
                 });
                 rowsHTML += `</tr>`;
 
-                // Baris 3: Jam Pulang
                 rowsHTML += `<tr class="row-plg"><td class="col-tipe">Jam<br>Plg</td>`;
-                days.forEach(d => { rowsHTML += `<td>${emp.att[d]?.status === 'H' ? (emp.att[d].out || '') : ''}</td>`; });
+                days.forEach(d => rowsHTML += `<td>${emp.att[d]?.status === 'H' ? (emp.att[d].out || '') : ''}</td>`);
                 rowsHTML += `</tr>`;
 
-                // Baris 4: Paraf Pulang
                 rowsHTML += `<tr class="row-prf2"><td class="col-tipe">Prf</td>`;
                 days.forEach(d => {
                     const st = emp.att[d]?.status;
@@ -609,146 +864,112 @@
                 });
                 rowsHTML += `</tr>`;
             });
-            tbody.innerHTML = rowsHTML;
+            const printBody = document.getElementById('print-table-body');
+            if(printBody) printBody.innerHTML = rowsHTML;
         }
 
-        // --- JSON IMPORT/EXPORT ---
+        // --- BACKUP & MODAL ---
         function exportData() {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], { type: "application/json" }));
             a.download = `Backup_Absensi_${state.bulan}.json`; a.click();
         }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function importData(e) {
+            const f = e.target.files[0]; if(!f) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    Object.assign(state, JSON.parse(e.target.result));
-                    saveData(); location.reload();
-                } catch(err) { alert("File tidak valid!"); }
+            reader.onload = function(evt) {
+                try { Object.assign(state, JSON.parse(evt.target.result)); saveData(); location.reload(); } 
+                catch(err) { alert("File tidak valid!"); }
             };
-            reader.readAsText(file);
+            reader.readAsText(f);
         }
-
-        // --- MODAL MANUAL ---
-        function addEmployee() {
-            state.employees.push({ id: Date.now(), name: "Pegawai Baru", signature: "", att: {} });
-            saveData(); renderEmployeeList(); renderPrintTable();
-        }
-        function deleteEmployee(id) {
-            if(confirm('Hapus pegawai ini?')) { state.employees = state.employees.filter(e => e.id !== id); saveData(); renderEmployeeList(); renderPrintTable(); }
-        }
-
+        function addEmployee() { state.employees.push({ id: Date.now(), name: "Pegawai Baru", signature: "", att: {} }); saveData(); renderEmployeeList(); renderPrintTable(); }
+        function deleteEmployee(id) { if(confirm('Hapus pegawai ini?')) { state.employees = state.employees.filter(e => e.id !== id); saveData(); renderEmployeeList(); renderPrintTable(); } }
+        
         function openModal(id) {
-            const emp = state.employees.find(e => e.id === id);
-            editingId = id; tempAtt = JSON.parse(JSON.stringify(emp.att));
+            isModalEditOpen = true; // Block auto-sync agar tidak mengganggu pengetikan
+            const emp = state.employees.find(e => e.id === id); editingId = id; tempAtt = JSON.parse(JSON.stringify(emp.att));
             document.getElementById('modal-emp-name').value = emp.name;
-            document.getElementById('quick-status').value = 'H';
-            document.getElementById('quick-in').disabled = false; document.getElementById('quick-out').disabled = false;
-
-            clearCanvas();
+            clearSignatureCanvas();
             if(emp.signature) {
-                const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                img.src = emp.signature;
-                document.getElementById('canvas-placeholder').classList.add('hidden');
+                const img = new Image(); img.onload = () => sigCtx.drawImage(img, 0, 0, sigCanvas.width, sigCanvas.height);
+                img.src = emp.signature; 
+                const placeholder = document.getElementById('canvas-placeholder');
+                if(placeholder) placeholder.classList.add('hidden'); 
+                hasDrawing = true;
             }
-            renderDaysGrid();
-            document.getElementById('modal-edit').classList.remove('hidden');
+            renderDaysGrid(); 
+            const modal = document.getElementById('modal-edit');
+            if(modal) modal.classList.remove('hidden');
         }
-
-        function closeModal() { document.getElementById('modal-edit').classList.add('hidden'); editingId = null; }
-
+        function closeModal() { 
+            isModalEditOpen = false; // Buka block auto-sync
+            const modal = document.getElementById('modal-edit');
+            if(modal) modal.classList.add('hidden'); 
+            editingId = null; 
+        }
+        
         function saveModalData() {
-            const empIndex = state.employees.findIndex(e => e.id === editingId);
-            if(empIndex > -1) {
-                state.employees[empIndex].name = document.getElementById('modal-emp-name').value;
-                state.employees[empIndex].att = JSON.parse(JSON.stringify(tempAtt));
-                if (hasDrawing) state.employees[empIndex].signature = canvas.toDataURL('image/png');
-                else if (!state.employees[empIndex].signature) state.employees[empIndex].signature = "";
+            const emp = state.employees.find(e => e.id === editingId);
+            if(emp) {
+                emp.name = document.getElementById('modal-emp-name').value;
+                emp.att = JSON.parse(JSON.stringify(tempAtt));
+                if (hasDrawing) emp.signature = sigCanvas.toDataURL('image/png');
+                else if (!emp.signature) emp.signature = ""; // Clear if empty
             }
-            saveData(); closeModal(); renderEmployeeList(); renderPrintTable();
+            saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Data Manual Tersimpan');
         }
 
         function renderDaysGrid() {
-            const grid = document.getElementById('days-grid');
             let html = '';
             days.forEach(day => {
                 const dData = tempAtt[day] || { status: 'H', in: '', out: '' };
-                const bg = dData.status !== 'H' && dData.status !== '' ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200';
-                html += `
-                <div class="p-2 border rounded ${bg}">
-                    <div class="flex justify-between items-center border-b pb-1 mb-1">
-                        <span class="font-bold text-[11px]">Tgl ${day}</span>
-                        <select onchange="updateDay(${day}, 'status', this.value)" class="text-[10px] outline-none border rounded px-0.5 bg-transparent">
-                            <option value="H" ${dData.status === 'H' ? 'selected' : ''}>Hadir</option>
-                            <option value="S" ${dData.status === 'S' ? 'selected' : ''}>Sakit</option>
-                            <option value="I" ${dData.status === 'I' ? 'selected' : ''}>Izin</option>
-                            <option value="A" ${dData.status === 'A' ? 'selected' : ''}>Alpa</option>
-                            <option value="" ${dData.status === '' ? 'selected' : ''}>Libur</option>
-                        </select>
-                    </div>
-                    ${dData.status === 'H' ? `
-                        <div class="flex items-center justify-between mb-1"><span class="text-[10px] text-gray-500">Dtg</span><input type="time" value="${dData.in||''}" onchange="updateDay(${day}, 'in', this.value)" class="text-[10px] border rounded w-16 p-0.5"></div>
-                        <div class="flex items-center justify-between"><span class="text-[10px] text-gray-500">Plg</span><input type="time" value="${dData.out||''}" onchange="updateDay(${day}, 'out', this.value)" class="text-[10px] border rounded w-16 p-0.5"></div>
-                    ` : `<div class="text-center text-[10px] py-2 text-gray-500 font-bold">${dData.status === '' ? 'LIBUR' : dData.status}</div>`}
-                </div>`;
+                const bg = dData.status !== 'H' && dData.status !== '' ? 'bg-orange-50' : 'bg-white';
+                html += `<div class="p-2 border rounded ${bg}"><div class="flex justify-between items-center border-b pb-1 mb-1"><span class="font-bold text-[11px]">Tgl ${day}</span><select onchange="updateDay(${day}, 'status', this.value)" class="text-[10px] outline-none border rounded px-0.5"><option value="H" ${dData.status==='H'?'selected':''}>Hadir</option><option value="S" ${dData.status==='S'?'selected':''}>Sakit</option><option value="I" ${dData.status==='I'?'selected':''}>Izin</option><option value="A" ${dData.status==='A'?'selected':''}>Alpa</option><option value="" ${dData.status===''?'selected':''}>Libur</option></select></div>${dData.status==='H'?`<div class="flex items-center justify-between mb-1"><span class="text-[10px] text-gray-500">Dtg</span><input type="time" value="${dData.in||''}" onchange="updateDay(${day}, 'in', this.value)" class="text-[10px] border rounded w-16 p-0.5"></div><div class="flex items-center justify-between"><span class="text-[10px] text-gray-500">Plg</span><input type="time" value="${dData.out||''}" onchange="updateDay(${day}, 'out', this.value)" class="text-[10px] border rounded w-16 p-0.5"></div>`:`<div class="text-center text-[10px] py-2 text-gray-500 font-bold">${dData.status===''?'LIBUR':dData.status}</div>`}</div>`;
             });
-            grid.innerHTML = html;
+            const grid = document.getElementById('days-grid');
+            if(grid) grid.innerHTML = html;
         }
-
-        function updateDay(day, field, value) {
-            if(!tempAtt[day]) tempAtt[day] = { status: 'H', in: '', out: '' };
-            tempAtt[day][field] = value;
-            if(field === 'status') renderDaysGrid();
-        }
-
-        function toggleQuickTime() {
-            const stat = document.getElementById('quick-status').value;
-            const disabled = stat !== 'H';
-            document.getElementById('quick-in').disabled = disabled; document.getElementById('quick-out').disabled = disabled;
-        }
-
+        function updateDay(day, f, val) { if(!tempAtt[day]) tempAtt[day]={status:'H',in:'',out:''}; tempAtt[day][f]=val; if(f==='status') renderDaysGrid(); }
         function applyQuickFill() {
-            const status = document.getElementById('quick-status').value;
-            const inTime = document.getElementById('quick-in').value;
-            const outTime = document.getElementById('quick-out').value;
-            days.forEach(day => { tempAtt[day] = { status: status, in: status==='H'?inTime:'', out: status==='H'?outTime:'' }; });
-            renderDaysGrid();
+            const st = document.getElementById('quick-status').value, i = document.getElementById('quick-in').value, o = document.getElementById('quick-out').value;
+            days.forEach(d => { tempAtt[d] = { status: st, in: st==='H'?i:'', out: st==='H'?o:'' }; }); renderDaysGrid();
         }
 
-        // --- CANVAS SIGNATURE ---
-        const canvas = document.getElementById('signature-pad');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false, hasDrawing = false;
-
-        function initCanvas() {
-            ctx.lineWidth = 3.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#000000';
-            canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseleave', endPosition);
-            canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchend', endPosition); canvas.addEventListener('touchmove', draw, {passive: false});
+        // --- CANVAS SIGNATURE (MANUAL EDIT) ---
+        const sigCanvas = document.getElementById('signature-pad');
+        let sigCtx;
+        if(sigCanvas) sigCtx = sigCanvas.getContext('2d');
+        let isSigDrawing = false, hasDrawing = false;
+        
+        function initSignatureCanvas() {
+            if(!sigCanvas || !sigCtx) return;
+            sigCtx.lineWidth = 3.5; sigCtx.lineCap = 'round'; sigCtx.lineJoin = 'round'; sigCtx.strokeStyle = '#000000';
+            sigCanvas.addEventListener('mousedown', startSig); sigCanvas.addEventListener('mouseup', endSig); sigCanvas.addEventListener('mousemove', drawSig); sigCanvas.addEventListener('mouseleave', endSig);
+            sigCanvas.addEventListener('touchstart', startSig, {passive: false}); sigCanvas.addEventListener('touchend', endSig); sigCanvas.addEventListener('touchmove', drawSig, {passive: false});
         }
-        function getPointerPos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
-            if (e.touches && e.touches.length > 0) return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+        function getSigPos(e) {
+            const rect = sigCanvas.getBoundingClientRect(); const scaleX = sigCanvas.width / rect.width, scaleY = sigCanvas.height / rect.height;
+            if(e.touches && e.touches.length > 0) return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
             return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
         }
-        function startPosition(e) {
-            e.preventDefault(); isDrawing = true; hasDrawing = true;
-            document.getElementById('canvas-placeholder').classList.add('hidden');
-            const pos = getPointerPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); draw(e); 
-        }
-        function endPosition() { isDrawing = false; ctx.beginPath(); }
-        function draw(e) {
-            if (!isDrawing) return; e.preventDefault();
-            const pos = getPointerPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-        }
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); hasDrawing = false;
-            if(editingId) { const emp = state.employees.find(e => e.id === editingId); if(emp) emp.signature = ""; }
-            document.getElementById('canvas-placeholder').classList.remove('hidden');
+        function startSig(e) { e.preventDefault(); isSigDrawing = true; hasDrawing = true; const placeholder = document.getElementById('canvas-placeholder'); if(placeholder) placeholder.classList.add('hidden'); const pos = getSigPos(e); sigCtx.beginPath(); sigCtx.moveTo(pos.x, pos.y); drawSig(e); }
+        function endSig() { isSigDrawing = false; sigCtx.beginPath(); }
+        function drawSig(e) { if(!isSigDrawing) return; e.preventDefault(); const pos = getSigPos(e); sigCtx.lineTo(pos.x, pos.y); sigCtx.stroke(); sigCtx.beginPath(); sigCtx.moveTo(pos.x, pos.y); }
+        
+        // FUNGSI FIX: Menghapus Tanda Tangan
+        function clearSignatureCanvas() {
+            if(!sigCtx) return;
+            sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height); 
+            hasDrawing = false;
+            
+            if(editingId) { 
+                const emp = state.employees.find(e => e.id === editingId); 
+                if(emp) emp.signature = ""; 
+            }
+            
+            const placeholder = document.getElementById('canvas-placeholder');
+            if(placeholder) placeholder.classList.remove('hidden');
         }
     </script>
 </body>
