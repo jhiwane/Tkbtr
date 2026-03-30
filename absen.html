@@ -21,7 +21,7 @@
                 display: none !important; 
             }
 
-            /* Tampilkan tabel dengan lebar penuh (overflow dimatikan agar tidak terpotong) */
+            /* Tampilkan tabel dengan lebar penuh */
             #dashboard-view { display: block !important; visibility: visible !important; }
             #print-wrapper {
                 display: block !important; visibility: visible !important; overflow: visible !important; 
@@ -85,7 +85,12 @@
         }
         
         .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
+            /* 1. BACKGROUND KOTAK POPUP */
+            background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(15, 23, 42, 0.85); /* Warna dasar gelap (85% opacity) */
+            background-blend-mode: overlay; 
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -100,12 +105,25 @@
         .orbit-center {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 140px; height: 140px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, rgba(15,23,42,0.8) 80%);
+            
+            /* 2. BACKGROUND LINGKARAN TENGAH (LOGO SEKOLAH / FOTO) */
+            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=200&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-color: #0f172a;
+            
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            z-index: 10; word-break: break-word; font-size: 13px;
+            overflow: hidden;
+        }
+
+        .orbit-center-overlay {
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
             display: flex; align-items: center; justify-content: center;
             text-align: center; color: white; font-weight: bold;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            z-index: 10; padding: 10px; word-break: break-word; font-size: 13px;
+            padding: 10px;
         }
 
         .orbit-wrapper {
@@ -146,6 +164,7 @@
 
     <!-- ================= VIEW 1: LANDING PAGE MEWAH ================= -->
     <div id="landing-view" class="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-slate-900">
+        <!-- Background Canvas untuk Salju -->
         <canvas id="bg-canvas"></canvas>
 
         <button onclick="toggleView('dashboard')" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-3 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-lg group" title="Pengaturan Data">
@@ -153,9 +172,12 @@
         </button>
 
         <div class="glass-panel p-8 rounded-3xl w-11/12 max-w-md z-10 flex flex-col items-center relative">
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 tracking-wide text-center drop-shadow-lg">SISTEM ABSENSI</h1>
+            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 tracking-wide text-center drop-shadow-lg">
+                SISTEM ABSENSI
+            </h1>
             <div id="landing-clock" class="text-white/90 text-xl font-mono tracking-widest mb-6 border-b border-white/20 pb-2">00:00:00</div>
 
+            <!-- Search Input -->
             <div class="w-full relative mb-8">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -166,19 +188,22 @@
                 <div id="search-results" class="absolute w-full mt-2 bg-slate-800/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl hidden z-50 overflow-hidden"></div>
             </div>
 
+            <!-- Orbit Animation -->
             <div class="orbit-container">
-                <div class="orbit-center" id="orbit-center-text">SILAKAN PILIH NAMA</div>
+                <div class="orbit-center">
+                    <div class="orbit-center-overlay" id="orbit-center-text">SILAKAN PILIH NAMA</div>
+                </div>
                 
                 <div class="orbit-wrapper masuk-wrapper">
                     <button class="orbit-btn" onclick="landingAction('in')" title="Absen Masuk">
-                        <img src="https://media.giphy.com/media/KL4x5vlDBLDFYBzV8N/giphy.gif" alt="Masuk">
+                        <img src="https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUybnc3NnRoZGp2YndtaGU1cGkybTZxdWQ4cWwwNzFjcG4zcjF1eDZ4bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/QfeVpqABHE3twT6LMG/giphy.gif" alt="Masuk">
                         <span>MASUK</span>
                     </button>
                 </div>
 
                 <div class="orbit-wrapper pulang-wrapper">
                     <button class="orbit-btn" onclick="landingAction('out')" title="Absen Pulang">
-                        <img src="https://media.giphy.com/media/1xdwrnfnyfeIL8GriN/giphy.gif" alt="Pulang">
+                        <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybmQ4YnJheW8zb2drcnpidnp6bW12ZHQ2dHYwZmp3bWh2cndwdTVwcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/qID73rvksNfCrxGyLA/giphy.gif" alt="Pulang">
                         <span>PULANG</span>
                     </button>
                 </div>
@@ -317,7 +342,6 @@
                             <input type="text" id="modal-emp-name" class="w-full p-2 border rounded font-bold text-sm outline-none focus:border-blue-500 mb-4 bg-blue-50">
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="font-bold text-sm text-gray-800">1. Gambar Paraf</h3>
-                                <!-- FIX BUG: Menggunakan clearSignatureCanvas() -->
                                 <button onclick="clearSignatureCanvas()" class="text-[11px] text-red-500 hover:underline font-bold px-2 py-1 bg-red-50 rounded">Hapus TTD</button>
                             </div>
                             <div class="canvas-container">
@@ -358,13 +382,12 @@
     <script>
         // --- KONFIGURASI SUPABASE ---
         const SUPABASE_URL = 'https://mmhayivbzlwfzbuyjall.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_2Egzr9VZhclbrQg7x_vMMg_htBetvrs'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1taGF5aXZiemx3ZnpidXlqYWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzU5MTgsImV4cCI6MjA5MDQxMTkxOH0.pVWLpoZu0EVynxWQ_LwmsXYQWNR363WBLS1RaGm4iNI'; 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // --- STATE MANAGEMENT ---
         const LOCAL_STORAGE_KEY = 'DataAbsensi_v2_Realtime';
         
-        // Penambahan Zaitun dan Muhammad Kholilur Rohman
         const defaultEmployeesList = [
             { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
             { id: 2, name: "Umniyatul Mas'udah, S.Ag.", signature: "", att: {} },
@@ -397,7 +420,6 @@
         document.addEventListener('click', initAudio, { once: true });
         document.addEventListener('touchstart', initAudio, { once: true });
 
-        // Efek Suara Imut (Bloop)
         function playCuteSound() {
             try {
                 if (!myAudioCtx) initAudio();
@@ -423,7 +445,6 @@
             window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
         }
 
-        // TTS Google Lemah Lembut
         function speakSoftly(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel(); 
@@ -542,7 +563,7 @@
             }
         });
 
-        // --- ANIMASI CANVAS BACKGROUND ---
+        // --- ANIMASI CANVAS BACKGROUND (HUJAN SALJU CINEMATIC) ---
         function initCanvasBackground() {
             const c = document.getElementById('bg-canvas');
             if(!c) return;
@@ -552,43 +573,48 @@
             window.addEventListener('resize', resize);
             resize();
 
-            let particles = [];
-            for(let i=0; i<60; i++) {
-                particles.push({
+            let snowflakes = [];
+            // Bikin 100 partikel salju dengan kedalaman (Parallax) yang berbeda
+            for(let i=0; i<100; i++) {
+                snowflakes.push({
                     x: Math.random() * c.width,
                     y: Math.random() * c.height,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4,
-                    r: Math.random() * 1.5 + 0.5
+                    r: Math.random() * 3 + 1,     // Radius (ukuran) salju
+                    d: Math.random() * 1 + 0.5,   // Density (kepadatan/angin)
+                    vx: Math.random() * 1 - 0.5,  // Kecepatan goyang X
+                    vy: Math.random() * 1.5 + 0.5 // Kecepatan jatuh Y
                 });
             }
 
+            let angle = 0; // Sudut ayunan angin
+
             function draw() {
                 ctx.clearRect(0, 0, c.width, c.height);
-                particles.forEach((p, i) => {
-                    p.x += p.vx; p.y += p.vy;
-                    if(p.x < 0 || p.x > c.width) p.vx *= -1;
-                    if(p.y < 0 || p.y > c.height) p.vy *= -1;
-                    
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(212, 175, 55, 0.6)'; 
-                    ctx.fill();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
 
-                    for(let j=i+1; j<particles.length; j++) {
-                        const dx = particles[j].x - p.x;
-                        const dy = particles[j].y - p.y;
-                        const dist = Math.sqrt(dx*dx + dy*dy);
-                        if(dist < 100) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(212, 175, 55, ${0.15 - dist/1000})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
-                        }
+                angle += 0.01;
+
+                snowflakes.forEach((p, i) => {
+                    ctx.moveTo(p.x, p.y);
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
+
+                    // Update titik jatuh salju
+                    p.y += p.vy;
+                    p.x += Math.sin(angle + p.d) * p.vx; // Ayunan sinus ke kiri/kanan
+
+                    // Jika salju melewati batas bawah layar, kembalikan ke atas
+                    if (p.y > c.height) {
+                        p.y = -10;
+                        p.x = Math.random() * c.width;
                     }
+                    
+                    // Efek wrap-around jika salju ketiup angin melewati batas layar samping
+                    if (p.x > c.width + 5) p.x = -5;
+                    if (p.x < -5) p.x = c.width + 5;
                 });
+
+                ctx.fill();
                 requestAnimationFrame(draw);
             }
             draw();
@@ -685,9 +711,8 @@
         }
 
         // --- AUTO-SYNC (POLLING TIAP 10 DETIK) ---
-        // Agar data terupdate otomatis jika guru lain melakukan absen tanpa perlu refresh browser
         setInterval(async () => {
-            if(isModalEditOpen) return; // Jangan sinkronisasi otomatis kalau Admin sedang asik ngedit manual!
+            if(isModalEditOpen) return; 
             try {
                 const { data, error } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
                 if(data && data.data) {
@@ -887,7 +912,7 @@
         function deleteEmployee(id) { if(confirm('Hapus pegawai ini?')) { state.employees = state.employees.filter(e => e.id !== id); saveData(); renderEmployeeList(); renderPrintTable(); } }
         
         function openModal(id) {
-            isModalEditOpen = true; // Block auto-sync agar tidak mengganggu pengetikan
+            isModalEditOpen = true; 
             const emp = state.employees.find(e => e.id === id); editingId = id; tempAtt = JSON.parse(JSON.stringify(emp.att));
             document.getElementById('modal-emp-name').value = emp.name;
             clearSignatureCanvas();
@@ -903,7 +928,7 @@
             if(modal) modal.classList.remove('hidden');
         }
         function closeModal() { 
-            isModalEditOpen = false; // Buka block auto-sync
+            isModalEditOpen = false; 
             const modal = document.getElementById('modal-edit');
             if(modal) modal.classList.add('hidden'); 
             editingId = null; 
@@ -915,7 +940,7 @@
                 emp.name = document.getElementById('modal-emp-name').value;
                 emp.att = JSON.parse(JSON.stringify(tempAtt));
                 if (hasDrawing) emp.signature = sigCanvas.toDataURL('image/png');
-                else if (!emp.signature) emp.signature = ""; // Clear if empty
+                else if (!emp.signature) emp.signature = ""; 
             }
             saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Data Manual Tersimpan');
         }
@@ -957,7 +982,6 @@
         function endSig() { isSigDrawing = false; sigCtx.beginPath(); }
         function drawSig(e) { if(!isSigDrawing) return; e.preventDefault(); const pos = getSigPos(e); sigCtx.lineTo(pos.x, pos.y); sigCtx.stroke(); sigCtx.beginPath(); sigCtx.moveTo(pos.x, pos.y); }
         
-        // FUNGSI FIX: Menghapus Tanda Tangan
         function clearSignatureCanvas() {
             if(!sigCtx) return;
             sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height); 
