@@ -64,7 +64,7 @@
         }
 
         /* Styling Scrollbar Admin Panel */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px;}
         ::-webkit-scrollbar-thumb { background-color: #4b5563; border-radius: 4px; }
         
         /* Admin Tabs */
@@ -78,17 +78,17 @@
     <!-- === LAYAR MULAI === -->
     <div id="start-screen" class="absolute inset-0 z-[100] bg-black bg-cover bg-center flex flex-col items-center justify-end" style="background-image: url('a.png');">
         <div class="flex flex-col items-center justify-end mb-16 md:mb-24 z-20 w-full gap-4">
-            <button id="btn-start" class="btn-ketap-ketip text-2xl md:text-3xl font-black py-3 px-14 rounded-full transform transition active:scale-95 shadow-xl tracking-widest">
+            <button id="btn-start" class="btn-ketap-ketip text-2xl md:text-3xl font-black py-4 px-16 rounded-full transform transition active:scale-95 shadow-xl tracking-widest">
                 MASUK
             </button>
-            <p id="footer-text" class="text-white/80 text-sm md:text-base font-bold cursor-pointer px-4 py-2 tracking-wide hover:text-white transition-colors bg-black/50 rounded-xl backdrop-blur-sm shadow-md">
+            <p id="footer-text" class="text-white/90 text-sm md:text-base font-bold cursor-pointer px-6 py-2 tracking-wide hover:text-white transition-colors bg-black/60 rounded-xl backdrop-blur-sm shadow-md border border-white/20">
                 Created by TK Baiturrohman
             </p>
         </div>
         <div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10"></div>
     </div>
 
-    <!-- === PANEL ADMIN (TATA LETAK DIPERBAIKI) === -->
+    <!-- === PANEL ADMIN === -->
     <div id="admin-panel" class="absolute inset-0 z-[200] bg-gray-900/95 hidden flex-col items-center justify-center p-2 md:p-4">
         <div class="bg-gray-800 w-full max-w-4xl rounded-2xl border-4 border-yellow-500 flex flex-col h-[98%] md:h-[90%] shadow-2xl overflow-hidden">
             
@@ -97,11 +97,11 @@
                 <button id="btn-close-admin" class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded-lg font-bold">X</button>
             </div>
 
-            <!-- Tab Flex-Wrap agar tidak kejepit di HP -->
+            <!-- Tab Flex-Wrap (Anti Kejepit di HP) -->
             <div class="flex flex-wrap bg-gray-700 p-2 gap-2 shadow z-10">
-                <button class="admin-tab-btn active flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-umum">Pengaturan</button>
+                <button class="admin-tab-btn active flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-umum">Pengaturan Umum</button>
                 <button class="admin-tab-btn flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-tts">Soal Cerita</button>
-                <button class="admin-tab-btn flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-level">Level & Mode</button>
+                <button class="admin-tab-btn flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-level">Level & Mode Game</button>
             </div>
 
             <div class="flex-grow overflow-y-auto p-4 bg-gray-800">
@@ -218,10 +218,10 @@
             <div id="action-area" class="absolute inset-0 overflow-hidden z-10 pointer-events-none"></div>
         </div>
 
-        <!-- === MEKANIK BARU: HITUNG OBJEK (TAP) === -->
-        <div id="mechanic-object-count" class="absolute inset-0 z-10 hidden flex-col items-center justify-center pointer-events-none pt-20">
+        <!-- === MEKANIK 6: HITUNG OBJEK (APEL) DENGAN AUTO CHECK === -->
+        <div id="mechanic-object-count" class="absolute inset-0 z-10 hidden flex-col items-center justify-center pointer-events-none pt-10 md:pt-16">
             <!-- Papan Soal -->
-            <div class="bg-white/95 border-[3px] md:border-4 border-sky-400 rounded-2xl md:rounded-3xl py-2 px-6 shadow-xl flex items-center justify-center gap-2 md:gap-4 mb-6 md:mb-10 pointer-events-auto animate-pop">
+            <div class="bg-white/95 border-[3px] md:border-4 border-sky-400 rounded-2xl md:rounded-3xl py-2 px-6 shadow-xl flex items-center justify-center gap-2 md:gap-4 mb-4 md:mb-6 pointer-events-auto animate-pop">
                 <span id="obj-num-a" class="text-4xl md:text-6xl text-blue-600 font-black">0</span>
                 <span id="obj-operator" class="text-3xl md:text-5xl text-green-500 font-black mx-1">+</span>
                 <span id="obj-num-b" class="text-4xl md:text-6xl text-blue-600 font-black">0</span>
@@ -230,16 +230,18 @@
             </div>
 
             <!-- Interaksi Buah Apel -->
-            <div class="flex flex-col items-center gap-2 md:gap-4 pointer-events-auto">
-                <div id="btn-tap-object" class="text-7xl md:text-9xl cursor-pointer active:scale-90 transition-transform bg-white/70 p-4 md:p-6 rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.3)] border-4 md:border-8 border-white hover:bg-white animate-float select-none">
+            <div class="flex flex-col items-center gap-2 pointer-events-auto">
+                <div id="btn-tap-object" class="text-[90px] md:text-[130px] leading-none cursor-pointer active:scale-90 transition-transform bg-white/70 p-4 md:p-6 rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.3)] border-4 md:border-8 border-white hover:bg-white animate-float select-none">
                     🍎
                 </div>
                 <div class="text-2xl md:text-4xl font-black text-white text-outline-black mt-2">
                     Jumlah: <span id="tap-counter" class="text-yellow-400 text-4xl md:text-6xl">0</span>
                 </div>
-                <button id="btn-check-object" class="mt-4 md:mt-6 bg-green-500 hover:bg-green-400 text-white text-xl md:text-3xl font-black py-3 px-8 md:px-12 rounded-full border-[3px] md:border-4 border-green-700 shadow-xl active:scale-95 transition-transform tracking-wider">
-                    CEK JAWABAN
-                </button>
+                
+                <!-- Countdown Warning (Mengecek dalam...) -->
+                <div id="tap-countdown" class="text-lg md:text-2xl font-bold text-red-200 bg-black/80 px-5 py-2 rounded-full border-2 border-red-500 shadow-lg hidden mt-2 animate-pop">
+                    Mengecek dalam 3...
+                </div>
             </div>
         </div>
 
@@ -270,7 +272,7 @@
             "appConfig": { "title": "Math Land TK Baiturrohman", "bgmVolume": 0.05, "pointsPerLevel": 50, "lives": 3 },
             "ttsTemplates": {
                 "add": [
-                    "Andi punya {a} apel, diberi lagi {b}. Berapa jumlahnya?",
+                    "Andi punya {a} permen, diberi lagi {b}. Berapa jumlahnya?",
                     "Ada {a} burung, datang lagi {b} burung. Berapa semuanya?",
                     "{a} ditambah {b}, sama dengan berapa ya?"
                 ],
@@ -486,6 +488,9 @@
         let numA = 0, numB = 0, resultC = 0, currentAnswer = 0;
         let currentOperator = '+', questionType = 0; 
         let activeIntervals = []; let activeTimeouts = [];
+        
+        // Timer khusus untuk Hitung Objek (Auto Cek)
+        let tapCountdownInterval = null;
 
         const scoreEl = document.getElementById('score');
         const levelEl = document.getElementById('level-display');
@@ -493,14 +498,17 @@
         function clearActionArea() {
             activeIntervals.forEach(clearInterval); activeIntervals = [];
             activeTimeouts.forEach(clearTimeout); activeTimeouts = [];
+            clearInterval(tapCountdownInterval); // Bersihkan juga timer apel
+            
             document.getElementById('action-area').innerHTML = '';
             document.querySelectorAll('body > .draggable').forEach(el => el.remove());
             
-            // Sembunyikan semua UI Mode
             document.getElementById('mechanic-drag-drop').classList.add('hidden');
             document.getElementById('mechanic-action').classList.add('hidden');
             document.getElementById('mechanic-object-count').classList.add('hidden');
             document.getElementById('mechanic-object-count').classList.remove('flex');
+            
+            document.getElementById('tap-countdown').classList.add('hidden');
         }
 
         function getDynamicConfig() {
@@ -534,7 +542,6 @@
             clearActionArea();
             const config = getDynamicConfig();
             
-            // Set Custom Background
             document.getElementById('game-container').style.backgroundImage = `url('${config.bgImage || 'b.png'}')`;
 
             numA = Math.floor(Math.random() * config.maxNumber) + 1;
@@ -546,7 +553,6 @@
                 resultC = numA - numB;
             } else { resultC = numA + numB; }
 
-            // Jika mode Hitung Objek (Mekanik Baru), pastikan questionType = 0 (A+B=?) agar logika tapping sesuai.
             if (config.mechanic === 'object_count') {
                 questionType = 0;
             } else {
@@ -762,57 +768,75 @@
         }
 
         // ==========================================
-        // 7. MEKANIK BARU: HITUNG OBJEK (MENGKETUK APEL)
+        // 7. MEKANIK BARU: HITUNG OBJEK (APEL) + AUTO CHECK
         // ==========================================
         let currentObjectTaps = 0;
         
         function initObjectCountMechanic() {
             const mech = document.getElementById('mechanic-object-count');
             mech.classList.remove('hidden');
-            mech.classList.add('flex'); // Pakai flex untuk centering
+            mech.classList.add('flex'); 
 
             document.getElementById('obj-num-a').innerText = numA;
             document.getElementById('obj-operator').innerText = currentOperator;
             document.getElementById('obj-num-b').innerText = numB;
             
             currentObjectTaps = 0;
-            document.getElementById('tap-counter').innerText = currentObjectTaps;
+            document.getElementById('tap-counter').innerText = '0';
+            
+            const countdownEl = document.getElementById('tap-countdown');
+            countdownEl.classList.add('hidden');
+            clearInterval(tapCountdownInterval);
 
-            // Pastikan event listener tidak duplikat (hapus yang lama, pasang baru)
             const btnTap = document.getElementById('btn-tap-object');
             const newBtnTap = btnTap.cloneNode(true);
             btnTap.parentNode.replaceChild(newBtnTap, btnTap);
 
-            const btnCheck = document.getElementById('btn-check-object');
-            const newBtnCheck = btnCheck.cloneNode(true);
-            btnCheck.parentNode.replaceChild(newBtnCheck, btnCheck);
-
-            // Event Tap Objek (Membesarkan angka)
+            newBtnTap.style.pointerEvents = 'auto'; // Pastikan bisa diklik
             newBtnTap.addEventListener('mousedown', hitungObjek);
             newBtnTap.addEventListener('touchstart', (e) => { e.preventDefault(); hitungObjek(); }, {passive: false});
-
-            // Event Cek Jawaban
-            newBtnCheck.addEventListener('click', () => {
-                if (currentObjectTaps === currentAnswer) {
-                    newBtnTap.style.pointerEvents = 'none'; // Kunci tombol tap
-                    handleCorrect();
-                } else {
-                    handleWrong(newBtnTap, true); // Getarkan objek, reset nilai
-                    currentObjectTaps = 0;
-                    document.getElementById('tap-counter').innerText = 0;
-                }
-            });
         }
 
         function hitungObjek() {
             currentObjectTaps++;
             document.getElementById('tap-counter').innerText = currentObjectTaps;
-            playDropSound(); // Suara pop kecil
+            playDropSound(); 
             
-            // Animasi membesar sejenak (efek poping)
             const obj = document.getElementById('btn-tap-object');
             obj.style.transform = 'scale(1.3)';
             setTimeout(() => { obj.style.transform = 'scale(1)'; }, 100);
+
+            // AUTO CHECK LOGIC (Hitung Mundur saat diam)
+            clearInterval(tapCountdownInterval);
+            const countdownEl = document.getElementById('tap-countdown');
+            countdownEl.classList.add('hidden');
+
+            let timeLeft = 3; // 3 Detik
+
+            tapCountdownInterval = setInterval(() => {
+                countdownEl.classList.remove('hidden');
+                countdownEl.innerText = `Mengecek dalam ${timeLeft}...`;
+                
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(tapCountdownInterval);
+                    countdownEl.classList.add('hidden');
+                    evaluateObjectCount();
+                }
+            }, 1000);
+        }
+
+        function evaluateObjectCount() {
+            const btnTap = document.getElementById('btn-tap-object');
+            if (currentObjectTaps === currentAnswer) {
+                btnTap.style.pointerEvents = 'none'; 
+                handleCorrect();
+            } else {
+                handleWrong(btnTap, true); 
+                currentObjectTaps = 0;
+                document.getElementById('tap-counter').innerText = '0';
+            }
         }
 
         // ==========================================
@@ -838,7 +862,6 @@
         function handleWrong(el, isAction = false) {
             playWrongSound();
             if(isAction) { 
-                // Khusus untuk tap objek, jangan dikasi background merah
                 if (el.id !== 'btn-tap-object') { el.classList.add('bg-red-500'); el.style.borderColor = 'red'; }
                 el.classList.add('animate-shake'); 
             } else { resetDragPosition(el); el.classList.add('animate-shake'); }
@@ -854,8 +877,7 @@
                 ftxt.innerText = "SALAH!"; ftxt.style.color = "#f87171";
                 fdbk.classList.remove('hidden'); ftxt.style.animation = 'none'; void ftxt.offsetWidth; ftxt.style.animation = 'popIn 0.5s forwards';
                 setTimeout(() => fdbk.classList.add('hidden'), 1000);
-                if(!isAction) setTimeout(() => el.classList.remove('animate-shake'), 500);
-                else setTimeout(() => el.classList.remove('animate-shake'), 500); // Untuk action/objek bersihkan shake
+                setTimeout(() => el.classList.remove('animate-shake'), 500);
             }
         }
 
