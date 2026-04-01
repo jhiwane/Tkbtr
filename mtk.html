@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Land - TK Baiturrohman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka One', cursive;
+            touch-action: none; overscroll-behavior: none; user-select: none; -webkit-user-select: none; overflow: hidden;
+        }
+
+        /* --- STYLING UMUM --- */
+        .wood-texture {
+            background: linear-gradient(to bottom, #d4a373 0%, #bc6c25 50%, #8a4816 100%);
+            border-top: 4px solid #fefae0; border-bottom: 6px solid #5c300e; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+        }
+        .math-symbol {
+            color: #32CD32; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0px 4px 0 #000;
+            filter: drop-shadow(2px 4px 2px rgba(0,0,0,0.3));
+        }
+        .text-outline-black { text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0px 3px 3px rgba(0,0,0,0.5); }
+        .text-outline-white { text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 0px 3px 3px rgba(0,0,0,0.3); }
+
+        /* --- ANIMASI --- */
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+        .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes popOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+        .animate-pop-out { animation: popOut 0.3s forwards; }
+
+        @keyframes shakeWrong { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px) rotate(-5deg); } 40%, 80% { transform: translateX(10px) rotate(5deg); } }
+        .animate-shake { animation: shakeWrong 0.4s ease-in-out; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        @keyframes lampuFlicker { 0%, 19.9%, 22%, 62.9%, 64%, 64.9%, 70%, 100% { box-shadow: 0 0 10px #fff, 0 0 20px #facc15; background-color: #facc15; color: #713f12; opacity: 1; } 20%, 21.9%, 63%, 63.9%, 65%, 69.9% { box-shadow: none; background-color: #854d0e; color: #fef08a; opacity: 0.8; } }
+        .btn-ketap-ketip { animation: lampuFlicker 3s infinite; border: 3px solid #fff; }
+
+        @keyframes breakHeart { 0% { transform: scale(1); filter: grayscale(0%); opacity: 1; } 50% { transform: scale(1.5) rotate(15deg); filter: grayscale(50%); } 100% { transform: scale(1) rotate(0deg); filter: grayscale(100%); opacity: 0.3; } }
+        .heart-lost { animation: breakHeart 0.5s forwards; }
+
+        /* --- MEKANIK BUBBLES & BLOCKS --- */
+        .dragging { opacity: 0.9; transform: scale(1.1) rotate(3deg) !important; transition: none !important; cursor: grabbing !important; z-index: 9999 !important; }
+        
+        @keyframes moveUpAnim { 0% { top: 110%; opacity: 1; } 100% { top: -20%; opacity: 1; } }
+        @keyframes moveDownAnim { 0% { top: -20%; opacity: 1; } 100% { top: 110%; opacity: 1; } }
+        
+        .bubble {
+            position: absolute; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(135,206,235,0.6) 60%, rgba(30,144,255,0.8));
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 5px 10px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.5);
+            z-index: 50;
+        }
+
+        .falling-block {
+            position: absolute; border-radius: 12px; display: flex; justify-content: center; align-items: center; cursor: pointer;
+            background: linear-gradient(135deg, #9ca3af, #4b5563); border: 3px solid #374151;
+            box-shadow: 0 8px 10px rgba(0,0,0,0.4), inset 0px 3px 0px rgba(255,255,255,0.3);
+            z-index: 50;
+        }
+
+        /* Styling Scrollbar Admin Panel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background-color: #4b5563; border-radius: 4px; }
+        
+        /* Admin Tabs */
+        .admin-tab-btn.active { background-color: #eab308; color: #422006; border-color: #eab308; }
+        .admin-tab-content { display: none; }
+        .admin-tab-content.active { display: flex; }
+    </style>
+</head>
+<body class="bg-gray-900 w-screen h-screen flex justify-center items-center relative text-white">
+
+    <!-- === LAYAR MULAI === -->
+    <div id="start-screen" class="absolute inset-0 z-[100] bg-black bg-cover bg-center flex flex-col items-center justify-end" style="background-image: url('a.png');">
+        <div class="flex flex-col items-center justify-end mb-16 md:mb-24 z-20 w-full gap-4">
+            <button id="btn-start" class="btn-ketap-ketip text-2xl md:text-3xl font-black py-3 px-14 rounded-full transform transition active:scale-95 shadow-xl tracking-widest">
+                MASUK
+            </button>
+            <p id="footer-text" class="text-white/80 text-sm md:text-base font-bold cursor-pointer px-4 py-2 tracking-wide hover:text-white transition-colors bg-black/50 rounded-xl backdrop-blur-sm shadow-md">
+                Created by TK Baiturrohman
+            </p>
+        </div>
+        <div class="absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10"></div>
+    </div>
+
+    <!-- === PANEL ADMIN (TATA LETAK DIPERBAIKI) === -->
+    <div id="admin-panel" class="absolute inset-0 z-[200] bg-gray-900/95 hidden flex-col items-center justify-center p-2 md:p-4">
+        <div class="bg-gray-800 w-full max-w-4xl rounded-2xl border-4 border-yellow-500 flex flex-col h-[98%] md:h-[90%] shadow-2xl overflow-hidden">
+            
+            <div class="bg-gray-900 p-3 border-b border-gray-700 flex justify-between items-center z-10">
+                <h2 class="text-lg md:text-2xl text-yellow-400 font-black">⚙️ Panel Guru</h2>
+                <button id="btn-close-admin" class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded-lg font-bold">X</button>
+            </div>
+
+            <!-- Tab Flex-Wrap agar tidak kejepit di HP -->
+            <div class="flex flex-wrap bg-gray-700 p-2 gap-2 shadow z-10">
+                <button class="admin-tab-btn active flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-umum">Pengaturan</button>
+                <button class="admin-tab-btn flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-tts">Soal Cerita</button>
+                <button class="admin-tab-btn flex-1 min-w-[100px] text-center px-2 py-2 rounded-lg font-bold border-2 border-transparent bg-gray-600 hover:bg-gray-500 text-sm" data-target="tab-level">Level & Mode</button>
+            </div>
+
+            <div class="flex-grow overflow-y-auto p-4 bg-gray-800">
+                <!-- TAB UMUM -->
+                <div id="tab-umum" class="admin-tab-content active flex-col gap-4">
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-600">
+                        <label class="block text-gray-400 text-sm mb-1">Nama Judul Game</label>
+                        <input type="text" id="admin-title" class="w-full bg-gray-700 text-white rounded p-3 outline-none focus:ring-2 ring-yellow-400">
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-600 flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <label class="block text-gray-400 text-sm mb-1">Jumlah Nyawa Maksimal</label>
+                            <input type="number" id="admin-lives" class="w-full bg-gray-700 text-white rounded p-3 outline-none" min="1" max="5">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-gray-400 text-sm mb-1">Skor Naik Level</label>
+                            <input type="number" id="admin-pts" class="w-full bg-gray-700 text-white rounded p-3 outline-none" min="10" step="10">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB TTS -->
+                <div id="tab-tts" class="admin-tab-content flex-col gap-4">
+                    <p class="text-sm text-yellow-300 bg-yellow-900/30 p-2 rounded">Gunakan <b>{a}</b> untuk angka pertama, dan <b>{b}</b> untuk angka kedua.</p>
+                    <div class="bg-gray-900 p-3 rounded-xl border border-gray-600">
+                        <h3 class="text-green-400 font-bold mb-1 text-sm">Soal Penjumlahan (+)</h3>
+                        <textarea id="admin-tts-add" class="w-full h-24 bg-gray-700 text-white rounded p-2 text-sm outline-none" placeholder="Pisahkan tiap kalimat dengan baris baru (Enter)"></textarea>
+                    </div>
+                    <div class="bg-gray-900 p-3 rounded-xl border border-gray-600">
+                        <h3 class="text-red-400 font-bold mb-1 text-sm">Soal Pengurangan (-)</h3>
+                        <textarea id="admin-tts-sub" class="w-full h-24 bg-gray-700 text-white rounded p-2 text-sm outline-none" placeholder="Pisahkan tiap kalimat dengan baris baru (Enter)"></textarea>
+                    </div>
+                </div>
+
+                <!-- TAB LEVEL -->
+                <div id="tab-level" class="admin-tab-content flex-col gap-3">
+                    <p class="text-sm text-yellow-300 bg-yellow-900/30 p-2 rounded">Atur level dan latar belakang kustom. Level terakhir akan terus diulang makin cepat!</p>
+                    <div id="admin-level-container" class="flex flex-col gap-3">
+                        <!-- Generate via JS -->
+                    </div>
+                    <button id="btn-add-level" class="bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-bold border-2 border-blue-400 shadow-lg active:scale-95 mt-2">
+                        ➕ TAMBAH LEVEL
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-gray-900 p-3 border-t border-gray-700 flex justify-between flex-wrap gap-2 z-10">
+                <div class="flex gap-2">
+                    <button id="btn-import-trigger" class="bg-indigo-600 hover:bg-indigo-500 text-xs md:text-sm px-3 py-2 rounded-lg font-bold shadow">📂 Import</button>
+                    <input type="file" id="file-import" accept=".json" class="hidden">
+                    <button id="btn-export" class="bg-purple-600 hover:bg-purple-500 text-xs md:text-sm px-3 py-2 rounded-lg font-bold shadow">💾 Export</button>
+                </div>
+                <button id="btn-save-admin" class="bg-green-500 hover:bg-green-400 text-gray-900 px-5 py-2 rounded-lg font-black shadow-lg active:scale-95">SIMPAN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- === CONTAINER GAME UTAMA === -->
+    <div id="game-container" class="relative w-full h-full max-w-4xl bg-cover bg-center overflow-hidden shadow-2xl hidden transition-all duration-500" style="background-image: url('b.png');">
+        
+        <div class="absolute inset-0 bg-white/10 pointer-events-none z-0"></div>
+
+        <!-- UI ATAS -->
+        <div class="absolute top-2 left-2 right-2 z-[60] flex justify-between items-center pointer-events-none gap-1">
+            <div class="flex items-center gap-1 md:gap-2">
+                <button id="btn-back" class="pointer-events-auto bg-red-500 border-[3px] border-red-700 text-white rounded-full w-9 h-9 md:w-11 md:h-11 flex items-center justify-center text-sm md:text-base shadow active:scale-95">⬅️</button>
+                <button id="btn-mute" class="pointer-events-auto bg-blue-400 border-[3px] border-blue-600 text-white rounded-full w-9 h-9 md:w-11 md:h-11 flex items-center justify-center text-sm md:text-base shadow active:scale-95">🔊</button>
+                <div id="lives-container" class="flex gap-1 bg-white/95 px-2 py-1 md:py-1.5 rounded-full border border-gray-300 shadow-md">
+                    <span class="text-sm md:text-lg transition-all" id="heart-1">❤️</span>
+                    <span class="text-sm md:text-lg transition-all" id="heart-2">❤️</span>
+                    <span class="text-sm md:text-lg transition-all" id="heart-3">❤️</span>
+                    <span class="text-sm md:text-lg transition-all" id="heart-4" style="display:none">❤️</span>
+                    <span class="text-sm md:text-lg transition-all" id="heart-5" style="display:none">❤️</span>
+                </div>
+            </div>
+
+            <div class="bg-gray-800/95 px-2 py-1 md:px-4 rounded-xl border border-gray-500 text-white text-xs md:text-sm font-bold shadow pointer-events-auto flex items-center gap-1">
+                ⏱️ <span id="timer-display" class="w-10 text-center text-yellow-400">00:00</span>
+            </div>
+            
+            <div class="flex items-center gap-1 md:gap-2">
+                <div class="bg-indigo-600/95 px-2 py-1 md:px-3 rounded-xl border border-indigo-400 text-white text-xs md:text-sm font-bold shadow pointer-events-auto">
+                    Lv <span id="level-display" class="text-yellow-300 font-black">1</span>
+                </div>
+                <div class="bg-white/95 px-2 py-1 md:px-3 rounded-xl border border-yellow-500 text-yellow-600 text-xs md:text-sm font-bold shadow pointer-events-auto">
+                    Skor: <span id="score" class="text-red-500 font-black">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teks Panduan Bantuan TTS -->
+        <div id="guide-text" class="absolute top-[14%] w-full text-center z-[70] px-4 hidden">
+            <span class="bg-black/80 border-2 border-yellow-400 text-white px-3 py-1.5 rounded-2xl text-sm md:text-xl font-bold inline-block animate-pop shadow-xl max-w-full truncate"></span>
+        </div>
+
+        <!-- === MEKANIK 1: DRAG & DROP === -->
+        <div id="mechanic-drag-drop" class="absolute inset-0 z-10 hidden pointer-events-none">
+            <div class="absolute top-[40%] md:top-[45%] w-full h-8 md:h-10 wood-texture z-10 opacity-90"></div>
+            <div id="equation-container" class="absolute top-[20%] md:top-[25%] w-full flex justify-center items-center gap-1 md:gap-4 z-10 px-2 pointer-events-auto"></div>
+            
+            <div class="absolute bottom-0 w-full h-[25%] wood-texture z-10 rounded-t-[30px] md:rounded-t-[40px]"></div>
+            <div id="options-container" class="absolute bottom-[8%] md:bottom-[10%] w-full flex justify-center items-end gap-3 md:gap-12 z-20 px-2 min-h-[120px] pointer-events-auto"></div>
+        </div>
+
+        <!-- === MEKANIK 2, 3, 4, 5: ACTION (BUBBLES/BRICKS) === -->
+        <div id="mechanic-action" class="absolute inset-0 z-10 hidden pointer-events-none">
+            <div class="absolute top-[18%] md:top-[20%] left-1/2 transform -translate-x-1/2 bg-white/95 border-[3px] md:border-4 border-sky-400 rounded-2xl md:rounded-3xl py-2 px-4 shadow-xl flex items-center justify-center gap-1 md:gap-3 z-20 min-w-[200px] pointer-events-auto">
+                 <span id="action-num-a" class="text-3xl md:text-5xl text-blue-600 text-outline-white font-black">0</span>
+                 <span id="action-operator" class="text-2xl md:text-4xl text-green-500 font-black mx-1">+</span>
+                 <span id="action-num-b" class="text-3xl md:text-5xl text-blue-600 text-outline-white font-black">0</span>
+                 <span class="text-2xl md:text-4xl text-green-500 font-black mx-1">=</span>
+                 <span id="action-result" class="text-4xl md:text-6xl text-red-500 font-black">?</span>
+            </div>
+            <div id="action-area" class="absolute inset-0 overflow-hidden z-10 pointer-events-none"></div>
+        </div>
+
+        <!-- === MEKANIK BARU: HITUNG OBJEK (TAP) === -->
+        <div id="mechanic-object-count" class="absolute inset-0 z-10 hidden flex-col items-center justify-center pointer-events-none pt-20">
+            <!-- Papan Soal -->
+            <div class="bg-white/95 border-[3px] md:border-4 border-sky-400 rounded-2xl md:rounded-3xl py-2 px-6 shadow-xl flex items-center justify-center gap-2 md:gap-4 mb-6 md:mb-10 pointer-events-auto animate-pop">
+                <span id="obj-num-a" class="text-4xl md:text-6xl text-blue-600 font-black">0</span>
+                <span id="obj-operator" class="text-3xl md:text-5xl text-green-500 font-black mx-1">+</span>
+                <span id="obj-num-b" class="text-4xl md:text-6xl text-blue-600 font-black">0</span>
+                <span class="text-3xl md:text-5xl text-green-500 font-black mx-1">=</span>
+                <span class="text-5xl md:text-7xl text-red-500 font-black animate-pulse">?</span>
+            </div>
+
+            <!-- Interaksi Buah Apel -->
+            <div class="flex flex-col items-center gap-2 md:gap-4 pointer-events-auto">
+                <div id="btn-tap-object" class="text-7xl md:text-9xl cursor-pointer active:scale-90 transition-transform bg-white/70 p-4 md:p-6 rounded-full shadow-[0_10px_20px_rgba(0,0,0,0.3)] border-4 md:border-8 border-white hover:bg-white animate-float select-none">
+                    🍎
+                </div>
+                <div class="text-2xl md:text-4xl font-black text-white text-outline-black mt-2">
+                    Jumlah: <span id="tap-counter" class="text-yellow-400 text-4xl md:text-6xl">0</span>
+                </div>
+                <button id="btn-check-object" class="mt-4 md:mt-6 bg-green-500 hover:bg-green-400 text-white text-xl md:text-3xl font-black py-3 px-8 md:px-12 rounded-full border-[3px] md:border-4 border-green-700 shadow-xl active:scale-95 transition-transform tracking-wider">
+                    CEK JAWABAN
+                </button>
+            </div>
+        </div>
+
+        <!-- Overlays Game -->
+        <div id="feedback" class="absolute inset-0 z-[80] flex items-center justify-center pointer-events-none hidden bg-black/30">
+            <div id="feedback-text" class="text-6xl md:text-8xl font-black text-center" style="-webkit-text-stroke: 3px #000;"></div>
+        </div>
+
+        <div id="game-over-overlay" class="absolute inset-0 z-[90] bg-black/95 flex flex-col items-center justify-center hidden">
+            <h1 class="text-5xl md:text-7xl text-red-500 font-black text-outline-white mb-2 animate-pop">GAME OVER</h1>
+            <p class="text-white text-xl md:text-2xl font-bold mb-2">Skor Akhir: <span id="final-score" class="text-yellow-400">0</span></p>
+            <p class="text-white text-lg md:text-xl font-bold mb-8">Waktu Bermain: <span id="final-time" class="text-sky-300">00:00</span></p>
+            <button onclick="resetGame()" class="bg-yellow-400 border-4 border-yellow-600 text-yellow-900 text-xl md:text-2xl font-black py-2 md:py-3 px-8 rounded-full shadow-2xl active:scale-95 pointer-events-auto">MAIN LAGI</button>
+        </div>
+
+        <div id="level-up-overlay" class="absolute inset-0 z-[90] bg-blue-500/95 flex flex-col items-center justify-center hidden">
+            <h1 class="text-4xl md:text-6xl text-yellow-400 font-black text-outline-black mb-2 animate-pop">LEVEL NAIK!</h1>
+            <p id="level-up-text" class="text-white text-lg md:text-xl font-bold text-center px-4"></p>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. DATA MANAJEMEN JSON & ADMIN PANEL
+        // ==========================================
+        const DEFAULT_JSON = {
+            "appConfig": { "title": "Math Land TK Baiturrohman", "bgmVolume": 0.05, "pointsPerLevel": 50, "lives": 3 },
+            "ttsTemplates": {
+                "add": [
+                    "Andi punya {a} apel, diberi lagi {b}. Berapa jumlahnya?",
+                    "Ada {a} burung, datang lagi {b} burung. Berapa semuanya?",
+                    "{a} ditambah {b}, sama dengan berapa ya?"
+                ],
+                "sub": [
+                    "Budi punya {a} biskuit, dimakan {b}. Berapa sisanya?",
+                    "Ada {a} apel, jatuh {b}. Berapa yang tersisa?",
+                    "{a} dikurangi {b}, sama dengan berapa ya?"
+                ]
+            },
+            "levels": [
+                { "level": 1, "mechanic": "drag_drop", "maxNumber": 5, "speed": "0", "bgImage": "b.png" },
+                { "level": 2, "mechanic": "bubble_float", "maxNumber": 9, "speed": "7000", "bgImage": "b.png" }, 
+                { "level": 3, "mechanic": "falling_tap", "maxNumber": 12, "speed": "6500", "bgImage": "b.png" },
+                { "level": 4, "mechanic": "bubble_pop", "maxNumber": 15, "speed": "2500", "bgImage": "b.png" },
+                { "level": 5, "mechanic": "brick_peek", "maxNumber": 20, "speed": "2000", "bgImage": "b.png" },
+                { "level": 6, "mechanic": "object_count", "maxNumber": 10, "speed": "0", "bgImage": "b.png" }
+            ]
+        };
+
+        let db = JSON.parse(localStorage.getItem('mathLandData'));
+        if (!db || !db.ttsTemplates.add || !db.levels[5] || !db.levels[0].bgImage) {
+            db = DEFAULT_JSON; localStorage.setItem('mathLandData', JSON.stringify(db));
+        }
+
+        const tabs = document.querySelectorAll('.admin-tab-btn');
+        const contents = document.querySelectorAll('.admin-tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active')); contents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active'); document.getElementById(tab.dataset.target).classList.add('active');
+            });
+        });
+
+        const mechanicNames = { 
+            'drag_drop': 'Seret Jawaban', 
+            'bubble_float': 'Gelembung Terbang', 
+            'falling_tap': 'Batu Jatuh', 
+            'bubble_pop': 'Gelembung Buka-Tutup', 
+            'brick_peek': 'Batu Buka-Tutup',
+            'object_count': 'Hitung Objek (Apel)' 
+        };
+
+        function renderAdminLevel() {
+            const lvlContainer = document.getElementById('admin-level-container');
+            lvlContainer.innerHTML = '';
+            
+            db.levels.forEach((lvl, idx) => {
+                let mechOptions = Object.keys(mechanicNames).map(k => `<option value="${k}" ${lvl.mechanic===k?'selected':''}>${mechanicNames[k]}</option>`).join('');
+                let bgInput = lvl.bgImage || 'b.png';
+                let delBtn = idx > 0 ? `<button class="bg-red-500 text-white p-2 rounded text-xs ml-2" onclick="removeAdminLevel(${idx})">❌</button>` : '';
+
+                let html = `
+                <div class="admin-level-item bg-gray-900 p-3 rounded-xl border border-gray-600 flex flex-col gap-2">
+                    <div class="flex justify-between items-center border-b border-gray-700 pb-1">
+                        <span class="font-black text-lg text-yellow-400">Level ${idx + 1}</span>
+                        ${delBtn}
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-2">
+                        <div class="flex-1">
+                            <label class="text-[10px] text-gray-400">Mode Game</label>
+                            <select class="adm-lvl-mech w-full bg-gray-700 text-white p-1.5 text-sm rounded outline-none">${mechOptions}</select>
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[10px] text-gray-400">Background (URL/Gambar)</label>
+                            <input type="text" class="adm-lvl-bg w-full bg-gray-700 text-white p-1.5 text-sm rounded outline-none" value="${bgInput}" placeholder="b.png">
+                        </div>
+                        <div class="w-16">
+                            <label class="text-[10px] text-gray-400">Max Angka</label>
+                            <input type="number" class="adm-lvl-max w-full bg-gray-700 text-white p-1.5 text-sm rounded outline-none text-center" value="${lvl.maxNumber}">
+                        </div>
+                        <div class="w-20">
+                            <label class="text-[10px] text-gray-400">Speed (ms)</label>
+                            <input type="number" class="adm-lvl-spd w-full bg-gray-700 text-white p-1.5 text-sm rounded outline-none text-center" value="${lvl.speed}">
+                        </div>
+                    </div>
+                </div>`;
+                lvlContainer.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function loadDataToAdminForm() {
+            document.getElementById('admin-title').value = db.appConfig.title;
+            document.getElementById('admin-lives').value = db.appConfig.lives;
+            document.getElementById('admin-pts').value = db.appConfig.pointsPerLevel;
+            document.getElementById('admin-tts-add').value = db.ttsTemplates.add.join("\n");
+            document.getElementById('admin-tts-sub').value = db.ttsTemplates.sub.join("\n");
+            renderAdminLevel();
+        }
+
+        document.getElementById('btn-add-level').addEventListener('click', () => {
+            db.levels.push({ level: db.levels.length + 1, mechanic: "drag_drop", maxNumber: 10, speed: "0", bgImage: "b.png" });
+            renderAdminLevel();
+        });
+
+        window.removeAdminLevel = function(idx) {
+            db.levels.splice(idx, 1);
+            db.levels.forEach((l, i) => l.level = i + 1); // reindex
+            renderAdminLevel();
+        };
+
+        function saveDataFromAdminForm() {
+            db.appConfig.title = document.getElementById('admin-title').value;
+            db.appConfig.lives = parseInt(document.getElementById('admin-lives').value);
+            db.appConfig.pointsPerLevel = parseInt(document.getElementById('admin-pts').value);
+            
+            let addArr = document.getElementById('admin-tts-add').value.split('\n').map(s=>s.trim()).filter(s=>s);
+            let subArr = document.getElementById('admin-tts-sub').value.split('\n').map(s=>s.trim()).filter(s=>s);
+            if(addArr.length) db.ttsTemplates.add = addArr;
+            if(subArr.length) db.ttsTemplates.sub = subArr;
+
+            const items = document.querySelectorAll('.admin-level-item');
+            db.levels = [];
+            items.forEach((item, idx) => {
+                db.levels.push({
+                    level: idx + 1,
+                    mechanic: item.querySelector('.adm-lvl-mech').value,
+                    bgImage: item.querySelector('.adm-lvl-bg').value || 'b.png',
+                    maxNumber: parseInt(item.querySelector('.adm-lvl-max').value),
+                    speed: item.querySelector('.adm-lvl-spd').value
+                });
+            });
+
+            localStorage.setItem('mathLandData', JSON.stringify(db));
+            alert("Pengaturan Berhasil Disimpan!");
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('flex');
+            document.title = db.appConfig.title; 
+        }
+
+        // ==========================================
+        // 2. SISTEM AUDIO, BGM & TTS
+        // ==========================================
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx; let isMuted = false;
+        
+        const bgmAudio = new Audio('audio01.mp3');
+        bgmAudio.loop = true; bgmAudio.volume = db.appConfig.bgmVolume;
+
+        function initAudio() {
+            if(!audioCtx) audioCtx = new AudioContext();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playTone(freq, type, duration) {
+            if (isMuted || !audioCtx) return;
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function playCorrectSound() { playTone(523.25, 'sine', 0.1); setTimeout(() => playTone(659.25, 'sine', 0.2), 100); setTimeout(() => playTone(783.99, 'sine', 0.3), 200); }
+        function playWrongSound() { playTone(300, 'sawtooth', 0.2); setTimeout(() => playTone(250, 'sawtooth', 0.3), 150); }
+        function playDropSound() { playTone(400, 'triangle', 0.1); }
+        function playGameOverSound() { playTone(300, 'sawtooth', 0.3); setTimeout(() => playTone(200, 'sawtooth', 0.5), 300); }
+        function playLevelUpSound() { playTone(523.25, 'sine', 0.1); setTimeout(() => playTone(1046.50, 'sine', 0.4), 200); }
+
+        let lastSpeakText = "";
+
+        function triggerTTS(text) {
+            if (isMuted) return;
+            window.speechSynthesis.cancel();
+            lastSpeakText = text;
+            
+            const guideEl = document.getElementById('guide-text');
+            guideEl.querySelector('span').innerText = text;
+            guideEl.classList.remove('hidden');
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID'; utterance.rate = 0.85; utterance.pitch = 1.2; utterance.volume = 1.0; 
+            utterance.onend = () => { setTimeout(() => guideEl.classList.add('hidden'), 1500); };
+            utterance.onerror = () => { guideEl.classList.add('hidden'); };
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // DOUBLE TAP
+        let lastTapTime = 0;
+        document.getElementById('game-container').addEventListener('touchstart', (e) => {
+            const currentTime = new Date().getTime();
+            if (currentTime - lastTapTime < 400 && currentTime - lastTapTime > 0) {
+                if(lastSpeakText !== "") triggerTTS(lastSpeakText);
+            }
+            lastTapTime = currentTime;
+        }, {passive: true});
+        document.getElementById('game-container').addEventListener('dblclick', () => {
+             if(lastSpeakText !== "") triggerTTS(lastSpeakText);
+        });
+
+        // ==========================================
+        // 3. FITUR TIMER WAKTU BERMAIN
+        // ==========================================
+        let secondsPlayed = 0; let timerInterval = null;
+
+        function startTimer() {
+            if(timerInterval) clearInterval(timerInterval);
+            secondsPlayed = 0; updateTimerDisplay();
+            timerInterval = setInterval(() => { secondsPlayed++; updateTimerDisplay(); }, 1000);
+        }
+        function stopTimer() { if(timerInterval) clearInterval(timerInterval); }
+        function updateTimerDisplay() {
+            const m = Math.floor(secondsPlayed / 60).toString().padStart(2, '0');
+            const s = (secondsPlayed % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+        }
+
+        // ==========================================
+        // 4. STATE ENGINE GAME & DINAMIS SCALING
+        // ==========================================
+        let score = 0, currentLevelIndex = 0, lives = db.appConfig.lives;
+        let numA = 0, numB = 0, resultC = 0, currentAnswer = 0;
+        let currentOperator = '+', questionType = 0; 
+        let activeIntervals = []; let activeTimeouts = [];
+
+        const scoreEl = document.getElementById('score');
+        const levelEl = document.getElementById('level-display');
+        
+        function clearActionArea() {
+            activeIntervals.forEach(clearInterval); activeIntervals = [];
+            activeTimeouts.forEach(clearTimeout); activeTimeouts = [];
+            document.getElementById('action-area').innerHTML = '';
+            document.querySelectorAll('body > .draggable').forEach(el => el.remove());
+            
+            // Sembunyikan semua UI Mode
+            document.getElementById('mechanic-drag-drop').classList.add('hidden');
+            document.getElementById('mechanic-action').classList.add('hidden');
+            document.getElementById('mechanic-object-count').classList.add('hidden');
+            document.getElementById('mechanic-object-count').classList.remove('flex');
+        }
+
+        function getDynamicConfig() {
+            if (currentLevelIndex < db.levels.length) {
+                return db.levels[currentLevelIndex];
+            } else {
+                const actionMechanics = ['bubble_float', 'falling_tap', 'bubble_pop', 'brick_peek', 'object_count'];
+                const loopIndex = currentLevelIndex - db.levels.length; 
+                const mech = actionMechanics[loopIndex % actionMechanics.length];
+                const baseLevel = db.levels[db.levels.length-1];
+                
+                const newMax = baseLevel.maxNumber + ((loopIndex + 1) * 5);
+                const cycle = Math.floor(loopIndex / 4) + 1;
+                let newSpeed = parseInt(baseLevel.speed) - (cycle * 500); 
+                if (newSpeed < 800) newSpeed = 800;
+
+                return { mechanic: mech, maxNumber: newMax, speed: newSpeed.toString(), bgImage: baseLevel.bgImage };
+            }
+        }
+
+        function generateOptions() {
+            let options = new Set([currentAnswer]);
+            while(options.size < 3) {
+                let fakeAns = currentAnswer + (Math.floor(Math.random() * 7) - 3);
+                if(fakeAns >= 0 && fakeAns !== currentAnswer) options.add(fakeAns);
+            }
+            return Array.from(options).sort(() => Math.random() - 0.5);
+        }
+
+        function nextQuestion() {
+            clearActionArea();
+            const config = getDynamicConfig();
+            
+            // Set Custom Background
+            document.getElementById('game-container').style.backgroundImage = `url('${config.bgImage || 'b.png'}')`;
+
+            numA = Math.floor(Math.random() * config.maxNumber) + 1;
+            numB = Math.floor(Math.random() * config.maxNumber) + 1;
+            currentOperator = Math.random() < 0.5 ? '+' : '-';
+
+            if (currentOperator === '-') {
+                if (numB > numA) { let temp = numA; numA = numB; numB = temp; }
+                resultC = numA - numB;
+            } else { resultC = numA + numB; }
+
+            // Jika mode Hitung Objek (Mekanik Baru), pastikan questionType = 0 (A+B=?) agar logika tapping sesuai.
+            if (config.mechanic === 'object_count') {
+                questionType = 0;
+            } else {
+                const randType = Math.random();
+                if (randType < 0.5) questionType = 0; else if (randType < 0.75) questionType = 1; else questionType = 2;
+            }
+            
+            if (questionType === 0) currentAnswer = resultC;
+            else if (questionType === 1) currentAnswer = numA;
+            else if (questionType === 2) currentAnswer = numB;
+
+            const options = generateOptions();
+
+            if (config.mechanic === 'drag_drop') {
+                initDragDrop(options);
+            } else if (config.mechanic === 'object_count') {
+                initObjectCountMechanic();
+            } else {
+                initActionMechanic(options, config.mechanic, parseInt(config.speed));
+            }
+
+            setTimeout(() => {
+                let textToSpeak = "";
+                if (questionType === 0) {
+                    const tplCat = (currentOperator === '+') ? db.ttsTemplates.add : db.ttsTemplates.sub;
+                    textToSpeak = tplCat[Math.floor(Math.random() * tplCat.length)].replace("{a}", numA).replace("{b}", numB);
+                } else if (questionType === 1) {
+                    textToSpeak = currentOperator === '+' ? `Berapa ditambah ${numB}, agar hasilnya ${resultC}?` : `Berapa dikurangi ${numB}, agar sisanya ${resultC}?`;
+                } else {
+                    textToSpeak = currentOperator === '+' ? `${numA} ditambah berapa, agar hasilnya ${resultC}?` : `${numA} dikurangi berapa, agar sisanya ${resultC}?`;
+                }
+                triggerTTS(textToSpeak);
+            }, 500);
+        }
+
+        // ==========================================
+        // 5. MEKANIK 1: DRAG & DROP
+        // ==========================================
+        let isDragging = false, dragEl = null, offsetX = 0, offsetY = 0, startParent = null;
+
+        function initDragDrop(options) {
+            document.getElementById('mechanic-drag-drop').classList.remove('hidden');
+            const eqContainer = document.getElementById('equation-container');
+            const optContainer = document.getElementById('options-container');
+
+            const opSpan = `<span class="text-4xl md:text-6xl font-black math-symbol mx-1 md:mx-3">${currentOperator}</span>`;
+            const eqSpan = `<span class="text-4xl md:text-6xl font-black math-symbol mx-1 md:mx-3">=</span>`;
+            
+            let bagA = questionType === 1 ? generateBagHTML('?', 'dark', 'dropzone') : generateBagHTML(numA, 'white', 'bag-1');
+            let bagB = questionType === 2 ? generateBagHTML('?', 'dark', 'dropzone') : generateBagHTML(numB, 'white', 'bag-2');
+            let bagC = questionType === 0 ? generateBagHTML('?', 'dark', 'dropzone') : generateBagHTML(resultC, 'white', 'bag-3');
+
+            eqContainer.innerHTML = bagA + opSpan + bagB + eqSpan + bagC;
+            optContainer.innerHTML = options.map(val => generateBagHTML(val, 'brown')).join('');
+
+            [...eqContainer.children, ...optContainer.children].forEach((el, idx) => {
+                el.style.opacity = '0'; el.style.animation = `popIn 0.4s ease-out forwards ${idx * 0.05}s`;
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.draggable').forEach(el => {
+                    el.addEventListener('mousedown', dragStart, {passive: false});
+                    el.addEventListener('touchstart', dragStart, {passive: false});
+                });
+            }, 500);
+        }
+
+        function generateBagHTML(num, type='brown', id='') {
+            let fill, stroke, txtColor, textClass;
+            if(type === 'white') { fill = '#f8fafc'; stroke = '#475569'; txtColor = '#0f172a'; textClass = 'text-outline-white'; } 
+            else if(type === 'dark') { fill = '#292524'; stroke = '#000000'; txtColor = '#d97706'; textClass = ''; } 
+            else { fill = '#d97706'; stroke = '#78350f'; txtColor = '#ffffff'; textClass = 'text-outline-black'; }
+
+            const isDraggable = type === 'brown';
+            const dragClasses = isDraggable ? 'draggable cursor-grab hover:scale-105' : '';
+            const sizeClass = 'w-20 h-24 md:w-32 md:h-40'; 
+            const textS = type === 'dark' ? 'text-5xl md:text-7xl' : 'text-4xl md:text-6xl';
+
+            return `
+                <div id="${id}" class="relative flex flex-col items-center justify-end pb-3 md:pb-6 transition-transform ${sizeClass} ${dragClasses}" data-val="${num}" style="z-index: ${isDraggable ? '20' : '10'}; touch-action: none;">
+                    <svg viewBox="0 0 100 120" class="absolute bottom-0 w-full h-full pointer-events-none drop-shadow-md md:drop-shadow-xl">
+                        <path d="M 25 110 C 10 70 20 40 35 35 Q 50 40 65 35 C 80 40 90 70 75 110 Z" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+                        <path d="M 32 38 Q 50 45 68 38" fill="none" stroke="${stroke}" stroke-width="4"/>
+                        <path d="M 35 35 C 30 15 70 15 65 35 Z" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+                    </svg>
+                    <span class="relative z-10 ${textS} font-black select-none pointer-events-none ${textClass}" style="color: ${txtColor};">${num}</span>
+                </div>`;
+        }
+
+        function dragStart(e) {
+            if(e.type === 'touchstart') e.preventDefault();
+            dragEl = this; isDragging = true; startParent = dragEl.parentElement;
+            const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            const rect = dragEl.getBoundingClientRect(); offsetX = cx - rect.left; offsetY = cy - rect.top;
+
+            dragEl.classList.add('dragging'); dragEl.style.position = 'fixed'; dragEl.style.left = rect.left + 'px'; dragEl.style.top = rect.top + 'px';
+            document.body.appendChild(dragEl); playDropSound();
+
+            document.addEventListener('mousemove', dragMove, {passive: false}); document.addEventListener('touchmove', dragMove, {passive: false});
+            document.addEventListener('mouseup', dragEnd); document.addEventListener('touchend', dragEnd);
+        }
+        function dragMove(e) {
+            if(!isDragging) return; e.preventDefault();
+            const cx = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const cy = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            dragEl.style.left = (cx - offsetX) + 'px'; dragEl.style.top = (cy - offsetY) + 'px';
+        }
+        function dragEnd() {
+            if(!isDragging) return; isDragging = false;
+            document.removeEventListener('mousemove', dragMove); document.removeEventListener('touchmove', dragMove);
+            document.removeEventListener('mouseup', dragEnd); document.removeEventListener('touchend', dragEnd);
+            dragEl.classList.remove('dragging');
+
+            const dropzone = document.getElementById('dropzone');
+            if(dropzone && isColliding(dragEl, dropzone)) {
+                if(parseInt(dragEl.getAttribute('data-val')) === currentAnswer) {
+                    dragEl.style.left = dropzone.getBoundingClientRect().left + 'px'; dragEl.style.top = dropzone.getBoundingClientRect().top + 'px';
+                    dropzone.style.opacity = '0'; handleCorrect();
+                } else { handleWrong(dragEl); }
+            } else { resetDragPosition(dragEl); }
+            dragEl = null;
+        }
+        function isColliding(a, b) {
+            const r1 = a.getBoundingClientRect(), r2 = b.getBoundingClientRect();
+            const cx = r1.left + r1.width/2, cy = r1.top + r1.height/2;
+            return (cx >= r2.left && cx <= r2.right && cy >= r2.top && cy <= r2.bottom);
+        }
+        function resetDragPosition(el) { el.style.position = 'relative'; el.style.left = ''; el.style.top = ''; startParent.appendChild(el); playDropSound(); }
+
+        // ==========================================
+        // 6. MEKANIK ACTION: FLOAT, FALL, POP, PEEK
+        // ==========================================
+        function initActionMechanic(options, mechanicType, speedMs) {
+            document.getElementById('mechanic-action').classList.remove('hidden');
+            const styleN = 'text-3xl md:text-5xl text-blue-600 text-outline-white font-black';
+            const styleM = 'text-4xl md:text-6xl text-red-500 font-black animate-pulse';
+            
+            document.getElementById('action-num-a').innerText = questionType === 1 ? '?' : numA;
+            document.getElementById('action-num-a').className = questionType === 1 ? styleM : styleN;
+            document.getElementById('action-num-b').innerText = questionType === 2 ? '?' : numB;
+            document.getElementById('action-num-b').className = questionType === 2 ? styleM : styleN;
+            document.getElementById('action-result').innerText = questionType === 0 ? '?' : resultC;
+            document.getElementById('action-result').className = questionType === 0 ? styleM : styleN;
+            document.getElementById('action-operator').innerText = currentOperator;
+
+            const area = document.getElementById('action-area');
+            let spawnRate = Math.max(800, speedMs * 0.4); 
+
+            const spawner = setInterval(() => {
+                const val = options[Math.floor(Math.random() * options.length)];
+                createActionItem(val, mechanicType, speedMs, area);
+            }, spawnRate);
+            
+            activeIntervals.push(spawner);
+        }
+
+        function createActionItem(val, mechanicType, speedMs, area) {
+            const el = document.createElement('div');
+            el.innerHTML = `<span class="text-4xl md:text-6xl font-black text-white text-outline-black pointer-events-none">${val}</span>`;
+            
+            const randomX = Math.floor(Math.random() * 70) + 10; 
+            el.style.left = `${randomX}%`;
+            const objSize = 'w-24 h-24 md:w-36 md:h-36';
+
+            if (mechanicType === 'bubble_float') {
+                el.className = `bubble ${objSize} pointer-events-auto active:scale-95`;
+                el.style.top = '110%'; 
+                el.style.animation = `moveUpAnim ${speedMs}ms linear forwards`;
+                el.addEventListener('animationend', () => el.remove());
+            } 
+            else if (mechanicType === 'falling_tap') {
+                el.className = `falling-block ${objSize} pointer-events-auto active:scale-95`;
+                el.style.top = '-20%';
+                el.style.animation = `moveDownAnim ${speedMs}ms linear forwards`;
+                el.addEventListener('animationend', () => el.remove());
+            }
+            else if (mechanicType === 'bubble_pop') {
+                const randomY = Math.floor(Math.random() * 50) + 30; 
+                el.style.top = `${randomY}%`;
+                el.className = `bubble ${objSize} pointer-events-auto active:scale-95 animate-pop`;
+                
+                const t1 = setTimeout(() => { if(el) { el.classList.remove('animate-pop'); el.classList.add('animate-pop-out'); } }, speedMs - 300);
+                const t2 = setTimeout(() => { if(el) el.remove(); }, speedMs);
+                activeTimeouts.push(t1, t2);
+            }
+            else if (mechanicType === 'brick_peek') {
+                const randomY = Math.floor(Math.random() * 50) + 30; 
+                el.style.top = `${randomY}%`;
+                el.className = `falling-block ${objSize} pointer-events-auto active:scale-95 animate-pop`;
+                el.style.background = 'linear-gradient(135deg, #b45309, #78350f)'; 
+                el.style.borderColor = '#451a03';
+                
+                const t1 = setTimeout(() => { if(el) { el.classList.remove('animate-pop'); el.classList.add('animate-pop-out'); } }, speedMs - 300);
+                const t2 = setTimeout(() => { if(el) el.remove(); }, speedMs);
+                activeTimeouts.push(t1, t2);
+            }
+
+            el.addEventListener('mousedown', () => evaluateActionTap(el, val));
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); evaluateActionTap(el, val); }, {passive: false});
+            area.appendChild(el);
+        }
+
+        function evaluateActionTap(el, val) {
+            if(el.dataset.clicked) return; el.dataset.clicked = "true";
+            if (val === currentAnswer) {
+                activeIntervals.forEach(clearInterval); activeIntervals = [];
+                activeTimeouts.forEach(clearTimeout); activeTimeouts = [];
+                el.style.animationPlayState = 'paused'; el.style.transition = 'all 0.2s';
+                el.style.transform = 'scale(1.5)'; el.style.opacity = '0';
+                handleCorrect();
+            } else { handleWrong(el, true); }
+        }
+
+        // ==========================================
+        // 7. MEKANIK BARU: HITUNG OBJEK (MENGKETUK APEL)
+        // ==========================================
+        let currentObjectTaps = 0;
+        
+        function initObjectCountMechanic() {
+            const mech = document.getElementById('mechanic-object-count');
+            mech.classList.remove('hidden');
+            mech.classList.add('flex'); // Pakai flex untuk centering
+
+            document.getElementById('obj-num-a').innerText = numA;
+            document.getElementById('obj-operator').innerText = currentOperator;
+            document.getElementById('obj-num-b').innerText = numB;
+            
+            currentObjectTaps = 0;
+            document.getElementById('tap-counter').innerText = currentObjectTaps;
+
+            // Pastikan event listener tidak duplikat (hapus yang lama, pasang baru)
+            const btnTap = document.getElementById('btn-tap-object');
+            const newBtnTap = btnTap.cloneNode(true);
+            btnTap.parentNode.replaceChild(newBtnTap, btnTap);
+
+            const btnCheck = document.getElementById('btn-check-object');
+            const newBtnCheck = btnCheck.cloneNode(true);
+            btnCheck.parentNode.replaceChild(newBtnCheck, btnCheck);
+
+            // Event Tap Objek (Membesarkan angka)
+            newBtnTap.addEventListener('mousedown', hitungObjek);
+            newBtnTap.addEventListener('touchstart', (e) => { e.preventDefault(); hitungObjek(); }, {passive: false});
+
+            // Event Cek Jawaban
+            newBtnCheck.addEventListener('click', () => {
+                if (currentObjectTaps === currentAnswer) {
+                    newBtnTap.style.pointerEvents = 'none'; // Kunci tombol tap
+                    handleCorrect();
+                } else {
+                    handleWrong(newBtnTap, true); // Getarkan objek, reset nilai
+                    currentObjectTaps = 0;
+                    document.getElementById('tap-counter').innerText = 0;
+                }
+            });
+        }
+
+        function hitungObjek() {
+            currentObjectTaps++;
+            document.getElementById('tap-counter').innerText = currentObjectTaps;
+            playDropSound(); // Suara pop kecil
+            
+            // Animasi membesar sejenak (efek poping)
+            const obj = document.getElementById('btn-tap-object');
+            obj.style.transform = 'scale(1.3)';
+            setTimeout(() => { obj.style.transform = 'scale(1)'; }, 100);
+        }
+
+        // ==========================================
+        // 8. LOGIKA BENAR / SALAH & GAME OVER
+        // ==========================================
+        function handleCorrect() {
+            playCorrectSound();
+            if (!isMuted) { window.speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance("Benar sekali! Pintar!"); utter.lang = 'id-ID'; window.speechSynthesis.speak(utter); }
+            
+            score += 10;
+            scoreEl.innerText = score;
+            scoreEl.classList.remove('animate-pop'); void scoreEl.offsetWidth; scoreEl.classList.add('animate-pop');
+            
+            const fdbk = document.getElementById('feedback');
+            const ftxt = document.getElementById('feedback-text');
+            ftxt.innerText = "BENAR!"; ftxt.style.color = "#4ade80";
+            fdbk.classList.remove('hidden'); ftxt.style.animation = 'none'; void ftxt.offsetWidth; ftxt.style.animation = 'popIn 0.5s forwards';
+            setTimeout(() => fdbk.classList.add('hidden'), 1500);
+
+            setTimeout(() => { if(!checkLevelUp()) nextQuestion(); }, 2000);
+        }
+
+        function handleWrong(el, isAction = false) {
+            playWrongSound();
+            if(isAction) { 
+                // Khusus untuk tap objek, jangan dikasi background merah
+                if (el.id !== 'btn-tap-object') { el.classList.add('bg-red-500'); el.style.borderColor = 'red'; }
+                el.classList.add('animate-shake'); 
+            } else { resetDragPosition(el); el.classList.add('animate-shake'); }
+
+            lives--; updateLivesUI();
+            
+            if (lives <= 0) {
+                triggerGameOver();
+            } else {
+                if (!isMuted) { window.speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance("O ow, salah. Ayo coba hitung lagi!"); utter.lang = 'id-ID'; window.speechSynthesis.speak(utter); }
+                const fdbk = document.getElementById('feedback');
+                const ftxt = document.getElementById('feedback-text');
+                ftxt.innerText = "SALAH!"; ftxt.style.color = "#f87171";
+                fdbk.classList.remove('hidden'); ftxt.style.animation = 'none'; void ftxt.offsetWidth; ftxt.style.animation = 'popIn 0.5s forwards';
+                setTimeout(() => fdbk.classList.add('hidden'), 1000);
+                if(!isAction) setTimeout(() => el.classList.remove('animate-shake'), 500);
+                else setTimeout(() => el.classList.remove('animate-shake'), 500); // Untuk action/objek bersihkan shake
+            }
+        }
+
+        function updateLivesUI() {
+            for(let i = 1; i <= 5; i++) { 
+                const heartEl = document.getElementById(`heart-${i}`);
+                if(heartEl) {
+                    if (i <= lives) heartEl.classList.remove('heart-lost');
+                    else if(!heartEl.classList.contains('heart-lost')) heartEl.classList.add('heart-lost');
+                    heartEl.style.display = (i <= db.appConfig.lives) ? 'inline-block' : 'none';
+                }
+            }
+        }
+
+        function checkLevelUp() {
+            if (score > 0 && score % db.appConfig.pointsPerLevel === 0) {
+                currentLevelIndex++;
+                const actLevelNum = currentLevelIndex + 1;
+                levelEl.innerText = actLevelNum;
+                playLevelUpSound();
+                
+                let mechanicText = getDynamicConfig().mechanic;
+                if (mechanicNames[mechanicText]) mechanicText = mechanicNames[mechanicText];
+                document.getElementById('level-up-text').innerText = `Tantangan Baru: ${mechanicText.toUpperCase()}`;
+                
+                if (!isMuted) {
+                    window.speechSynthesis.cancel();
+                    const utter = new SpeechSynthesisUtterance(`Luar biasa! Kamu naik ke level ${actLevelNum}!`);
+                    utter.lang = 'id-ID'; window.speechSynthesis.speak(utter);
+                }
+
+                const overlay = document.getElementById('level-up-overlay');
+                overlay.classList.remove('hidden');
+                setTimeout(() => { overlay.classList.add('hidden'); nextQuestion(); }, 3500);
+                return true;
+            }
+            return false;
+        }
+
+        function triggerGameOver() {
+            stopTimer(); 
+            playGameOverSound();
+            if (!isMuted) { window.speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance("Permainan selesai. Jangan menyerah, ayo main lagi!"); utter.lang = 'id-ID'; window.speechSynthesis.speak(utter); }
+            bgmAudio.pause(); clearActionArea();
+            
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-time').innerText = document.getElementById('timer-display').innerText;
+            document.getElementById('game-over-overlay').classList.remove('hidden');
+        }
+
+        function resetGame() {
+            score = 0; currentLevelIndex = 0; lives = db.appConfig.lives;
+            scoreEl.innerText = score; levelEl.innerText = "1"; updateLivesUI();
+            document.getElementById('game-over-overlay').classList.add('hidden');
+            if(!isMuted) { bgmAudio.currentTime = 0; bgmAudio.play().catch(e=>e); }
+            startTimer(); 
+            nextQuestion();
+        }
+
+        // ==========================================
+        // 9. INISIALISASI & TOMBOL UTAMA
+        // ==========================================
+        document.title = db.appConfig.title || "Math Land"; 
+        for(let i=4; i<=5; i++){ document.getElementById('lives-container').insertAdjacentHTML('beforeend', `<span class="text-sm md:text-lg transition-all" id="heart-${i}" style="display:none;">❤️</span>`); }
+
+        function backToMenu() {
+            document.getElementById('start-screen').style.display = 'flex';
+            document.getElementById('game-container').classList.add('hidden');
+            document.getElementById('game-over-overlay').classList.add('hidden');
+            bgmAudio.pause(); window.speechSynthesis.cancel(); clearActionArea(); stopTimer();
+        }
+
+        document.getElementById('btn-start').addEventListener('click', () => {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-container').classList.remove('hidden');
+            history.pushState({page: 'game'}, 'Permainan Berlangsung', '#game');
+
+            initAudio(); bgmAudio.play().catch(e=>e);
+            
+            if(lives <= 0) { resetGame(); } 
+            else if (score === 0 && lives === db.appConfig.lives) { updateLivesUI(); startTimer(); nextQuestion(); } 
+            else { startTimer(); }
+        });
+
+        document.getElementById('btn-mute').addEventListener('click', () => {
+            isMuted = !isMuted; const btn = document.getElementById('btn-mute');
+            if (isMuted) { btn.innerHTML = '🔇'; bgmAudio.pause(); window.speechSynthesis.cancel(); } 
+            else { btn.innerHTML = '🔊'; initAudio(); bgmAudio.play().catch(e=>e); }
+        });
+
+        document.getElementById('btn-back').addEventListener('click', () => history.back());
+        window.addEventListener('popstate', (e) => { if (!e.state || e.state.page !== 'game') backToMenu(); });
+
+        let adminClickCount = 0; let adminClickTimer;
+        document.getElementById('footer-text').addEventListener('click', () => {
+            adminClickCount++; clearTimeout(adminClickTimer);
+            if(adminClickCount >= 5) {
+                loadDataToAdminForm();
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('admin-panel').classList.add('flex');
+                adminClickCount = 0;
+            } else {
+                adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 1500);
+            }
+        });
+
+        document.getElementById('btn-close-admin').addEventListener('click', () => {
+            document.getElementById('admin-panel').classList.add('hidden'); document.getElementById('admin-panel').classList.remove('flex');
+        });
+
+        document.getElementById('btn-export').addEventListener('click', () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 4));
+            const dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr); dlAnchorElem.setAttribute("download", "MathLand_Config.json"); dlAnchorElem.click();
+        });
+
+        document.getElementById('btn-import-trigger').addEventListener('click', () => document.getElementById('file-import').click());
+        document.getElementById('file-import').addEventListener('change', function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try { db = JSON.parse(e.target.result); loadDataToAdminForm(); alert("Data berhasil di-import!"); } 
+                catch(error) { alert("Error membaca file JSON. Pastikan file benar."); }
+            }; reader.readAsText(file);
+        });
+
+    </script>
+</body>
+</html>
