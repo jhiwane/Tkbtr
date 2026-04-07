@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1e293b">
-    <title>Aplikasi Cetak Absensi Guru - Final PWA</title>
+    <title>Aplikasi Cetak Absensi Guru - Final PWA & Agenda</title>
     
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQWJzZW5zaSBUSyIsInNob3J0X25hbWUiOiJBYnNlbnNpIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxZTI5M2IiLCJ0aGVtZV9jb2xvciI6IiMxZTI5M2IiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2RsYnBxcC5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
     <link rel="apple-touch-icon" href="https://files.catbox.moe/dlbpqp.png">
@@ -20,7 +20,7 @@
             @page { size: landscape; margin: 6mm 10mm; }
             body { background: white !important; margin: 0 !important; padding: 0 !important; }
             
-            #landing-view, #bottom-nav, #dashboard-header, #tab-pegawai, #tab-pengaturan, #toast-container, #modal-edit, #modal-halangan, #modal-pilih-nama, .no-print, .bg-shapes { 
+            #landing-view, #bottom-nav, #dashboard-header, #tab-pegawai, #tab-pengaturan, #toast-container, #modal-edit, #modal-halangan, #modal-pilih-nama, #modal-notif, .no-print, .bg-shapes { 
                 display: none !important; 
             }
 
@@ -47,7 +47,6 @@
             .table-absensi { width: 100%; border-collapse: collapse; font-size: 10.5px; border: 2px solid black; }
             .table-absensi th, .table-absensi td { border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; }
             
-            /* Warna Merah Hari Libur di Print */
             .holiday-col { background-color: #fee2e2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             .row-dtg td { border-bottom: 1px dashed black !important; }
@@ -115,7 +114,6 @@
         .glass-panel { background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: rgba(15, 23, 42, 0.85); background-blend-mode: overlay; backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .orbit-container { position: relative; width: 300px; height: 300px; margin: 2rem auto; border-radius: 50%; border: 2px dashed rgba(212, 175, 55, 0.3); box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 40px rgba(212, 175, 55, 0.1); }
         
-        /* Modifikasi Orbit Center jadi tombol interaktif */
         .orbit-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; border-radius: 50%; background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=200&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: #0f172a; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 2px solid rgba(212, 175, 55, 0.5); z-index: 10; overflow: hidden; outline: none; }
         .orbit-center:hover { border-color: rgba(212, 175, 55, 0.9); box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
         .orbit-center-overlay { width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; padding: 10px; transition: background 0.3s; }
@@ -150,11 +148,18 @@
             <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
         </button>
 
+        <button onclick="openNotifModal()" class="absolute top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-50 p-3 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-lg group" title="Pengumuman">
+            <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+            <span id="notif-badge" class="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full border-2 border-slate-900 hidden animate-pulse"></span>
+        </button>
+
         <div class="glass-panel p-8 rounded-3xl w-11/12 max-w-md z-10 flex flex-col items-center relative">
             <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 tracking-wide text-center drop-shadow-lg">
                 SISTEM ABSENSI
             </h1>
-            <div id="landing-clock" class="text-white/90 text-xl font-mono tracking-widest mb-10 border-b border-white/20 pb-2">00:00:00</div>
+            
+            <div id="landing-clock" class="text-white/90 text-3xl font-mono tracking-widest font-bold">00:00:00</div>
+            <div id="landing-date" class="text-slate-300 text-sm font-medium mt-1 mb-8 border-b border-white/20 pb-3 uppercase tracking-wider text-center">...</div>
 
             <div class="orbit-container">
                 <button class="orbit-center cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95" onclick="openNameSelectModal()" title="Klik untuk pilih nama">
@@ -189,6 +194,23 @@
         </div>
     </div>
 
+    <div id="modal-notif" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md transition-opacity">
+        <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[90%] max-w-sm shadow-2xl flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
+                <h3 class="text-white font-extrabold text-xl flex items-center gap-2">
+                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                    Pengumuman
+                </h3>
+                <button onclick="closeNotifModal()" class="text-slate-400 hover:text-red-400 bg-slate-700 hover:bg-slate-600 rounded-full p-1.5 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="bg-slate-700/50 p-4 rounded-2xl text-slate-200 text-sm leading-relaxed whitespace-pre-wrap overflow-y-auto custom-scrollbar" id="notif-text">
+                Tidak ada pengumuman saat ini.
+            </div>
+        </div>
+    </div>
+
     <div id="modal-pilih-nama" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md transition-opacity">
         <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[90%] max-w-sm shadow-2xl flex flex-col max-h-[80vh]">
             <div class="flex justify-between items-center mb-5">
@@ -197,8 +219,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div id="list-nama-landing" class="overflow-y-auto custom-scrollbar flex flex-col gap-2.5 pr-2 pb-2">
-                </div>
+            <div id="list-nama-landing" class="overflow-y-auto custom-scrollbar flex flex-col gap-2.5 pr-2 pb-2"></div>
         </div>
     </div>
 
@@ -215,9 +236,7 @@
     </div>
 
     <div id="dashboard-view" class="hidden admin-bg">
-        <div class="bg-shapes">
-            <div class="shape-1"></div><div class="shape-2"></div>
-        </div>
+        <div class="bg-shapes"><div class="shape-1"></div><div class="shape-2"></div></div>
 
         <div id="dashboard-header" class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/50 shadow-sm px-4 py-3 flex justify-between items-center no-print">
             <div class="flex items-center gap-2">
@@ -248,6 +267,20 @@
 
             <div id="tab-pengaturan" class="hidden space-y-6">
                 <div class="glass-card p-5">
+                    
+                    <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-200 mb-6 shadow-sm">
+                        <label class="block text-sm font-bold text-yellow-800 mb-2 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg> 
+                            Kirim Pengumuman / Agenda Guru
+                        </label>
+<textarea id="inp-agenda" class="w-full p-3 border border-yellow-300 rounded-xl text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 bg-white min-h-[100px] break-words whitespace-pre-wrap resize-y" placeholder="Tulis pengumuman di sini... Kosongkan jika tidak ada pengumuman."></textarea>
+                        <div class="flex justify-end mt-3">
+                            <button onclick="saveAgenda()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Kirim Pengumuman
+                            </button>
+                        </div>
+                    </div>
+
                     <h2 class="font-extrabold text-slate-800 border-b border-slate-200 pb-3 flex items-center gap-2 mb-4">
                         <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         Teks Kop & Laporan
@@ -413,7 +446,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1taGF5aXZiemx3ZnpidXlqYWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzU5MTgsImV4cCI6MjA5MDQxMTkxOH0.pVWLpoZu0EVynxWQ_LwmsXYQWNR363WBLS1RaGm4iNI'; 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v5_Final';
+        const LOCAL_STORAGE_KEY = 'DataAbsensi_v6_Agenda';
         
         const defaultEmployeesList = [
             { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
@@ -434,11 +467,12 @@
             tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
             holidays: [], 
+            agendaMessage: "", // State baru untuk menyimpan pengumuman
             employees: JSON.parse(JSON.stringify(defaultEmployeesList))
         };
 
         let currentDaysList = [];
-        function getMonthName(mIndex) { const months = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER']; return months[parseInt(mIndex) - 1]; }
+        function getMonthName(mIndex) { const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; return months[parseInt(mIndex) - 1]; }
         function updateDaysList() { if(!state.tahunBulan) state.tahunBulan=defaultTahunBulan; const [y, m]=state.tahunBulan.split('-'); const daysCount=new Date(y, m, 0).getDate(); currentDaysList=Array.from({length: daysCount}, (_, i) => i + 1); }
         
         function isHoliday(day) {
@@ -472,8 +506,39 @@
         function switchTab(tabName) { ['pegawai','pengaturan','cetak'].forEach(t => { document.getElementById('tab-'+t).classList.add('hidden'); document.getElementById('btn-tab-'+t).classList.remove('active'); }); document.getElementById('tab-'+tabName).classList.remove('hidden'); document.getElementById('btn-tab-'+tabName).classList.add('active'); window.scrollTo(0,0); }
         function showToast(message, isSuccess = true) { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${isSuccess ? 'bg-green-600' : 'bg-red-600'} border border-white/20`; toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`; container.appendChild(toast); setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000); }
 
+        // --- AGENDA & NOTIFIKASI LOGIC ---
+        function saveAgenda() {
+            const val = document.getElementById('inp-agenda').value;
+            updateState('agendaMessage', val);
+            showToast('Pengumuman berhasil dikirim ke semua guru!');
+            renderNotif();
+        }
+
+        function renderNotif() {
+    const msg = state.agendaMessage;
+    const badge = document.getElementById('notif-badge');
+    const textEl = document.getElementById('notif-text');
+    
+    if (msg && msg.trim() !== '') {
+        if(badge) badge.classList.remove('hidden');
+        if(textEl) textEl.innerText = msg;
+    } else {
+        if(badge) badge.classList.add('hidden');
+        if(textEl) textEl.innerText = "Tidak ada pengumuman saat ini.";
+    }
+    
+    // Perbaikan bug: Mencegah tulisan ketimpa/hilang saat admin sedang mengetik
+    const inp = document.getElementById('inp-agenda');
+    // Hanya update isi kotak JIKA kursor admin tidak sedang berada di dalam kotak tersebut
+    if (inp && document.activeElement !== inp && inp.value !== msg) {
+        inp.value = msg || "";
+    }
+}
+
+        function openNotifModal() { document.getElementById('modal-notif').classList.remove('hidden'); }
+        function closeNotifModal() { document.getElementById('modal-notif').classList.add('hidden'); }
+
         // --- LANDING LOGIC & HALANGAN ---
-        // BUKA MODAL PILIH NAMA
         function openNameSelectModal() {
             const listContainer = document.getElementById('list-nama-landing');
             listContainer.innerHTML = '';
@@ -491,19 +556,8 @@
             }
             document.getElementById('modal-pilih-nama').classList.remove('hidden');
         }
-
-        // TUTUP MODAL PILIH NAMA
-        function closeNameSelectModal() {
-            document.getElementById('modal-pilih-nama').classList.add('hidden');
-        }
-
-        // PILIH NAMA DARI MODAL
-        function selectLandingName(id, name) {
-            currentSelectedLandingId = id;
-            document.getElementById('orbit-center-text').innerText = name.toUpperCase();
-            closeNameSelectModal();
-            playCuteSound();
-        }
+        function closeNameSelectModal() { document.getElementById('modal-pilih-nama').classList.add('hidden'); }
+        function selectLandingName(id, name) { currentSelectedLandingId = id; document.getElementById('orbit-center-text').innerText = name.toUpperCase(); closeNameSelectModal(); playCuteSound(); }
         
         function openHalanganMenu() { if(!currentSelectedLandingId) { showToast("Silakan klik tengah dan pilih nama dulu!", false); return; } document.getElementById('modal-halangan').classList.remove('hidden'); }
         function closeHalanganMenu() { document.getElementById('modal-halangan').classList.add('hidden'); }
@@ -542,7 +596,7 @@
             } catch (err) { updateLandingStatus("Sistem Offline (Mode Lokal)", "offline"); }
             
             if(!loaded) { const sd = localStorage.getItem(LOCAL_STORAGE_KEY); if (sd) try { Object.assign(state, JSON.parse(sd)); } catch (e) {} }
-            if(!state.tahunBulan) state.tahunBulan = defaultTahunBulan; if(!state.holidays) state.holidays = [];
+            if(!state.tahunBulan) state.tahunBulan = defaultTahunBulan; if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
             updateDaysList();
             
             let needsSave = false; defaultEmployeesList.forEach(d => { if(!state.employees.find(e => e.name===d.name)){ state.employees.push(d); needsSave=true; } }); if(needsSave) saveData();
@@ -550,13 +604,17 @@
             ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-tglcetak', 'inp-kepsek'].forEach(id => { const el=document.getElementById(id); if(el && state[id.replace('inp-','')]) el.value = state[id.replace('inp-','')]; });
             const inpB = document.getElementById('inp-bulan-tahun'); if(inpB) inpB.value = state.tahunBulan;
 
-            renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); 
+            renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); renderNotif();
         }
 
         setInterval(async () => {
             if(isModalEditOpen) return; 
             try { const { data } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
-                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { Object.assign(state, data.data); if(!state.holidays) state.holidays = []; updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); }
+                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { 
+                    Object.assign(state, data.data); if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
+                    updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); 
+                    renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); renderNotif();
+                }
             } catch(e) {}
         }, 10000);
 
@@ -567,7 +625,23 @@
 
         // --- CORE LOGIC ---
         let editingId = null; let tempAtt = {}; let isSignatureCleared = false;
-        function updateClock() { const now = new Date(); const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':'); const dC = document.getElementById('dash-clock'); const lC = document.getElementById('landing-clock'); if (dC) dC.innerText = timeStr; if (lC) lC.innerText = timeStr; }
+        
+        function updateClock() { 
+            const now = new Date(); 
+            // Jam
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':'); 
+            // Tanggal Hari Ini (ex: Selasa, 7 April 2026)
+            const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+            const dC = document.getElementById('dash-clock'); 
+            const lC = document.getElementById('landing-clock'); 
+            const lD = document.getElementById('landing-date');
+
+            if (dC) dC.innerText = timeStr; 
+            if (lC) lC.innerText = timeStr; 
+            if (lD) lD.innerText = dateStr;
+        }
+        
         function getTodayDate() { return new Date().getDate(); }
         window.onload = async () => { const bdg = document.getElementById('badge-hari-ini'); if (bdg) bdg.innerText = `TGL ${getTodayDate()}`; setInterval(updateClock, 1000); updateClock(); initSignatureCanvas(); initCanvasBackground(); await loadData(); };
 
@@ -600,7 +674,7 @@
                 
                 let btnMasuk = "", btnPulang = "";
                 if(todayAtt.status === 'S' || todayAtt.status === 'I' || todayAtt.status === 'A') {
-                    btnMasuk = `<span class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold w-full text-center tracking-widest">KETERANGAN: ${todayAtt.status}</span>`;
+                    btnMasuk = `<span class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold w-full text-center tracking-widest uppercase">KETERANGAN: ${todayAtt.status === 'S' ? 'Sakit' : (todayAtt.status === 'I' ? 'Izin' : 'Alpa')}</span>`;
                 } else {
                     btnMasuk = todayAtt.in ? `<span class="bg-green-100 text-green-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-inner">In: ${todayAtt.in}</span>` : `<button onclick="clockAction(${emp.id}, 'in')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md">MASUK</button>`;
                     btnPulang = todayAtt.out ? `<span class="bg-orange-100 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-inner">Out: ${todayAtt.out}</span>` : `<button onclick="clockAction(${emp.id}, 'out')" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md">PULANG</button>`;
@@ -628,7 +702,7 @@
 
         // --- CETAK/PRINT RENDERING ---
         function renderPrintHeader() {
-            const [y, m] = state.tahunBulan.split('-'); const teksBulan = `BULAN : ${getMonthName(m)} ${y}`;
+            const [y, m] = state.tahunBulan.split('-'); const teksBulan = `BULAN : ${getMonthName(m).toUpperCase()} ${y}`;
             const maps = { 'print-judul1': state.judul1, 'print-judul2': state.judul2, 'print-judul3': state.judul3, 'print-bulan-text': teksBulan, 'print-tglcetak': state.tglCetak, 'print-kepsek': state.kepsek };
             for(let id in maps) { const el = document.getElementById(id); if(el) el.innerText = maps[id]; }
         }
