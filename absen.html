@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1e293b">
-    <title>Aplikasi Cetak Absensi Guru - Native App</title>
+    <title>Aplikasi Cetak Absensi Guru - Final PWA</title>
     
-     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQWJzZW5zaSBUSyIsInNob3J0X25hbWUiOiJBYnNlbnNpIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxZTI5M2IiLCJ0aGVtZV9jb2xvciI6IiMxZTI5M2IiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2RsYnBxcC5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQWJzZW5zaSBUSyIsInNob3J0X25hbWUiOiJBYnNlbnNpIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxZTI5M2IiLCJ0aGVtZV9jb2xvciI6IiMxZTI5M2IiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2RsYnBxcC5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/dlbpqp.png">
 
-<link rel="apple-touch-icon" href="https://files.catbox.moe/dlbpqp.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
@@ -17,19 +17,16 @@
            STYLE KHUSUS UNTUK HASIL CETAK (PRINT)
            ========================================================= */
         @media print {
-            /* Margin diperkecil agar muat 1 lembar */
             @page { size: landscape; margin: 6mm 10mm; }
             body { background: white !important; margin: 0 !important; padding: 0 !important; }
             
-            /* Sembunyikan SEMUA elemen UI web */
-            #landing-view, #bottom-nav, #dashboard-header, #tab-pegawai, #tab-pengaturan, #toast-container, #modal-edit, .no-print, .bg-shapes { 
+            #landing-view, #bottom-nav, #dashboard-header, #tab-pegawai, #tab-pengaturan, #toast-container, #modal-edit, #modal-halangan, .no-print, .bg-shapes { 
                 display: none !important; 
             }
 
-            /* PAKSA TAMPILKAN AREA CETAK SAJA */
             #dashboard-view { display: block !important; visibility: visible !important; background: white !important; }
             #tab-cetak { display: block !important; margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important;}
-            #tab-cetak-controls { display: none !important; } /* Sembunyikan tombol di tab cetak */
+            #tab-cetak-controls { display: none !important; } 
             
             #print-wrapper {
                 display: block !important; visibility: visible !important; overflow: visible !important; 
@@ -43,7 +40,6 @@
             }
             #print-section * { color: black !important; }
             
-            /* Cegah tabel dan TTD terpotong beda halaman */
             .print-footer { page-break-inside: avoid; }
             .table-absensi { page-break-inside: auto; }
             tr { page-break-inside: avoid; page-break-after: auto; }
@@ -51,7 +47,9 @@
             .table-absensi { width: 100%; border-collapse: collapse; font-size: 10.5px; border: 2px solid black; }
             .table-absensi th, .table-absensi td { border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; }
             
-            .sunday-col { background-color: #fee2e2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            /* Warna Merah Hari Libur di Print */
+            .holiday-col { background-color: #fee2e2 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            
             .row-dtg td { border-bottom: 1px dashed black !important; }
             .row-prf1 td { border-bottom: 1px dashed black !important; border-top: 1px dashed black !important; }
             .row-plg td { border-bottom: 1px dashed black !important; border-top: 1px dashed black !important; }
@@ -66,7 +64,7 @@
         
         .table-absensi { width: 100%; border-collapse: collapse; font-size: 10px; border: 2px solid black; }
         .table-absensi th, .table-absensi td { border: 1px solid black; padding: 2px; text-align: center; vertical-align: middle; }
-        .sunday-col { background-color: #fee2e2; }
+        .holiday-col { background-color: #fee2e2; }
         .col-no { width: 2%; }
         .col-nama { width: 15%; text-align: left !important; padding-left: 5px !important; }
         .col-tipe { width: 3%; text-align: left !important; padding-left: 2px !important; font-size: 8px; line-height: 1.1; }
@@ -91,11 +89,7 @@
             border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); border-radius: 1.5rem;
         }
 
-        /* Bottom Navigation Bar Styles */
-        .nav-btn {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33.33%;
-            padding: 0.5rem 0; color: #64748b; transition: all 0.2s;
-        }
+        .nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33.33%; padding: 0.5rem 0; color: #64748b; transition: all 0.2s; }
         .nav-btn.active { color: #4f46e5; }
         .nav-btn svg { width: 24px; height: 24px; margin-bottom: 2px; transition: transform 0.2s; }
         .nav-btn.active svg { transform: scale(1.15); stroke-width: 2.5; }
@@ -123,7 +117,7 @@
         .orbit-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; border-radius: 50%; background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=200&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: #0f172a; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 2px solid rgba(212, 175, 55, 0.5); z-index: 10; overflow: hidden; }
         .orbit-center-overlay { width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; text-align: center; color: white; font-weight: bold; padding: 10px; }
         .orbit-wrapper { position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; z-index: 20; }
-        .orbit-btn { width: 100%; height: 100%; border-radius: 50%; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); border: 2px solid transparent; backdrop-filter: blur(4px); }
+        .orbit-btn { width: 100%; height: 100%; border-radius: 50%; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); border: 2px solid transparent; backdrop-filter: blur(4px); }
         .orbit-btn img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5)); }
         .orbit-btn span { color: #fff; font-size: 10px; font-weight: bold; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .orbit-btn:hover { transform: scale(1.15); background: rgba(255,255,255,0.15); border-color: rgba(212, 175, 55, 0.8); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
@@ -131,7 +125,7 @@
 
         .masuk-wrapper { animation: orbit1 18s linear infinite; }
         .pulang-wrapper { animation: orbit2 18s linear infinite; }
-        .libur-wrapper { animation: orbit3 18s linear infinite; }
+        .halangan-wrapper { animation: orbit3 18s linear infinite; }
         @keyframes orbit1 { 0% { transform: rotate(0deg) translateX(150px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(150px) rotate(-360deg); } }
         @keyframes orbit2 { 0% { transform: rotate(120deg) translateX(150px) rotate(-120deg); } 100% { transform: rotate(480deg) translateX(150px) rotate(-480deg); } }
         @keyframes orbit3 { 0% { transform: rotate(240deg) translateX(150px) rotate(-240deg); } 100% { transform: rotate(600deg) translateX(150px) rotate(-600deg); } }
@@ -175,27 +169,40 @@
                 
                 <div class="orbit-wrapper masuk-wrapper">
                     <button class="orbit-btn" onclick="landingAction('in')" title="Absen Masuk">
-                        <img src="https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUybnc3NnRoZGp2YndtaGU1cGkybTZxdWQ4cWwwNzFjcG4zcjF1eDZ4bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/QfeVpqABHE3twT6LMG/giphy.gif" alt="Masuk">
+                        <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyaDdjY3c1OXRxc2d1MXg5ZjB1NTBsdjgwbXV0OHpmeTNrNG12aXR6dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/28TeqcO2MRGta9RpCw/giphy.gif" alt="Masuk">
                         <span class="text-green-300">MASUK</span>
                     </button>
                 </div>
                 <div class="orbit-wrapper pulang-wrapper">
                     <button class="orbit-btn" onclick="landingAction('out')" title="Absen Pulang">
-                        <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUybmQ4YnJheW8zb2drcnpidnp6bW12ZHQ2dHYwZmp3bWh2cndwdTVwcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/qID73rvksNfCrxGyLA/giphy.gif" alt="Pulang">
+                        <img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyanQ3cnNjNzUwaWcxZ3JpcXJpNGVqc2djYXJkNHVoYTlpb3ppY3VpMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/AXAU9RDZqb2FX7dfmR/giphy.gif" alt="Pulang">
                         <span class="text-orange-300">PULANG</span>
                     </button>
                 </div>
-                <div class="orbit-wrapper libur-wrapper">
-                    <button class="orbit-btn" onclick="landingAction('libur')" title="Tandai Libur">
-                        <img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUydjN4cmpsOTgyMjN0NG16am1xZzZkOGIydzlkbzhqbmwzaGkxNG9meCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MViYNpI0wx69zX7j7w/giphy.gif" alt="Libur">
-                        <span class="text-blue-300">LIBUR</span>
+                
+                <div class="orbit-wrapper halangan-wrapper">
+                    <button class="orbit-btn" onclick="openHalanganMenu()" title="Ada Halangan?">
+                        <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyanZ2ZDhiY2VqbnUyOGN6eDBibXliMXp2eHBiM2dqbHlwYzZoOG90MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Gn9cGMn9vl9oX0QCMX/giphy.gif" alt="Halangan" style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));">
+                        <span class="text-purple-300">HALANGAN</span>
                     </button>
                 </div>
             </div>
             
+            <div id="landing-status" class="mt-4 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 text-white/80 bg-black/40 border-white/20">Menghubungkan...</div>
         </div>
     </div>
 
+    <div id="modal-halangan" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md">
+        <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[85%] max-w-sm text-center shadow-2xl">
+            <h3 class="text-white font-extrabold mb-5 text-xl">Pilih Keterangan</h3>
+            <div class="flex flex-col gap-3">
+                <button onclick="submitHalangan('S')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3.5 rounded-2xl text-lg transition-colors shadow-lg shadow-yellow-500/30">🤒 Sakit (S)</button>
+                <button onclick="submitHalangan('I')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3.5 rounded-2xl text-lg transition-colors shadow-lg shadow-blue-500/30">📝 Izin (I)</button>
+                <button onclick="submitHalangan('A')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-2xl text-lg transition-colors shadow-lg shadow-red-500/30">🚫 Alpa (A)</button>
+                <button onclick="closeHalanganMenu()" class="mt-4 text-slate-400 hover:text-white font-bold text-sm bg-slate-700 py-2 rounded-xl">Batal</button>
+            </div>
+        </div>
+    </div>
 
     <div id="dashboard-view" class="hidden admin-bg">
         <div class="bg-shapes">
@@ -211,7 +218,6 @@
             </div>
             <div class="flex flex-col items-end">
                 <div id="dash-clock" class="text-blue-600 font-mono font-bold text-sm tracking-wider">00:00:00</div>
-                <div id="sync-status" class="text-[9px] font-bold text-yellow-600 uppercase tracking-widest flex items-center gap-1"><span class="animate-pulse h-1.5 w-1.5 bg-yellow-500 rounded-full inline-block"></span> Syncing...</div>
             </div>
         </div>
 
@@ -227,8 +233,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Tambah
                     </button>
                 </div>
-                <div id="employee-list" class="space-y-4">
-                    </div>
+                <div id="employee-list" class="space-y-4"></div>
             </div>
 
             <div id="tab-pengaturan" class="hidden space-y-6">
@@ -243,8 +248,18 @@
                         <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 3 (Tahun Ajaran)</label><input type="text" id="inp-judul3" oninput="updateState('judul3', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/80"></div>
                         
                         <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                            <label class="block text-xs font-bold text-blue-800 mb-1.5">Pilih Bulan & Tahun Absensi</label>
+                            <label class="block text-xs font-bold text-blue-800 mb-1.5">Bulan & Tahun Absensi</label>
                             <input type="month" id="inp-bulan-tahun" onchange="updateBulanTahun(this.value)" class="w-full p-3 border border-blue-200 rounded-xl text-sm outline-none focus:border-blue-500 font-bold text-blue-700 bg-white">
+                        </div>
+
+                        <div class="bg-red-50 p-4 rounded-xl border border-red-100 mt-2">
+                            <label class="block text-xs font-bold text-red-800 mb-1.5 flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> Atur Hari Libur / Tanggal Merah</label>
+                            <div class="flex flex-col sm:flex-row gap-2 mb-3">
+                                <input type="date" id="inp-holiday" class="w-full p-3 border border-red-200 rounded-xl text-sm outline-none focus:border-red-500 bg-white">
+                                <button onclick="addHoliday()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl font-bold whitespace-nowrap shadow-sm">Tambah Libur</button>
+                            </div>
+                            <div id="holiday-list" class="flex flex-wrap gap-2"></div>
+                            <p class="text-[10px] text-red-600 mt-2 italic">*Tanggal yang ditambah akan otomatis berwarna merah di tabel absensi.</p>
                         </div>
                     </div>
 
@@ -305,7 +320,8 @@
                         <div class="print-footer">
                             <div class="ttd-box">
                                 <p style="margin-bottom: 2px;" id="print-tglcetak">Pulodarat, 28 FEBRUARI 2026</p>
-                                <p style="margin-bottom: 35px;">Kepala Sekolah</p> <p style="margin-bottom: 0; font-weight: bold; text-decoration: underline;" id="print-kepsek">Rosydianah, S.Ag.</p>
+                                <p style="margin-bottom: 35px;">Kepala Sekolah</p>
+                                <p style="margin-bottom: 0; font-weight: bold; text-decoration: underline;" id="print-kepsek">Rosydianah, S.Ag.</p>
                             </div>
                         </div>
                     </div>
@@ -353,7 +369,7 @@
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
                         <h3 class="font-bold text-sm text-slate-800 mb-4 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg inline-block">2. Isi Cepat Sebulan</h3>
                         <div class="flex flex-col sm:flex-row gap-3">
-                            <select id="quick-status" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm bg-slate-50 font-bold outline-none"><option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Libur</option></select>
+                            <select id="quick-status" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm bg-slate-50 font-bold outline-none"><option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Libur/Ksg</option></select>
                             <input type="time" id="quick-in" value="07:00" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm outline-none font-mono">
                             <input type="time" id="quick-out" value="16:00" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm outline-none font-mono">
                             <button onclick="applyQuickFill()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-3 rounded-xl text-sm font-bold border border-indigo-200 whitespace-nowrap">Terapkan Semua</button>
@@ -377,21 +393,15 @@
     </div>
 
     <script>
-        // --- INLINE SERVICE WORKER UNTUK PWA ---
-        // Script ini akan dipanggil otomatis untuk mengaktifkan PWA
-        if ('serviceWorker' in navigator) {
-            const swCode = `self.addEventListener('fetch', function(e) {}); self.addEventListener('install', function(e) { self.skipWaiting(); });`;
-            const blob = new Blob([swCode], {type: 'application/javascript'});
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).then(() => console.log('PWA Service Worker Registered!'));
-        }
+        // PWA SERVICE WORKER
+        if ('serviceWorker' in navigator) { const swCode=`self.addEventListener('fetch', function(e) {}); self.addEventListener('install', function(e) { self.skipWaiting(); });`; const blob=new Blob([swCode], {type:'application/javascript'}); navigator.serviceWorker.register(URL.createObjectURL(blob)); }
 
-        // --- KONFIGURASI SUPABASE ---
+        // KONFIGURASI SUPABASE
         const SUPABASE_URL = 'https://mmhayivbzlwfzbuyjall.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1taGF5aXZiemx3ZnpidXlqYWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzU5MTgsImV4cCI6MjA5MDQxMTkxOH0.pVWLpoZu0EVynxWQ_LwmsXYQWNR363WBLS1RaGm4iNI'; 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v4_Native';
+        const LOCAL_STORAGE_KEY = 'DataAbsensi_v5_Final';
         
         const defaultEmployeesList = [
             { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
@@ -411,193 +421,136 @@
             tahunBulan: defaultTahunBulan,
             tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
+            holidays: [], // Array untuk menyimpan tgl libur nasional (Format YYYY-MM-DD)
             employees: JSON.parse(JSON.stringify(defaultEmployeesList))
         };
 
         let currentDaysList = [];
-        function getMonthName(mIndex) {
-            const months = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
-            return months[parseInt(mIndex) - 1];
-        }
-
-        function updateDaysList() {
-            if(!state.tahunBulan) state.tahunBulan = defaultTahunBulan;
+        function getMonthName(mIndex) { const months = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER']; return months[parseInt(mIndex) - 1]; }
+        function updateDaysList() { if(!state.tahunBulan) state.tahunBulan=defaultTahunBulan; const [y, m]=state.tahunBulan.split('-'); const daysCount=new Date(y, m, 0).getDate(); currentDaysList=Array.from({length: daysCount}, (_, i) => i + 1); }
+        
+        // FUNGSI CEK HARI LIBUR / TANGGAL MERAH
+        function isHoliday(day) {
             const [y, m] = state.tahunBulan.split('-');
-            const daysCount = new Date(y, m, 0).getDate();
-            currentDaysList = Array.from({length: daysCount}, (_, i) => i + 1);
-        }
-
-        function isSunday(day) {
-            const [y, m] = state.tahunBulan.split('-');
-            const date = new Date(y, m - 1, day);
-            return date.getDay() === 0;
+            const dateObj = new Date(y, m - 1, day);
+            const isSun = dateObj.getDay() === 0; // Cek Minggu
+            
+            const dateStr = `${y}-${m.padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            const isNational = state.holidays && state.holidays.includes(dateStr); // Cek Libur Nasional
+            
+            return isSun || isNational;
         }
 
         // --- AUDIO & TTS ---
         let myAudioCtx;
         function initAudio() { if (!myAudioCtx) myAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (myAudioCtx.state === 'suspended') myAudioCtx.resume(); }
         document.addEventListener('click', initAudio, { once: true }); document.addEventListener('touchstart', initAudio, { once: true });
+        function playCuteSound() { try { if (!myAudioCtx) initAudio(); const osc = myAudioCtx.createOscillator(); const gainNode = myAudioCtx.createGain(); osc.connect(gainNode); gainNode.connect(myAudioCtx.destination); osc.type = 'sine'; osc.frequency.setValueAtTime(600, myAudioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1200, myAudioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.3, myAudioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, myAudioCtx.currentTime + 0.1); osc.start(myAudioCtx.currentTime); osc.stop(myAudioCtx.currentTime + 0.1); } catch(e) {} }
+        function speakSoftly(text) { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.lang = 'id-ID'; msg.pitch = 1.1; msg.rate = 0.85; const voices = window.speechSynthesis.getVoices(); msg.voice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google')) || voices.find(v => v.lang === 'id-ID'); window.speechSynthesis.speak(msg); } }
 
-        function playCuteSound() {
-            try { if (!myAudioCtx) initAudio(); const osc = myAudioCtx.createOscillator(); const gainNode = myAudioCtx.createGain(); osc.connect(gainNode); gainNode.connect(myAudioCtx.destination); osc.type = 'sine'; osc.frequency.setValueAtTime(600, myAudioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1200, myAudioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.3, myAudioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, myAudioCtx.currentTime + 0.1); osc.start(myAudioCtx.currentTime); osc.stop(myAudioCtx.currentTime + 0.1); } catch(e) {}
+        // --- UI NAVIGATION & STATUS ---
+        let currentSelectedLandingId = null; let isModalEditOpen = false;
+
+        function updateLandingStatus(msg, status = 'loading') {
+            const el = document.getElementById('landing-status'); if (!el) return; el.innerText = msg;
+            el.className = "mt-4 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 ";
+            if (status === 'online') { el.innerHTML = `<span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span> ${msg}`; el.className += "text-green-300 bg-green-900/40 border-green-500/50"; }
+            else if (status === 'offline') { el.innerHTML = `⚠️ ${msg}`; el.className += "text-red-300 bg-red-900/40 border-red-500/50"; }
+            else { el.innerHTML = `<svg class="animate-spin h-3 w-3 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> ${msg}`; el.className += "text-white/80 bg-black/40 border-white/20"; }
         }
 
-        function speakSoftly(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.lang = 'id-ID'; msg.pitch = 1.1; msg.rate = 0.85; 
-                const voices = window.speechSynthesis.getVoices();
-                msg.voice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google')) || voices.find(v => v.lang === 'id-ID');
-                window.speechSynthesis.speak(msg);
-            }
-        }
+        function toggleView(view) { if(view === 'dashboard') { document.getElementById('landing-view').classList.add('hidden'); document.getElementById('dashboard-view').classList.remove('hidden'); switchTab('pegawai'); } else { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('landing-view').classList.remove('hidden'); } }
+        function switchTab(tabName) { ['pegawai','pengaturan','cetak'].forEach(t => { document.getElementById('tab-'+t).classList.add('hidden'); document.getElementById('btn-tab-'+t).classList.remove('active'); }); document.getElementById('tab-'+tabName).classList.remove('hidden'); document.getElementById('btn-tab-'+tabName).classList.add('active'); window.scrollTo(0,0); }
+        function showToast(message, isSuccess = true) { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${isSuccess ? 'bg-green-600' : 'bg-red-600'} border border-white/20`; toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`; container.appendChild(toast); setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000); }
 
-        // --- NAVIGATION LOGIC ---
-        let currentSelectedLandingId = null;
-        let isModalEditOpen = false;
-
-        function toggleView(view) {
-            if(view === 'dashboard') {
-                document.getElementById('landing-view').classList.add('hidden');
-                document.getElementById('dashboard-view').classList.remove('hidden');
-                switchTab('pegawai'); // Selalu buka tab pegawai duluan
-            } else {
-                document.getElementById('dashboard-view').classList.add('hidden');
-                document.getElementById('landing-view').classList.remove('hidden');
-            }
-        }
-
-        // FUNGSI TABS BOTTOM NAV
-        function switchTab(tabName) {
-            // Sembunyikan semua konten tab
-            document.getElementById('tab-pegawai').classList.add('hidden');
-            document.getElementById('tab-pengaturan').classList.add('hidden');
-            document.getElementById('tab-cetak').classList.add('hidden');
-            
-            // Hapus class active dari semua tombol
-            document.getElementById('btn-tab-pegawai').classList.remove('active');
-            document.getElementById('btn-tab-pengaturan').classList.remove('active');
-            document.getElementById('btn-tab-cetak').classList.remove('active');
-            
-            // Tampilkan konten dan set aktif tombol yg dipilih
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            document.getElementById('btn-tab-' + tabName).classList.add('active');
-
-            // Scroll ke atas saat ganti tab biar enak
-            window.scrollTo(0,0);
-        }
-
-        function showToast(message, isSuccess = true) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${isSuccess ? 'bg-green-600' : 'bg-red-600'} border border-white/20`;
-            toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
-        }
-
-        // --- LANDING LOGIC ---
-        function handleSearch(query) {
-            const resultBox = document.getElementById('search-results'); if(!resultBox) return; resultBox.innerHTML = '';
-            const filtered = query ? state.employees.filter(e => e.name.toLowerCase().includes(query.toLowerCase())) : state.employees.slice(0,5);
-            if(filtered.length === 0) { resultBox.innerHTML = '<div class="p-3 text-sm text-slate-400 text-center">Tidak ditemukan</div>'; return; }
-            filtered.forEach(emp => {
-                const div = document.createElement('div'); div.className = "px-4 py-3 hover:bg-white/10 cursor-pointer text-white border-b border-white/5 transition-colors text-sm font-medium"; div.innerText = emp.name;
-                div.onclick = () => { currentSelectedLandingId = emp.id; document.getElementById('landing-search').value = emp.name; resultBox.classList.add('hidden'); document.getElementById('orbit-center-text').innerText = emp.name.toUpperCase(); };
-                resultBox.appendChild(div);
-            });
+        // --- LANDING LOGIC & HALANGAN ---
+        function handleSearch(query) { const resultBox = document.getElementById('search-results'); if(!resultBox) return; resultBox.innerHTML = ''; const filtered = query ? state.employees.filter(e => e.name.toLowerCase().includes(query.toLowerCase())) : state.employees.slice(0,5); if(filtered.length === 0) { resultBox.innerHTML = '<div class="p-3 text-sm text-slate-400 text-center">Tidak ditemukan</div>'; return; } filtered.forEach(emp => { const div = document.createElement('div'); div.className = "px-4 py-3 hover:bg-white/10 cursor-pointer text-white border-b border-white/5 transition-colors text-sm font-medium"; div.innerText = emp.name; div.onclick = () => { currentSelectedLandingId = emp.id; document.getElementById('landing-search').value = emp.name; resultBox.classList.add('hidden'); document.getElementById('orbit-center-text').innerText = emp.name.toUpperCase(); }; resultBox.appendChild(div); }); }
+        
+        function openHalanganMenu() { if(!currentSelectedLandingId) { showToast("Pilih nama dulu!", false); return; } document.getElementById('modal-halangan').classList.remove('hidden'); }
+        function closeHalanganMenu() { document.getElementById('modal-halangan').classList.add('hidden'); }
+        
+        function submitHalangan(status) {
+            closeHalanganMenu(); playCuteSound(); clockAction(currentSelectedLandingId, status); // status is 'S', 'I', or 'A'
+            const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name; const panggilNama = empName.split(',')[0];
+            let statusText = status === 'S' ? 'Sakit' : (status === 'I' ? 'Izin' : 'Alpa');
+            speakSoftly(`Semoga segala urusan dilancarkan, ${panggilNama}. Keterangan ${statusText} sudah dicatat.`);
+            showToast(`Sukses Tandai ${statusText} - ${empName}`);
+            setTimeout(() => { currentSelectedLandingId = null; document.getElementById('landing-search').value = ""; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
         }
 
         function landingAction(type) {
             if(!currentSelectedLandingId) { showToast("Pilih nama dulu!", false); return; }
             playCuteSound(); clockAction(currentSelectedLandingId, type);
-            const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name;
-            const panggilNama = empName.split(',')[0];
-            speakSoftly(type === 'in' ? `Selamat bertugas, ${panggilNama}.` : (type === 'out' ? `Terima kasih atas kerja kerasnya, ${panggilNama}.` : `Selamat beristirahat, ${panggilNama}.`));
+            const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name; const panggilNama = empName.split(',')[0];
+            speakSoftly(type === 'in' ? `Selamat bertugas, ${panggilNama}.` : `Terima kasih atas kerja kerasnya, ${panggilNama}.`);
             showToast(`Sukses Tandai - ${empName}`);
-            setTimeout(() => {
-                currentSelectedLandingId = null;
-                document.getElementById('landing-search').value = ""; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA";
-            }, 2000);
+            setTimeout(() => { currentSelectedLandingId = null; document.getElementById('landing-search').value = ""; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
         }
         document.addEventListener('click', (e) => { const sr = document.getElementById('search-results'); if(sr && !e.target.closest('#landing-search') && !e.target.closest('#search-results')) sr.classList.add('hidden'); });
 
-        // --- ANIMASI CANVAS BACKGROUND ---
-        function initCanvasBackground() {
-            const c = document.getElementById('bg-canvas'); if(!c) return; const ctx = c.getContext('2d');
-            function resize() { c.width = window.innerWidth; c.height = window.innerHeight; } window.addEventListener('resize', resize); resize();
-            let flakes = []; for(let i=0; i<80; i++) flakes.push({x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*2+1, d: Math.random()*1+0.5, vx: Math.random()*1-0.5, vy: Math.random()*1+0.5});
-            let angle = 0;
-            function draw() {
-                ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); angle+=0.01;
-                flakes.forEach(p => { ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true); p.y += p.vy; p.x += Math.sin(angle+p.d)*p.vx; if(p.y > c.height){ p.y=-10; p.x=Math.random()*c.width; } });
-                ctx.fill(); requestAnimationFrame(draw);
-            } draw();
-        }
+        function initCanvasBackground() { const c=document.getElementById('bg-canvas'); if(!c)return; const ctx=c.getContext('2d'); function resize(){c.width=window.innerWidth; c.height=window.innerHeight;} window.addEventListener('resize',resize); resize(); let flakes=[]; for(let i=0;i<80;i++) flakes.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,d:Math.random()*1+0.5,vx:Math.random()*1-0.5,vy:Math.random()*1+0.5}); let angle=0; function draw(){ ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); angle+=0.01; flakes.forEach(p=>{ctx.moveTo(p.x,p.y); ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true); p.y+=p.vy; p.x+=Math.sin(angle+p.d)*p.vx; if(p.y>c.height){p.y=-10;p.x=Math.random()*c.width;} }); ctx.fill(); requestAnimationFrame(draw); } draw(); }
 
         // --- DATA SYNC SUPABASE ---
         async function saveData() {
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
-            const statusEl = document.getElementById('sync-status'); if (statusEl) statusEl.innerHTML = `<span class="animate-pulse h-1.5 w-1.5 bg-blue-500 rounded-full inline-block"></span> Menyimpan...`;
-            try {
-                const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error;
-                if (statusEl) statusEl.innerHTML = `<span class="h-1.5 w-1.5 bg-green-500 rounded-full inline-block"></span> Sinkron`;
-            } catch (err) { if (statusEl) statusEl.innerHTML = `<span class="h-1.5 w-1.5 bg-red-500 rounded-full inline-block"></span> Error`; }
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); updateLandingStatus("Menyimpan ke Cloud...", "loading");
+            try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Online / Tersinkronisasi", "online"); } 
+            catch (err) { updateLandingStatus("Offline", "offline"); }
         }
 
         async function loadData() {
-            let loaded = false;
-            try {
-                const { data, error } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle(); if (error) throw error;
-                if(data && data.data) { Object.assign(state, data.data); loaded = true; document.getElementById('sync-status').innerHTML = `<span class="h-1.5 w-1.5 bg-green-500 rounded-full inline-block"></span> Cloud`; }
-            } catch (err) {}
+            let loaded = false; updateLandingStatus("Menghubungkan Database...", "loading");
+            try { const { data, error } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle(); if (error) throw error;
+                if(data && data.data) { Object.assign(state, data.data); loaded = true; updateLandingStatus("Online", "online"); }
+            } catch (err) { updateLandingStatus("Sistem Offline (Mode Lokal)", "offline"); }
+            
             if(!loaded) { const sd = localStorage.getItem(LOCAL_STORAGE_KEY); if (sd) try { Object.assign(state, JSON.parse(sd)); } catch (e) {} }
+            if(!state.tahunBulan) state.tahunBulan = defaultTahunBulan; if(!state.holidays) state.holidays = [];
+            updateDaysList();
             
-            if(!state.tahunBulan) state.tahunBulan = defaultTahunBulan; updateDaysList();
-            
-            let needsSave = false; defaultEmployeesList.forEach(d => { if(!state.employees.find(e => e.name===d.name)){ state.employees.push(d); needsSave=true; } });
-            if(needsSave) saveData();
+            let needsSave = false; defaultEmployeesList.forEach(d => { if(!state.employees.find(e => e.name===d.name)){ state.employees.push(d); needsSave=true; } }); if(needsSave) saveData();
 
             ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-tglcetak', 'inp-kepsek'].forEach(id => { const el=document.getElementById(id); if(el && state[id.replace('inp-','')]) el.value = state[id.replace('inp-','')]; });
             const inpB = document.getElementById('inp-bulan-tahun'); if(inpB) inpB.value = state.tahunBulan;
 
-            renderEmployeeList(); renderPrintHeader(); renderPrintTable(); handleSearch(document.getElementById('landing-search')?.value);
+            renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); handleSearch(document.getElementById('landing-search')?.value);
         }
 
         setInterval(async () => {
             if(isModalEditOpen) return; 
-            try {
-                const { data } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
-                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) {
-                    Object.assign(state, data.data); updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
-                    renderEmployeeList(); renderPrintHeader(); renderPrintTable(); handleSearch(document.getElementById('landing-search')?.value);
-                }
+            try { const { data } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
+                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { Object.assign(state, data.data); if(!state.holidays) state.holidays = []; updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); handleSearch(document.getElementById('landing-search')?.value); }
             } catch(e) {}
         }, 10000);
 
+        // --- PENGATURAN HARI LIBUR NASIONAL ---
+        function addHoliday() { const val = document.getElementById('inp-holiday').value; if(val && !state.holidays.includes(val)) { state.holidays.push(val); saveData(); renderHolidayList(); renderPrintTable(); } }
+        function removeHoliday(val) { state.holidays = state.holidays.filter(h => h !== val); saveData(); renderHolidayList(); renderPrintTable(); }
+        function renderHolidayList() { const hl = document.getElementById('holiday-list'); if(!hl) return; hl.innerHTML = state.holidays.map(h => `<span class="bg-red-100 border border-red-200 text-red-700 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2 shadow-sm">${h} <button onclick="removeHoliday('${h}')" class="text-red-400 hover:text-red-700 bg-white rounded-full w-4 h-4 flex items-center justify-center border border-red-100">×</button></span>`).join(''); }
+
         // --- CORE LOGIC ---
         let editingId = null; let tempAtt = {}; let isSignatureCleared = false;
-        function updateClock() {
-            const now = new Date(); const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':');
-            const dC = document.getElementById('dash-clock'); const lC = document.getElementById('landing-clock');
-            if (dC) dC.innerText = timeStr; if (lC) lC.innerText = timeStr;
-        }
+        function updateClock() { const now = new Date(); const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':'); const dC = document.getElementById('dash-clock'); const lC = document.getElementById('landing-clock'); if (dC) dC.innerText = timeStr; if (lC) lC.innerText = timeStr; }
         function getTodayDate() { return new Date().getDate(); }
-
-        window.onload = async () => {
-            const bdg = document.getElementById('badge-hari-ini'); if (bdg) bdg.innerText = `TGL ${getTodayDate()}`;
-            setInterval(updateClock, 1000); updateClock(); initSignatureCanvas(); initCanvasBackground(); await loadData();
-        };
+        window.onload = async () => { const bdg = document.getElementById('badge-hari-ini'); if (bdg) bdg.innerText = `TGL ${getTodayDate()}`; setInterval(updateClock, 1000); updateClock(); initSignatureCanvas(); initCanvasBackground(); await loadData(); };
 
         function updateState(key, value) { state[key] = value; if(['judul1', 'judul2', 'judul3', 'tglCetak', 'kepsek'].includes(key)) renderPrintHeader(); saveData(); }
         function updateBulanTahun(val) { state.tahunBulan = val; updateDaysList(); renderPrintHeader(); renderPrintTable(); saveData(); }
 
+        // UPDATE CLOCK ACTION UNTUK MENANGANI HALANGAN S, I, A
         function clockAction(empId, type) {
             const today = getTodayDate(); const now = new Date(); const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
             const emp = state.employees.find(e => e.id === empId);
             if(emp) {
                 if(!emp.att[today]) emp.att[today] = { status: '', in: '', out: '' };
-                if(type === 'libur') { emp.att[today].status = ''; emp.att[today].in = ''; emp.att[today].out = ''; }
-                else { if(!emp.att[today].status) emp.att[today].status = 'H'; if(type === 'in') emp.att[today].in = timeStr; if(type === 'out') emp.att[today].out = timeStr; }
+                
+                // Jika halangan dipilih, kosongkan jam masuk/pulang lalu isi status S/I/A
+                if(type === 'S' || type === 'I' || type === 'A') {
+                    emp.att[today].status = type; emp.att[today].in = ''; emp.att[today].out = '';
+                } else {
+                    if(!emp.att[today].status || (emp.att[today].status !== 'H' && emp.att[today].status !== '')) emp.att[today].status = 'H'; 
+                    if(type === 'in') emp.att[today].in = timeStr; 
+                    if(type === 'out') emp.att[today].out = timeStr; 
+                }
                 saveData(); renderEmployeeList(); renderPrintTable();
             }
         }
@@ -605,15 +558,23 @@
         function renderEmployeeList() {
             const list = document.getElementById('employee-list'); if(!list) return; list.innerHTML = ''; const today = getTodayDate();
             state.employees.forEach((emp, index) => {
-                const statusParaf = emp.signature ? '<span class="text-green-600 bg-green-100 px-2 py-0.5 rounded text-[9px] font-bold">✅ TTD</span>' : '<span class="text-red-500 bg-red-100 px-2 py-0.5 rounded text-[9px] font-bold">❌ KOSONG</span>';
+                const statusParaf = emp.signature ? '<span class="text-green-600 bg-green-100 border border-green-200 px-2 py-0.5 rounded text-[9px] font-bold">✅ TTD</span>' : '<span class="text-red-500 bg-red-100 border border-red-200 px-2 py-0.5 rounded text-[9px] font-bold">❌ KOSONG</span>';
                 const todayAtt = emp.att[today] || { status: '', in: '', out: '' };
-                let btnMasuk = todayAtt.in ? `<span class="bg-green-100 text-green-800 px-3 py-1.5 rounded-lg text-xs font-bold">In: ${todayAtt.in}</span>` : `<button onclick="clockAction(${emp.id}, 'in')" class="bg-green-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold">MASUK</button>`;
-                let btnPulang = todayAtt.out ? `<span class="bg-orange-100 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-bold">Out: ${todayAtt.out}</span>` : `<button onclick="clockAction(${emp.id}, 'out')" class="bg-orange-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold">PULANG</button>`;
+                
+                // Tampilan tombol disesuaikan jika statusnya halangan
+                let btnMasuk = "", btnPulang = "";
+                if(todayAtt.status === 'S' || todayAtt.status === 'I' || todayAtt.status === 'A') {
+                    btnMasuk = `<span class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold w-full text-center tracking-widest">KETERANGAN: ${todayAtt.status}</span>`;
+                } else {
+                    btnMasuk = todayAtt.in ? `<span class="bg-green-100 text-green-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-inner">In: ${todayAtt.in}</span>` : `<button onclick="clockAction(${emp.id}, 'in')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md">MASUK</button>`;
+                    btnPulang = todayAtt.out ? `<span class="bg-orange-100 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-bold shadow-inner">Out: ${todayAtt.out}</span>` : `<button onclick="clockAction(${emp.id}, 'out')" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-md">PULANG</button>`;
+                }
+
                 list.innerHTML += `
                     <div class="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm flex flex-col gap-4">
                         <div class="flex justify-between items-center gap-2">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 min-w-[40px] rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold">${index + 1}</div>
+                                <div class="w-10 h-10 min-w-[40px] rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold border border-blue-200">${index + 1}</div>
                                 <div><div class="font-bold text-slate-800 text-sm leading-tight">${emp.name}</div><div class="mt-1">${statusParaf}</div></div>
                             </div>
                             <div class="flex gap-1.5 flex-col sm:flex-row">
@@ -621,9 +582,9 @@
                                 <button onclick="deleteEmployee(${emp.id})" class="px-2 py-1.5 text-red-500 bg-red-50 rounded-lg">🗑️</button>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
                             <div class="text-[10px] font-bold text-slate-400">HARI INI:</div>
-                            <div class="flex gap-2">${btnMasuk}${btnPulang}</div>
+                            <div class="flex gap-2 w-full justify-end">${btnMasuk}${btnPulang}</div>
                         </div>
                     </div>`;
             });
@@ -639,7 +600,9 @@
         function renderPrintTable() {
             const th = document.getElementById('print-tgl-header'); const col = document.getElementById('print-tgl-colspan'); if(!th) return;
             col.setAttribute('colspan', currentDaysList.length);
-            let hHTML = ''; currentDaysList.forEach(d => hHTML += `<th class="${isSunday(d)?'sunday-col text-red-600':''}">${d}</th>`);
+            
+            // Ganti isSunday dengan isHoliday
+            let hHTML = ''; currentDaysList.forEach(d => hHTML += `<th class="${isHoliday(d)?'holiday-col text-red-600':''}">${d}</th>`);
             th.innerHTML = hHTML + `<th>S</th><th>I</th><th>A</th>`;
 
             let rHTML = '';
@@ -648,25 +611,25 @@
                 
                 // Baris 1: Jam Datang
                 rHTML += `<tr class="row-dtg"><td rowspan="4"><b>${i + 1}</b></td><td rowspan="4" class="col-nama"><b>${emp.name}</b></td><td class="col-tipe">Jam<br>Dtg</td>`;
-                currentDaysList.forEach(d => rHTML += `<td class="${isSunday(d)?'sunday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].in||'') : ''}</td>`);
+                currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].in||'') : ''}</td>`);
                 rHTML += `<td rowspan="4"><b>${s||''}</b></td><td rowspan="4"><b>${iz||''}</b></td><td rowspan="4"><b>${a||''}</b></td><td rowspan="4"><b>${s+iz+a||''}</b></td></tr>`;
 
                 // Baris 2: Paraf Datang
                 rHTML += `<tr class="row-prf1"><td class="col-tipe">Prf</td>`;
                 currentDaysList.forEach(d => {
-                    const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, sun=isSunday(d)?'sunday-col':'';
-                    if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${sun}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${sun}"><b>${st}</b></td>`; else rHTML+=`<td class="${sun}"></td>`;
+                    const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, hol=isHoliday(d)?'holiday-col':'';
+                    if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${hol}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${hol}"><b>${st}</b></td>`; else rHTML+=`<td class="${hol}"></td>`;
                 }); rHTML += `</tr>`;
 
                 // Baris 3: Jam Pulang
                 rHTML += `<tr class="row-plg"><td class="col-tipe">Jam<br>Plg</td>`;
-                currentDaysList.forEach(d => rHTML += `<td class="${isSunday(d)?'sunday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].out||'') : ''}</td>`); rHTML += `</tr>`;
+                currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].out||'') : ''}</td>`); rHTML += `</tr>`;
 
                 // Baris 4: Paraf Pulang
                 rHTML += `<tr class="row-prf2"><td class="col-tipe">Prf</td>`;
                 currentDaysList.forEach(d => {
-                    const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, sun=isSunday(d)?'sunday-col':'';
-                    if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${sun}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${sun}"><b>${st}</b></td>`; else rHTML+=`<td class="${sun}"></td>`;
+                    const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, hol=isHoliday(d)?'holiday-col':'';
+                    if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${hol}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${hol}"><b>${st}</b></td>`; else rHTML+=`<td class="${hol}"></td>`;
                 }); rHTML += `</tr>`;
             });
             const b = document.getElementById('print-table-body'); if(b) b.innerHTML = rHTML;
@@ -686,21 +649,17 @@
             renderDaysGrid(); const mdl=document.getElementById('modal-edit'); if(mdl) mdl.classList.remove('hidden');
         }
         function closeModal() { isModalEditOpen=false; const mdl=document.getElementById('modal-edit'); if(mdl) mdl.classList.add('hidden'); editingId=null; }
-        function saveModalData() {
-            const emp=state.employees.find(e=>e.id===editingId);
-            if(emp){ emp.name=document.getElementById('modal-emp-name').value; emp.att=JSON.parse(JSON.stringify(tempAtt)); if(hasDrawing) emp.signature=sigCanvas.toDataURL('image/png'); else if(isSignatureCleared) emp.signature=""; }
-            saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Tersimpan');
-        }
+        function saveModalData() { const emp=state.employees.find(e=>e.id===editingId); if(emp){ emp.name=document.getElementById('modal-emp-name').value; emp.att=JSON.parse(JSON.stringify(tempAtt)); if(hasDrawing) emp.signature=sigCanvas.toDataURL('image/png'); else if(isSignatureCleared) emp.signature=""; } saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Tersimpan'); }
 
         function renderDaysGrid() {
             let h = '';
             currentDaysList.forEach(d => {
-                const dD=tempAtt[d]||{status:'',in:'',out:''}; const sun=isSunday(d); const bg=sun?'bg-red-50 border-red-200':(dD.status!=='H'&&dD.status!==''?'bg-orange-50 border-orange-200':'bg-white');
-                h += `<div class="p-2.5 border rounded-xl ${bg}"><div class="flex justify-between items-center border-b pb-2 mb-2"><span class="font-extrabold text-[10px] ${sun?'text-red-600':'text-slate-600'}">TGL ${d} ${sun?'(M)':''}</span><select onchange="updateDay(${d}, 'status', this.value)" class="text-[10px] outline-none rounded bg-white font-bold p-0.5"><option value="H" ${dD.status==='H'?'selected':''}>Hadir</option><option value="S" ${dD.status==='S'?'selected':''}>Sakit</option><option value="I" ${dD.status==='I'?'selected':''}>Izin</option><option value="A" ${dD.status==='A'?'selected':''}>Alpa</option><option value="" ${dD.status===''?'selected':''}>Ksg</option></select></div>${dD.status==='H'?`<div class="space-y-1"><div class="flex items-center justify-between"><span class="text-[9px] font-bold text-slate-400">IN</span><input type="time" value="${dD.in||''}" onchange="updateDay(${d}, 'in', this.value)" class="text-[10px] font-mono border rounded p-0.5 w-[65px]"></div><div class="flex items-center justify-between"><span class="text-[9px] font-bold text-slate-400">OUT</span><input type="time" value="${dD.out||''}" onchange="updateDay(${d}, 'out', this.value)" class="text-[10px] font-mono border rounded p-0.5 w-[65px]"></div></div>`:`<div class="text-center text-[10px] py-2 font-bold text-slate-400">${dD.status||'LIBUR'}</div>`}</div>`;
+                const dD=tempAtt[d]||{status:'',in:'',out:''}; const hol=isHoliday(d); const bg=hol?'bg-red-50 border-red-200':(dD.status!=='H'&&dD.status!==''?'bg-orange-50 border-orange-200':'bg-white');
+                h += `<div class="p-2.5 border rounded-xl ${bg} shadow-sm"><div class="flex justify-between items-center border-b pb-2 mb-2"><span class="font-extrabold text-[10px] ${hol?'text-red-600':'text-slate-600'}">TGL ${d} ${hol?'(Merah)':''}</span><select onchange="updateDay(${d}, 'status', this.value)" class="text-[10px] outline-none rounded bg-white font-bold p-0.5 border shadow-sm"><option value="H" ${dD.status==='H'?'selected':''}>Hadir</option><option value="S" ${dD.status==='S'?'selected':''}>Sakit</option><option value="I" ${dD.status==='I'?'selected':''}>Izin</option><option value="A" ${dD.status==='A'?'selected':''}>Alpa</option><option value="" ${dD.status===''?'selected':''}>Ksg/Lbr</option></select></div>${dD.status==='H'?`<div class="space-y-1"><div class="flex items-center justify-between"><span class="text-[9px] font-bold text-slate-400">IN</span><input type="time" value="${dD.in||''}" onchange="updateDay(${d}, 'in', this.value)" class="text-[10px] font-mono border rounded p-0.5 w-[65px]"></div><div class="flex items-center justify-between"><span class="text-[9px] font-bold text-slate-400">OUT</span><input type="time" value="${dD.out||''}" onchange="updateDay(${d}, 'out', this.value)" class="text-[10px] font-mono border rounded p-0.5 w-[65px]"></div></div>`:`<div class="text-center text-[10px] py-2 font-bold ${hol ? 'text-red-500' : 'text-slate-400'} tracking-widest">${dD.status||'LIBUR'}</div>`}</div>`;
             }); document.getElementById('days-grid').innerHTML = h;
         }
         function updateDay(d, f, v) { if(!tempAtt[d]) tempAtt[d]={status:'H',in:'',out:''}; tempAtt[d][f]=v; if(f==='status') renderDaysGrid(); }
-        function applyQuickFill() { const st=document.getElementById('quick-status').value, i=document.getElementById('quick-in').value, o=document.getElementById('quick-out').value; currentDaysList.forEach(d => tempAtt[d] = {status:st, in:st==='H'?i:'', out:st==='H'?o:''}); renderDaysGrid(); }
+        function applyQuickFill() { const st=document.getElementById('quick-status').value, i=document.getElementById('quick-in').value, o=document.getElementById('quick-out').value; currentDaysList.forEach(d => { if(isHoliday(d) && st === 'H') return; tempAtt[d] = {status:st, in:st==='H'?i:'', out:st==='H'?o:''}; }); renderDaysGrid(); }
 
         // --- CANVAS SIGNATURE ---
         const sigCanvas=document.getElementById('signature-pad'); let sigCtx; if(sigCanvas) sigCtx=sigCanvas.getContext('2d'); let isSigDrawing=false, hasDrawing=false;
