@@ -493,7 +493,7 @@
         // --- DATA SYNC SUPABASE ---
         async function saveData() {
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); updateLandingStatus("Menyimpan ke Cloud...", "loading");
-            try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Online / Tersinkronisasi", "online"); } 
+            try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Sudah Absen", "online"); } 
             catch (err) { updateLandingStatus("Offline", "offline"); }
         }
 
