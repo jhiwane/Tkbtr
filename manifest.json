@@ -1,0 +1,15 @@
+{
+  "name": "Absensi TK",
+  "short_name": "Absensi",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "https://files.catbox.moe/dlbpqp.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
