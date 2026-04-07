@@ -144,18 +144,20 @@
     <div id="landing-view" class="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-slate-900">
         <canvas id="bg-canvas"></canvas>
 
-        <button onclick="toggleView('dashboard')" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 p-3 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-lg group" title="Pengaturan Data">
-            <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-        </button>
+        <div class="glass-panel p-8 rounded-3xl w-11/12 max-w-md z-10 flex flex-col items-center relative mt-6">
+            
+            <div class="absolute top-4 right-4 z-50 flex items-center gap-2">
+                <button onclick="openNotifModal()" class="relative p-2 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-sm group" title="Pengumuman">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <span id="notif-badge" class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full border border-slate-900 hidden animate-pulse"></span>
+                </button>
+                <button onclick="toggleView('dashboard')" class="p-2 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-sm group" title="Pengaturan Data">
+                    <svg class="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+            </div>
 
-        <button onclick="openNotifModal()" class="absolute top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-50 p-3 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-lg group" title="Pengumuman">
-            <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-            <span id="notif-badge" class="absolute top-0 right-0 h-3 w-3 bg-red-500 rounded-full border-2 border-slate-900 hidden animate-pulse"></span>
-        </button>
-
-        <div class="glass-panel p-8 rounded-3xl w-11/12 max-w-md z-10 flex flex-col items-center relative">
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 tracking-wide text-center drop-shadow-lg">
-                SISTEM ABSENSI
+            <h1 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 mt-4 tracking-wide text-center drop-shadow-lg">
+                ABSEN GURU
             </h1>
             
             <div id="landing-clock" class="text-white/90 text-3xl font-mono tracking-widest font-bold">00:00:00</div>
@@ -273,7 +275,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg> 
                             Kirim Pengumuman / Agenda Guru
                         </label>
-<textarea id="inp-agenda" class="w-full p-3 border border-yellow-300 rounded-xl text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 bg-white min-h-[100px] break-words whitespace-pre-wrap resize-y" placeholder="Tulis pengumuman di sini... Kosongkan jika tidak ada pengumuman."></textarea>
+                        <textarea id="inp-agenda" class="w-full p-3 border border-yellow-300 rounded-xl text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 bg-white min-h-[100px] break-words whitespace-pre-wrap resize-y" placeholder="Tulis pengumuman di sini... Kosongkan jika tidak ada pengumuman."></textarea>
                         <div class="flex justify-end mt-3">
                             <button onclick="saveAgenda()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Kirim Pengumuman
@@ -302,7 +304,7 @@
                                 <button onclick="addHoliday()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl font-bold whitespace-nowrap shadow-sm">Tambah Libur</button>
                             </div>
                             <div id="holiday-list" class="flex flex-wrap gap-2"></div>
-                            <p class="text-[10px] text-red-600 mt-2 italic">*Tanggal yang ditambah akan otomatis berwarna merah di tabel absensi.</p>
+                            <p class="text-[10px] text-red-600 mt-2 italic">*Tanggal yang ditambah otomatis merah di tabel absen.</p>
                         </div>
                     </div>
 
@@ -438,10 +440,8 @@
     </div>
 
     <script>
-        // PWA SERVICE WORKER
         if ('serviceWorker' in navigator) { const swCode=`self.addEventListener('fetch', function(e) {}); self.addEventListener('install', function(e) { self.skipWaiting(); });`; const blob=new Blob([swCode], {type:'application/javascript'}); navigator.serviceWorker.register(URL.createObjectURL(blob)); }
 
-        // KONFIGURASI SUPABASE
         const SUPABASE_URL = 'https://mmhayivbzlwfzbuyjall.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1taGF5aXZiemx3ZnpidXlqYWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzU5MTgsImV4cCI6MjA5MDQxMTkxOH0.pVWLpoZu0EVynxWQ_LwmsXYQWNR363WBLS1RaGm4iNI'; 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -467,7 +467,7 @@
             tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
             holidays: [], 
-            agendaMessage: "", // State baru untuk menyimpan pengumuman
+            agendaMessage: "", 
             employees: JSON.parse(JSON.stringify(defaultEmployeesList))
         };
 
@@ -484,14 +484,12 @@
             return isSun || isNational;
         }
 
-        // --- AUDIO & TTS ---
         let myAudioCtx;
         function initAudio() { if (!myAudioCtx) myAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (myAudioCtx.state === 'suspended') myAudioCtx.resume(); }
         document.addEventListener('click', initAudio, { once: true }); document.addEventListener('touchstart', initAudio, { once: true });
         function playCuteSound() { try { if (!myAudioCtx) initAudio(); const osc = myAudioCtx.createOscillator(); const gainNode = myAudioCtx.createGain(); osc.connect(gainNode); gainNode.connect(myAudioCtx.destination); osc.type = 'sine'; osc.frequency.setValueAtTime(600, myAudioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1200, myAudioCtx.currentTime + 0.1); gainNode.gain.setValueAtTime(0.3, myAudioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, myAudioCtx.currentTime + 0.1); osc.start(myAudioCtx.currentTime); osc.stop(myAudioCtx.currentTime + 0.1); } catch(e) {} }
         function speakSoftly(text) { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(text); msg.lang = 'id-ID'; msg.pitch = 1.1; msg.rate = 0.85; const voices = window.speechSynthesis.getVoices(); msg.voice = voices.find(v => v.lang === 'id-ID' && v.name.includes('Google')) || voices.find(v => v.lang === 'id-ID'); window.speechSynthesis.speak(msg); } }
 
-        // --- UI NAVIGATION & STATUS ---
         let currentSelectedLandingId = null; let isModalEditOpen = false;
 
         function updateLandingStatus(msg, status = 'loading') {
@@ -506,7 +504,6 @@
         function switchTab(tabName) { ['pegawai','pengaturan','cetak'].forEach(t => { document.getElementById('tab-'+t).classList.add('hidden'); document.getElementById('btn-tab-'+t).classList.remove('active'); }); document.getElementById('tab-'+tabName).classList.remove('hidden'); document.getElementById('btn-tab-'+tabName).classList.add('active'); window.scrollTo(0,0); }
         function showToast(message, isSuccess = true) { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${isSuccess ? 'bg-green-600' : 'bg-red-600'} border border-white/20`; toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`; container.appendChild(toast); setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000); }
 
-        // --- AGENDA & NOTIFIKASI LOGIC ---
         function saveAgenda() {
             const val = document.getElementById('inp-agenda').value;
             updateState('agendaMessage', val);
@@ -515,30 +512,27 @@
         }
 
         function renderNotif() {
-    const msg = state.agendaMessage;
-    const badge = document.getElementById('notif-badge');
-    const textEl = document.getElementById('notif-text');
-    
-    if (msg && msg.trim() !== '') {
-        if(badge) badge.classList.remove('hidden');
-        if(textEl) textEl.innerText = msg;
-    } else {
-        if(badge) badge.classList.add('hidden');
-        if(textEl) textEl.innerText = "Tidak ada pengumuman saat ini.";
-    }
-    
-    // Perbaikan bug: Mencegah tulisan ketimpa/hilang saat admin sedang mengetik
-    const inp = document.getElementById('inp-agenda');
-    // Hanya update isi kotak JIKA kursor admin tidak sedang berada di dalam kotak tersebut
-    if (inp && document.activeElement !== inp && inp.value !== msg) {
-        inp.value = msg || "";
-    }
-}
+            const msg = state.agendaMessage;
+            const badge = document.getElementById('notif-badge');
+            const textEl = document.getElementById('notif-text');
+            
+            if (msg && msg.trim() !== '') {
+                if(badge) badge.classList.remove('hidden');
+                if(textEl) textEl.innerText = msg;
+            } else {
+                if(badge) badge.classList.add('hidden');
+                if(textEl) textEl.innerText = "Tidak ada pengumuman saat ini.";
+            }
+            
+            const inp = document.getElementById('inp-agenda');
+            if (inp && document.activeElement !== inp && inp.value !== msg) {
+                inp.value = msg || "";
+            }
+        }
 
         function openNotifModal() { document.getElementById('modal-notif').classList.remove('hidden'); }
         function closeNotifModal() { document.getElementById('modal-notif').classList.add('hidden'); }
 
-        // --- LANDING LOGIC & HALANGAN ---
         function openNameSelectModal() {
             const listContainer = document.getElementById('list-nama-landing');
             listContainer.innerHTML = '';
@@ -582,7 +576,6 @@
 
         function initCanvasBackground() { const c=document.getElementById('bg-canvas'); if(!c)return; const ctx=c.getContext('2d'); function resize(){c.width=window.innerWidth; c.height=window.innerHeight;} window.addEventListener('resize',resize); resize(); let flakes=[]; for(let i=0;i<80;i++) flakes.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,d:Math.random()*1+0.5,vx:Math.random()*1-0.5,vy:Math.random()*1+0.5}); let angle=0; function draw(){ ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); angle+=0.01; flakes.forEach(p=>{ctx.moveTo(p.x,p.y); ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true); p.y+=p.vy; p.x+=Math.sin(angle+p.d)*p.vx; if(p.y>c.height){p.y=-10;p.x=Math.random()*c.width;} }); ctx.fill(); requestAnimationFrame(draw); } draw(); }
 
-        // --- DATA SYNC SUPABASE ---
         async function saveData() {
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); updateLandingStatus("Menyimpan ke Cloud...", "loading");
             try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Sudah Absen", "online"); } 
@@ -618,19 +611,15 @@
             } catch(e) {}
         }, 10000);
 
-        // --- PENGATURAN HARI LIBUR NASIONAL ---
         function addHoliday() { const val = document.getElementById('inp-holiday').value; if(val && !state.holidays.includes(val)) { state.holidays.push(val); saveData(); renderHolidayList(); renderPrintTable(); } }
         function removeHoliday(val) { state.holidays = state.holidays.filter(h => h !== val); saveData(); renderHolidayList(); renderPrintTable(); }
         function renderHolidayList() { const hl = document.getElementById('holiday-list'); if(!hl) return; hl.innerHTML = state.holidays.map(h => `<span class="bg-red-100 border border-red-200 text-red-700 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2 shadow-sm">${h} <button onclick="removeHoliday('${h}')" class="text-red-400 hover:text-red-700 bg-white rounded-full w-4 h-4 flex items-center justify-center border border-red-100">×</button></span>`).join(''); }
 
-        // --- CORE LOGIC ---
         let editingId = null; let tempAtt = {}; let isSignatureCleared = false;
         
         function updateClock() { 
             const now = new Date(); 
-            // Jam
             const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).replace(/\./g, ':'); 
-            // Tanggal Hari Ini (ex: Selasa, 7 April 2026)
             const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
             const dC = document.getElementById('dash-clock'); 
@@ -648,7 +637,6 @@
         function updateState(key, value) { state[key] = value; if(['judul1', 'judul2', 'judul3', 'tglCetak', 'kepsek'].includes(key)) renderPrintHeader(); saveData(); }
         function updateBulanTahun(val) { state.tahunBulan = val; updateDaysList(); renderPrintHeader(); renderPrintTable(); saveData(); }
 
-        // UPDATE CLOCK ACTION UNTUK MENANGANI HALANGAN S, I, A
         function clockAction(empId, type) {
             const today = getTodayDate(); const now = new Date(); const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
             const emp = state.employees.find(e => e.id === empId);
@@ -700,7 +688,6 @@
             });
         }
 
-        // --- CETAK/PRINT RENDERING ---
         function renderPrintHeader() {
             const [y, m] = state.tahunBulan.split('-'); const teksBulan = `BULAN : ${getMonthName(m).toUpperCase()} ${y}`;
             const maps = { 'print-judul1': state.judul1, 'print-judul2': state.judul2, 'print-judul3': state.judul3, 'print-bulan-text': teksBulan, 'print-tglcetak': state.tglCetak, 'print-kepsek': state.kepsek };
@@ -740,7 +727,6 @@
             const b = document.getElementById('print-table-body'); if(b) b.innerHTML = rHTML;
         }
 
-        // --- BACKUP & MODAL ---
         function exportData() { const [y, m] = state.tahunBulan.split('-'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], {type:"application/json"})); a.download = `Backup_${getMonthName(m)}_${y}.json`; a.click(); }
         function importData(e) { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = evt => { try { Object.assign(state, JSON.parse(evt.target.result)); updateDaysList(); saveData(); location.reload(); } catch(err){ alert("Error!"); } }; r.readAsText(f); }
         function addEmployee() { state.employees.push({ id: Date.now(), name: "Nama Pegawai", signature: "", att: {} }); saveData(); renderEmployeeList(); renderPrintTable(); }
@@ -766,7 +752,6 @@
         function updateDay(d, f, v) { if(!tempAtt[d]) tempAtt[d]={status:'H',in:'',out:''}; tempAtt[d][f]=v; if(f==='status') renderDaysGrid(); }
         function applyQuickFill() { const st=document.getElementById('quick-status').value, i=document.getElementById('quick-in').value, o=document.getElementById('quick-out').value; currentDaysList.forEach(d => { if(isHoliday(d) && st === 'H') return; tempAtt[d] = {status:st, in:st==='H'?i:'', out:st==='H'?o:''}; }); renderDaysGrid(); }
 
-        // --- CANVAS SIGNATURE ---
         const sigCanvas=document.getElementById('signature-pad'); let sigCtx; if(sigCanvas) sigCtx=sigCanvas.getContext('2d'); let isSigDrawing=false, hasDrawing=false;
         function initSignatureCanvas() { if(!sigCanvas||!sigCtx)return; sigCtx.lineWidth=3; sigCtx.lineCap='round'; sigCtx.lineJoin='round'; sigCtx.strokeStyle='#0f172a'; sigCanvas.addEventListener('mousedown',startSig); sigCanvas.addEventListener('mouseup',endSig); sigCanvas.addEventListener('mousemove',drawSig); sigCanvas.addEventListener('mouseleave',endSig); sigCanvas.addEventListener('touchstart',startSig,{passive:false}); sigCanvas.addEventListener('touchend',endSig); sigCanvas.addEventListener('touchmove',drawSig,{passive:false}); }
         function getSigPos(e) { const rect=sigCanvas.getBoundingClientRect(); const sX=sigCanvas.width/rect.width, sY=sigCanvas.height/rect.height; if(e.touches&&e.touches.length>0) return {x:(e.touches[0].clientX-rect.left)*sX, y:(e.touches[0].clientY-rect.top)*sY}; return {x:(e.clientX-rect.left)*sX, y:(e.clientY-rect.top)*sY}; }
