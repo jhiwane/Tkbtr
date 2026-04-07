@@ -20,7 +20,7 @@
             @page { size: landscape; margin: 6mm 10mm; }
             body { background: white !important; margin: 0 !important; padding: 0 !important; }
             
-            #landing-view, #bottom-nav, #dashboard-header, #tab-pegawai, #tab-pengaturan, #toast-container, #modal-edit, #modal-halangan, .no-print, .bg-shapes { 
+            #landing-view, #bottom-nav, #dashboard-header, #tab-pegawai, #tab-pengaturan, #toast-container, #modal-edit, #modal-halangan, #modal-pilih-nama, .no-print, .bg-shapes { 
                 display: none !important; 
             }
 
@@ -114,8 +114,13 @@
         #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
         .glass-panel { background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: rgba(15, 23, 42, 0.85); background-blend-mode: overlay; backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .orbit-container { position: relative; width: 300px; height: 300px; margin: 2rem auto; border-radius: 50%; border: 2px dashed rgba(212, 175, 55, 0.3); box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 40px rgba(212, 175, 55, 0.1); }
-        .orbit-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; border-radius: 50%; background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=200&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: #0f172a; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 2px solid rgba(212, 175, 55, 0.5); z-index: 10; overflow: hidden; }
-        .orbit-center-overlay { width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; text-align: center; color: white; font-weight: bold; padding: 10px; }
+        
+        /* Modifikasi Orbit Center jadi tombol interaktif */
+        .orbit-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; border-radius: 50%; background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=200&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: #0f172a; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 2px solid rgba(212, 175, 55, 0.5); z-index: 10; overflow: hidden; outline: none; }
+        .orbit-center:hover { border-color: rgba(212, 175, 55, 0.9); box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
+        .orbit-center-overlay { width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; padding: 10px; transition: background 0.3s; }
+        .orbit-center:hover .orbit-center-overlay { background: rgba(0, 0, 0, 0.4); }
+
         .orbit-wrapper { position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; z-index: 20; }
         .orbit-btn { width: 100%; height: 100%; border-radius: 50%; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); border: 2px solid transparent; backdrop-filter: blur(4px); }
         .orbit-btn img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5)); }
@@ -130,7 +135,6 @@
         @keyframes orbit2 { 0% { transform: rotate(120deg) translateX(150px) rotate(-120deg); } 100% { transform: rotate(480deg) translateX(150px) rotate(-480deg); } }
         @keyframes orbit3 { 0% { transform: rotate(240deg) translateX(150px) rotate(-240deg); } 100% { transform: rotate(600deg) translateX(150px) rotate(-600deg); } }
 
-        #search-results { max-height: 200px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(212, 175, 55, 0.5) transparent; }
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .toast-enter { animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
@@ -150,22 +154,15 @@
             <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 tracking-wide text-center drop-shadow-lg">
                 SISTEM ABSENSI
             </h1>
-            <div id="landing-clock" class="text-white/90 text-xl font-mono tracking-widest mb-6 border-b border-white/20 pb-2">00:00:00</div>
-
-            <div class="w-full relative mb-8">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </div>
-                    <input type="text" id="landing-search" autocomplete="off" placeholder="Cari Nama Guru..." oninput="handleSearch(this.value)" onfocus="document.getElementById('search-results').classList.remove('hidden')" class="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all shadow-inner">
-                </div>
-                <div id="search-results" class="absolute w-full mt-2 bg-slate-800/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl hidden z-50 overflow-hidden"></div>
-            </div>
+            <div id="landing-clock" class="text-white/90 text-xl font-mono tracking-widest mb-10 border-b border-white/20 pb-2">00:00:00</div>
 
             <div class="orbit-container">
-                <div class="orbit-center">
-                    <div class="orbit-center-overlay" id="orbit-center-text">SILAKAN PILIH NAMA</div>
-                </div>
+                <button class="orbit-center cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95" onclick="openNameSelectModal()" title="Klik untuk pilih nama">
+                    <div class="orbit-center-overlay">
+                        <span id="orbit-center-text" class="font-bold text-sm tracking-wide leading-tight drop-shadow-md">SILAKAN PILIH NAMA</span>
+                        <svg class="w-5 h-5 text-yellow-400 mt-1.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path></svg>
+                    </div>
+                </button>
                 
                 <div class="orbit-wrapper masuk-wrapper">
                     <button class="orbit-btn" onclick="landingAction('in')" title="Absen Masuk">
@@ -188,7 +185,20 @@
                 </div>
             </div>
             
-            <div id="landing-status" class="mt-4 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 text-white/80 bg-black/40 border-white/20">Menghubungkan...</div>
+            <div id="landing-status" class="mt-8 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 text-white/80 bg-black/40 border-white/20">Menghubungkan...</div>
+        </div>
+    </div>
+
+    <div id="modal-pilih-nama" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md transition-opacity">
+        <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[90%] max-w-sm shadow-2xl flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-white font-extrabold text-xl">Pilih Nama Anda</h3>
+                <button onclick="closeNameSelectModal()" class="text-slate-400 hover:text-red-400 bg-slate-700 hover:bg-slate-600 rounded-full p-1.5 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="list-nama-landing" class="overflow-y-auto custom-scrollbar flex flex-col gap-2.5 pr-2 pb-2">
+                </div>
         </div>
     </div>
 
@@ -344,7 +354,9 @@
                 <span class="nav-text">Cetak</span>
             </button>
         </div>
-    </div> <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[200] flex items-center justify-center p-4 hidden no-print backdrop-blur-sm">
+    </div> 
+
+    <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[200] flex items-center justify-center p-4 hidden no-print backdrop-blur-sm">
         <div class="bg-[#f8fafc] rounded-3xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden border border-white">
             <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-white sticky top-0 z-10">
                 <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">Kelola Data Manual</h2>
@@ -421,7 +433,7 @@
             tahunBulan: defaultTahunBulan,
             tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
-            holidays: [], // Array untuk menyimpan tgl libur nasional (Format YYYY-MM-DD)
+            holidays: [], 
             employees: JSON.parse(JSON.stringify(defaultEmployeesList))
         };
 
@@ -429,15 +441,12 @@
         function getMonthName(mIndex) { const months = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER']; return months[parseInt(mIndex) - 1]; }
         function updateDaysList() { if(!state.tahunBulan) state.tahunBulan=defaultTahunBulan; const [y, m]=state.tahunBulan.split('-'); const daysCount=new Date(y, m, 0).getDate(); currentDaysList=Array.from({length: daysCount}, (_, i) => i + 1); }
         
-        // FUNGSI CEK HARI LIBUR / TANGGAL MERAH
         function isHoliday(day) {
             const [y, m] = state.tahunBulan.split('-');
             const dateObj = new Date(y, m - 1, day);
-            const isSun = dateObj.getDay() === 0; // Cek Minggu
-            
+            const isSun = dateObj.getDay() === 0; 
             const dateStr = `${y}-${m.padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            const isNational = state.holidays && state.holidays.includes(dateStr); // Cek Libur Nasional
-            
+            const isNational = state.holidays && state.holidays.includes(dateStr); 
             return isSun || isNational;
         }
 
@@ -453,7 +462,7 @@
 
         function updateLandingStatus(msg, status = 'loading') {
             const el = document.getElementById('landing-status'); if (!el) return; el.innerText = msg;
-            el.className = "mt-4 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 ";
+            el.className = "mt-8 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 ";
             if (status === 'online') { el.innerHTML = `<span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span> ${msg}`; el.className += "text-green-300 bg-green-900/40 border-green-500/50"; }
             else if (status === 'offline') { el.innerHTML = `⚠️ ${msg}`; el.className += "text-red-300 bg-red-900/40 border-red-500/50"; }
             else { el.innerHTML = `<svg class="animate-spin h-3 w-3 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> ${msg}`; el.className += "text-white/80 bg-black/40 border-white/20"; }
@@ -464,29 +473,58 @@
         function showToast(message, isSuccess = true) { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${isSuccess ? 'bg-green-600' : 'bg-red-600'} border border-white/20`; toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`; container.appendChild(toast); setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000); }
 
         // --- LANDING LOGIC & HALANGAN ---
-        function handleSearch(query) { const resultBox = document.getElementById('search-results'); if(!resultBox) return; resultBox.innerHTML = ''; const filtered = query ? state.employees.filter(e => e.name.toLowerCase().includes(query.toLowerCase())) : state.employees.slice(0,5); if(filtered.length === 0) { resultBox.innerHTML = '<div class="p-3 text-sm text-slate-400 text-center">Tidak ditemukan</div>'; return; } filtered.forEach(emp => { const div = document.createElement('div'); div.className = "px-4 py-3 hover:bg-white/10 cursor-pointer text-white border-b border-white/5 transition-colors text-sm font-medium"; div.innerText = emp.name; div.onclick = () => { currentSelectedLandingId = emp.id; document.getElementById('landing-search').value = emp.name; resultBox.classList.add('hidden'); document.getElementById('orbit-center-text').innerText = emp.name.toUpperCase(); }; resultBox.appendChild(div); }); }
+        // BUKA MODAL PILIH NAMA
+        function openNameSelectModal() {
+            const listContainer = document.getElementById('list-nama-landing');
+            listContainer.innerHTML = '';
+            
+            if (state.employees.length === 0) {
+                listContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-sm">Belum ada data pegawai.</p>';
+            } else {
+                state.employees.forEach(emp => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left px-4 py-3.5 bg-slate-700 hover:bg-blue-600 text-white rounded-xl transition-colors font-bold text-sm shadow-sm flex items-center gap-3";
+                    btn.innerHTML = `<div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-blue-300 font-extrabold text-xs shadow-inner">${emp.name.charAt(0)}</div> <span class="truncate">${emp.name}</span>`;
+                    btn.onclick = () => selectLandingName(emp.id, emp.name);
+                    listContainer.appendChild(btn);
+                });
+            }
+            document.getElementById('modal-pilih-nama').classList.remove('hidden');
+        }
+
+        // TUTUP MODAL PILIH NAMA
+        function closeNameSelectModal() {
+            document.getElementById('modal-pilih-nama').classList.add('hidden');
+        }
+
+        // PILIH NAMA DARI MODAL
+        function selectLandingName(id, name) {
+            currentSelectedLandingId = id;
+            document.getElementById('orbit-center-text').innerText = name.toUpperCase();
+            closeNameSelectModal();
+            playCuteSound();
+        }
         
-        function openHalanganMenu() { if(!currentSelectedLandingId) { showToast("Pilih nama dulu!", false); return; } document.getElementById('modal-halangan').classList.remove('hidden'); }
+        function openHalanganMenu() { if(!currentSelectedLandingId) { showToast("Silakan klik tengah dan pilih nama dulu!", false); return; } document.getElementById('modal-halangan').classList.remove('hidden'); }
         function closeHalanganMenu() { document.getElementById('modal-halangan').classList.add('hidden'); }
         
         function submitHalangan(status) {
-            closeHalanganMenu(); playCuteSound(); clockAction(currentSelectedLandingId, status); // status is 'S', 'I', or 'A'
+            closeHalanganMenu(); playCuteSound(); clockAction(currentSelectedLandingId, status); 
             const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name; const panggilNama = empName.split(',')[0];
             let statusText = status === 'S' ? 'Sakit' : (status === 'I' ? 'Izin' : 'Alpa');
             speakSoftly(`Semoga segala urusan dilancarkan, ${panggilNama}. Keterangan ${statusText} sudah dicatat.`);
             showToast(`Sukses Tandai ${statusText} - ${empName}`);
-            setTimeout(() => { currentSelectedLandingId = null; document.getElementById('landing-search').value = ""; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
+            setTimeout(() => { currentSelectedLandingId = null; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
         }
 
         function landingAction(type) {
-            if(!currentSelectedLandingId) { showToast("Pilih nama dulu!", false); return; }
+            if(!currentSelectedLandingId) { showToast("Silakan klik tengah dan pilih nama dulu!", false); return; }
             playCuteSound(); clockAction(currentSelectedLandingId, type);
             const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name; const panggilNama = empName.split(',')[0];
             speakSoftly(type === 'in' ? `Selamat bertugas, ${panggilNama}.` : `Terima kasih atas kerja kerasnya, ${panggilNama}.`);
             showToast(`Sukses Tandai - ${empName}`);
-            setTimeout(() => { currentSelectedLandingId = null; document.getElementById('landing-search').value = ""; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
+            setTimeout(() => { currentSelectedLandingId = null; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
         }
-        document.addEventListener('click', (e) => { const sr = document.getElementById('search-results'); if(sr && !e.target.closest('#landing-search') && !e.target.closest('#search-results')) sr.classList.add('hidden'); });
 
         function initCanvasBackground() { const c=document.getElementById('bg-canvas'); if(!c)return; const ctx=c.getContext('2d'); function resize(){c.width=window.innerWidth; c.height=window.innerHeight;} window.addEventListener('resize',resize); resize(); let flakes=[]; for(let i=0;i<80;i++) flakes.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,d:Math.random()*1+0.5,vx:Math.random()*1-0.5,vy:Math.random()*1+0.5}); let angle=0; function draw(){ ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); angle+=0.01; flakes.forEach(p=>{ctx.moveTo(p.x,p.y); ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true); p.y+=p.vy; p.x+=Math.sin(angle+p.d)*p.vx; if(p.y>c.height){p.y=-10;p.x=Math.random()*c.width;} }); ctx.fill(); requestAnimationFrame(draw); } draw(); }
 
@@ -512,13 +550,13 @@
             ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-tglcetak', 'inp-kepsek'].forEach(id => { const el=document.getElementById(id); if(el && state[id.replace('inp-','')]) el.value = state[id.replace('inp-','')]; });
             const inpB = document.getElementById('inp-bulan-tahun'); if(inpB) inpB.value = state.tahunBulan;
 
-            renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); handleSearch(document.getElementById('landing-search')?.value);
+            renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); 
         }
 
         setInterval(async () => {
             if(isModalEditOpen) return; 
             try { const { data } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
-                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { Object.assign(state, data.data); if(!state.holidays) state.holidays = []; updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); handleSearch(document.getElementById('landing-search')?.value); }
+                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { Object.assign(state, data.data); if(!state.holidays) state.holidays = []; updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); }
             } catch(e) {}
         }, 10000);
 
@@ -543,7 +581,6 @@
             if(emp) {
                 if(!emp.att[today]) emp.att[today] = { status: '', in: '', out: '' };
                 
-                // Jika halangan dipilih, kosongkan jam masuk/pulang lalu isi status S/I/A
                 if(type === 'S' || type === 'I' || type === 'A') {
                     emp.att[today].status = type; emp.att[today].in = ''; emp.att[today].out = '';
                 } else {
@@ -561,7 +598,6 @@
                 const statusParaf = emp.signature ? '<span class="text-green-600 bg-green-100 border border-green-200 px-2 py-0.5 rounded text-[9px] font-bold">✅ TTD</span>' : '<span class="text-red-500 bg-red-100 border border-red-200 px-2 py-0.5 rounded text-[9px] font-bold">❌ KOSONG</span>';
                 const todayAtt = emp.att[today] || { status: '', in: '', out: '' };
                 
-                // Tampilan tombol disesuaikan jika statusnya halangan
                 let btnMasuk = "", btnPulang = "";
                 if(todayAtt.status === 'S' || todayAtt.status === 'I' || todayAtt.status === 'A') {
                     btnMasuk = `<span class="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg text-xs font-bold w-full text-center tracking-widest">KETERANGAN: ${todayAtt.status}</span>`;
@@ -601,7 +637,6 @@
             const th = document.getElementById('print-tgl-header'); const col = document.getElementById('print-tgl-colspan'); if(!th) return;
             col.setAttribute('colspan', currentDaysList.length);
             
-            // Ganti isSunday dengan isHoliday
             let hHTML = ''; currentDaysList.forEach(d => hHTML += `<th class="${isHoliday(d)?'holiday-col text-red-600':''}">${d}</th>`);
             th.innerHTML = hHTML + `<th>S</th><th>I</th><th>A</th>`;
 
@@ -609,23 +644,19 @@
             state.employees.forEach((emp, i) => {
                 let s=0, iz=0, a=0; currentDaysList.forEach(d => { const st=emp.att[d]?.status; if(st==='S')s++; if(st==='I')iz++; if(st==='A')a++; });
                 
-                // Baris 1: Jam Datang
                 rHTML += `<tr class="row-dtg"><td rowspan="4"><b>${i + 1}</b></td><td rowspan="4" class="col-nama"><b>${emp.name}</b></td><td class="col-tipe">Jam<br>Dtg</td>`;
                 currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].in||'') : ''}</td>`);
                 rHTML += `<td rowspan="4"><b>${s||''}</b></td><td rowspan="4"><b>${iz||''}</b></td><td rowspan="4"><b>${a||''}</b></td><td rowspan="4"><b>${s+iz+a||''}</b></td></tr>`;
 
-                // Baris 2: Paraf Datang
                 rHTML += `<tr class="row-prf1"><td class="col-tipe">Prf</td>`;
                 currentDaysList.forEach(d => {
                     const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, hol=isHoliday(d)?'holiday-col':'';
                     if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${hol}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${hol}"><b>${st}</b></td>`; else rHTML+=`<td class="${hol}"></td>`;
                 }); rHTML += `</tr>`;
 
-                // Baris 3: Jam Pulang
                 rHTML += `<tr class="row-plg"><td class="col-tipe">Jam<br>Plg</td>`;
                 currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].out||'') : ''}</td>`); rHTML += `</tr>`;
 
-                // Baris 4: Paraf Pulang
                 rHTML += `<tr class="row-prf2"><td class="col-tipe">Prf</td>`;
                 currentDaysList.forEach(d => {
                     const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, hol=isHoliday(d)?'holiday-col':'';
