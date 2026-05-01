@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1e293b">
-    <title>Aplikasi Cetak Absensi Guru - Final PWA & Agenda</title>
+    <title>Aplikasi Cetak Absensi Guru - Final Pintar</title>
     
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQWJzZW5zaSBUSyIsInNob3J0X25hbWUiOiJBYnNlbnNpIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxZTI5M2IiLCJ0aGVtZV9jb2xvciI6IiMxZTI5M2IiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9maWxlcy5jYXRib3gubW9lL2RsYnBxcC5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn1dfQ==">
     <link rel="apple-touch-icon" href="https://files.catbox.moe/dlbpqp.png">
@@ -56,7 +56,7 @@
             .row-dtg td[rowspan] { border-bottom: 1px solid black !important; border-top: 1px solid black !important; }
         }
 
-        /* Tipografi & Layout Umum Print (Mode Web Preview) */
+        /* Tipografi & Layout Umum Print */
         #print-section { font-family: Arial, Helvetica, sans-serif; color: black; }
         .print-header { text-align: center; font-size: 14px; line-height: 1.3; margin-bottom: 10px; text-transform: uppercase; }
         .print-bulan { font-size: 12px; margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
@@ -80,45 +80,33 @@
         .print-footer { margin-top: 15px; display: flex; justify-content: flex-end; font-size: 12px; }
         .ttd-box { width: 250px; text-align: center; }
 
-        /* UI Dashboard Styles - Premium Native Look */
+        /* UI Dashboard Styles */
         body { -webkit-tap-highlight-color: transparent; }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); border-radius: 1.5rem;
-        }
-
+        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); border-radius: 1.5rem; }
         .nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33.33%; padding: 0.5rem 0; color: #64748b; transition: all 0.2s; }
         .nav-btn.active { color: #4f46e5; }
         .nav-btn svg { width: 24px; height: 24px; margin-bottom: 2px; transition: transform 0.2s; }
         .nav-btn.active svg { transform: scale(1.15); stroke-width: 2.5; }
         .nav-text { font-size: 10px; font-weight: 700; }
-
         .canvas-container { border: 2px dashed #cbd5e1; background-color: rgba(248, 250, 252, 0.8); border-radius: 1rem; position: relative; overflow: hidden; }
         #signature-pad { touch-action: none; width: 100%; height: 150px; cursor: crosshair; }
-        
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
         .admin-bg { background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%); position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; }
         .bg-shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .shape-1 { position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(transparent) 70%); border-radius: 50%; }
         .shape-2 { position: absolute; bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(transparent) 70%); border-radius: 50%; }
 
-        /* =========================================================
-           STYLE LANDING PAGE
-           ========================================================= */
+        /* LANDING PAGE */
         #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
         .glass-panel { background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: rgba(15, 23, 42, 0.85); background-blend-mode: overlay; backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .orbit-container { position: relative; width: 300px; height: 300px; margin: 2rem auto; border-radius: 50%; border: 2px dashed rgba(212, 175, 55, 0.3); box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 0 0 40px rgba(212, 175, 55, 0.1); }
-        
         .orbit-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; border-radius: 50%; background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=200&auto=format&fit=crop'); background-size: cover; background-position: center; background-color: #0f172a; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border: 2px solid rgba(212, 175, 55, 0.5); z-index: 10; overflow: hidden; outline: none; }
         .orbit-center:hover { border-color: rgba(212, 175, 55, 0.9); box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
         .orbit-center-overlay { width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; padding: 10px; transition: background 0.3s; }
         .orbit-center:hover .orbit-center-overlay { background: rgba(0, 0, 0, 0.4); }
-
         .orbit-wrapper { position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; margin: -40px 0 0 -40px; z-index: 20; }
         .orbit-btn { width: 100%; height: 100%; border-radius: 50%; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); border: 2px solid transparent; backdrop-filter: blur(4px); }
         .orbit-btn img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5)); }
@@ -132,20 +120,20 @@
         @keyframes orbit1 { 0% { transform: rotate(0deg) translateX(150px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(150px) rotate(-360deg); } }
         @keyframes orbit2 { 0% { transform: rotate(120deg) translateX(150px) rotate(-120deg); } 100% { transform: rotate(480deg) translateX(150px) rotate(-480deg); } }
         @keyframes orbit3 { 0% { transform: rotate(240deg) translateX(150px) rotate(-240deg); } 100% { transform: rotate(600deg) translateX(150px) rotate(-600deg); } }
-
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .toast-enter { animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
 </head>
 <body class="bg-slate-900 text-gray-800 font-sans antialiased">
 
+    <!-- Toast Notification -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
+    <!-- ================= VIEW 1: LANDING PAGE ================= -->
     <div id="landing-view" class="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-slate-900">
         <canvas id="bg-canvas"></canvas>
 
         <div class="glass-panel p-8 rounded-3xl w-11/12 max-w-md z-10 flex flex-col items-center relative mt-6">
-            
             <div class="absolute top-4 right-4 z-50 flex items-center gap-2">
                 <button onclick="openNotifModal()" class="relative p-2 rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white backdrop-blur-md transition-all border border-white/10 shadow-sm group" title="Pengumuman">
                     <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
@@ -156,10 +144,9 @@
                 </button>
             </div>
 
-            <h1 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 mt-4 tracking-wide text-center drop-shadow-lg">
-                ABSEN GURU
+            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-2 mt-4 tracking-wide text-center drop-shadow-lg">
+                SISTEM ABSENSI
             </h1>
-            
             <div id="landing-clock" class="text-white/90 text-3xl font-mono tracking-widest font-bold">00:00:00</div>
             <div id="landing-date" class="text-slate-300 text-sm font-medium mt-1 mb-8 border-b border-white/20 pb-3 uppercase tracking-wider text-center">...</div>
 
@@ -171,175 +158,133 @@
                     </div>
                 </button>
                 
-                <div class="orbit-wrapper masuk-wrapper">
-                    <button class="orbit-btn" onclick="landingAction('in')" title="Absen Masuk">
-                        <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyaDdjY3c1OXRxc2d1MXg5ZjB1NTBsdjgwbXV0OHpmeTNrNG12aXR6dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/28TeqcO2MRGta9RpCw/giphy.gif" alt="Masuk">
-                        <span class="text-green-300">MASUK</span>
-                    </button>
-                </div>
-                <div class="orbit-wrapper pulang-wrapper">
-                    <button class="orbit-btn" onclick="landingAction('out')" title="Absen Pulang">
-                        <img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyanQ3cnNjNzUwaWcxZ3JpcXJpNGVqc2djYXJkNHVoYTlpb3ppY3VpMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/AXAU9RDZqb2FX7dfmR/giphy.gif" alt="Pulang">
-                        <span class="text-orange-300">PULANG</span>
-                    </button>
-                </div>
-                
-                <div class="orbit-wrapper halangan-wrapper">
-                    <button class="orbit-btn" onclick="openHalanganMenu()" title="Ada Halangan?">
-                        <img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyanZ2ZDhiY2VqbnUyOGN6eDBibXliMXp2eHBiM2dqbHlwYzZoOG90MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Gn9cGMn9vl9oX0QCMX/giphy.gif" alt="Halangan" style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));">
-                        <span class="text-purple-300">HALANGAN</span>
-                    </button>
-                </div>
+                <div class="orbit-wrapper masuk-wrapper"><button class="orbit-btn" onclick="landingAction('in')"><img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyaDdjY3c1OXRxc2d1MXg5ZjB1NTBsdjgwbXV0OHpmeTNrNG12aXR6dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/28TeqcO2MRGta9RpCw/giphy.gif" alt="Masuk"><span class="text-green-300">MASUK</span></button></div>
+                <div class="orbit-wrapper pulang-wrapper"><button class="orbit-btn" onclick="landingAction('out')"><img src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyanQ3cnNjNzUwaWcxZ3JpcXJpNGVqc2djYXJkNHVoYTlpb3ppY3VpMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/AXAU9RDZqb2FX7dfmR/giphy.gif" alt="Pulang"><span class="text-orange-300">PULANG</span></button></div>
+                <div class="orbit-wrapper halangan-wrapper"><button class="orbit-btn" onclick="openHalanganMenu()"><img src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyanZ2ZDhiY2VqbnUyOGN6eDBibXliMXp2eHBiM2dqbHlwYzZoOG90MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Gn9cGMn9vl9oX0QCMX/giphy.gif" alt="Halangan" style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));"><span class="text-purple-300">HALANGAN</span></button></div>
             </div>
             
             <div id="landing-status" class="mt-8 text-xs px-3 py-1.5 rounded-full backdrop-blur-md transition-all duration-500 border font-bold shadow-lg flex items-center gap-1.5 text-white/80 bg-black/40 border-white/20">Menghubungkan...</div>
         </div>
     </div>
 
+    <!-- MODAL NOTIFIKASI AGENDA -->
     <div id="modal-notif" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md transition-opacity">
         <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[90%] max-w-sm shadow-2xl flex flex-col max-h-[80vh]">
             <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
-                <h3 class="text-white font-extrabold text-xl flex items-center gap-2">
-                    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                    Pengumuman
-                </h3>
-                <button onclick="closeNotifModal()" class="text-slate-400 hover:text-red-400 bg-slate-700 hover:bg-slate-600 rounded-full p-1.5 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+                <h3 class="text-white font-extrabold text-xl flex items-center gap-2"><svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg> Pengumuman</h3>
+                <button onclick="closeNotifModal()" class="text-slate-400 hover:text-red-400 bg-slate-700 rounded-full p-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <div class="bg-slate-700/50 p-4 rounded-2xl text-slate-200 text-sm leading-relaxed whitespace-pre-wrap overflow-y-auto custom-scrollbar" id="notif-text">
-                Tidak ada pengumuman saat ini.
-            </div>
+            <div class="bg-slate-700/50 p-4 rounded-2xl text-slate-200 text-sm leading-relaxed whitespace-pre-wrap overflow-y-auto custom-scrollbar" id="notif-text">Tidak ada pengumuman saat ini.</div>
         </div>
     </div>
 
+    <!-- MODAL PILIH NAMA -->
     <div id="modal-pilih-nama" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md transition-opacity">
         <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[90%] max-w-sm shadow-2xl flex flex-col max-h-[80vh]">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="text-white font-extrabold text-xl">Pilih Nama Anda</h3>
-                <button onclick="closeNameSelectModal()" class="text-slate-400 hover:text-red-400 bg-slate-700 hover:bg-slate-600 rounded-full p-1.5 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
+            <div class="flex justify-between items-center mb-5"><h3 class="text-white font-extrabold text-xl">Pilih Nama Anda</h3><button onclick="closeNameSelectModal()" class="text-slate-400 hover:text-red-400 bg-slate-700 rounded-full p-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button></div>
             <div id="list-nama-landing" class="overflow-y-auto custom-scrollbar flex flex-col gap-2.5 pr-2 pb-2"></div>
         </div>
     </div>
 
+    <!-- MODAL HALANGAN -->
     <div id="modal-halangan" class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center hidden backdrop-blur-md">
         <div class="bg-slate-800 p-6 rounded-3xl border border-slate-600 w-[85%] max-w-sm text-center shadow-2xl">
             <h3 class="text-white font-extrabold mb-5 text-xl">Pilih Keterangan</h3>
             <div class="flex flex-col gap-3">
-                <button onclick="submitHalangan('S')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3.5 rounded-2xl text-lg transition-colors shadow-lg shadow-yellow-500/30">🤒 Sakit (S)</button>
-                <button onclick="submitHalangan('I')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3.5 rounded-2xl text-lg transition-colors shadow-lg shadow-blue-500/30">📝 Izin (I)</button>
-                <button onclick="submitHalangan('A')" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-2xl text-lg transition-colors shadow-lg shadow-red-500/30">🚫 Alpa (A)</button>
-                <button onclick="closeHalanganMenu()" class="mt-4 text-slate-400 hover:text-white font-bold text-sm bg-slate-700 py-2 rounded-xl">Batal</button>
+                <button onclick="submitHalangan('S')" class="bg-yellow-500 text-white font-bold py-3.5 rounded-2xl text-lg shadow-lg">🤒 Sakit (S)</button>
+                <button onclick="submitHalangan('I')" class="bg-blue-500 text-white font-bold py-3.5 rounded-2xl text-lg shadow-lg">📝 Izin (I)</button>
+                <button onclick="submitHalangan('A')" class="bg-red-500 text-white font-bold py-3.5 rounded-2xl text-lg shadow-lg">🚫 Alpa (A)</button>
+                <button onclick="closeHalanganMenu()" class="mt-4 text-slate-400 bg-slate-700 py-2 rounded-xl">Batal</button>
             </div>
         </div>
     </div>
 
+    <!-- ================= VIEW 2: DASHBOARD ADMIN ================= -->
     <div id="dashboard-view" class="hidden admin-bg">
         <div class="bg-shapes"><div class="shape-1"></div><div class="shape-2"></div></div>
 
         <div id="dashboard-header" class="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-white/50 shadow-sm px-4 py-3 flex justify-between items-center no-print">
             <div class="flex items-center gap-2">
-                <button onclick="toggleView('landing')" class="p-2 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200 transition-colors">
+                <button onclick="toggleView('landing')" class="p-2 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </button>
                 <h1 class="text-lg font-extrabold text-slate-800">Manajemen Admin</h1>
             </div>
-            <div class="flex flex-col items-end">
-                <div id="dash-clock" class="text-blue-600 font-mono font-bold text-sm tracking-wider">00:00:00</div>
-            </div>
+            <div id="dash-clock" class="text-blue-600 font-mono font-bold text-sm tracking-wider">00:00:00</div>
         </div>
 
         <div class="max-w-4xl mx-auto p-4 pb-28 relative z-10">
-            
+            <!-- TAB 1: PEGAWAI -->
             <div id="tab-pegawai" class="block">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h2 class="font-extrabold text-slate-800 text-xl">Daftar Pegawai</h2>
                         <span id="badge-hari-ini" class="bg-indigo-100 text-indigo-700 text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-widest mt-1 inline-block"></span>
                     </div>
-                    <button onclick="addEmployee()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all shadow-md">
+                    <button onclick="addEmployee()" class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-md">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Tambah
                     </button>
                 </div>
                 <div id="employee-list" class="space-y-4"></div>
             </div>
 
+            <!-- TAB 2: PENGATURAN TEKS & AGENDA -->
             <div id="tab-pengaturan" class="hidden space-y-6">
                 <div class="glass-card p-5">
                     
                     <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-200 mb-6 shadow-sm">
-                        <label class="block text-sm font-bold text-yellow-800 mb-2 flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg> 
-                            Kirim Pengumuman / Agenda Guru
-                        </label>
-                        <textarea id="inp-agenda" class="w-full p-3 border border-yellow-300 rounded-xl text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 bg-white min-h-[100px] break-words whitespace-pre-wrap resize-y" placeholder="Tulis pengumuman di sini... Kosongkan jika tidak ada pengumuman."></textarea>
-                        <div class="flex justify-end mt-3">
-                            <button onclick="saveAgenda()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Kirim Pengumuman
-                            </button>
-                        </div>
+                        <label class="block text-sm font-bold text-yellow-800 mb-2 flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg> Kirim Pengumuman Guru</label>
+                        <textarea id="inp-agenda" class="w-full p-3 border border-yellow-300 rounded-xl text-sm outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 bg-white min-h-[100px] break-words whitespace-pre-wrap resize-y" placeholder="Tulis pengumuman..."></textarea>
+                        <div class="flex justify-end mt-3"><button onclick="saveAgenda()" class="bg-yellow-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Kirim</button></div>
                     </div>
 
-                    <h2 class="font-extrabold text-slate-800 border-b border-slate-200 pb-3 flex items-center gap-2 mb-4">
-                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        Teks Kop & Laporan
-                    </h2>
+                    <h2 class="font-extrabold text-slate-800 border-b border-slate-200 pb-3 flex items-center gap-2 mb-4"><svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg> Teks Kop Laporan</h2>
                     <div class="space-y-4">
-                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 1 (Judul)</label><input type="text" id="inp-judul1" oninput="updateState('judul1', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/80"></div>
-                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 2 (Nama Sekolah)</label><input type="text" id="inp-judul2" oninput="updateState('judul2', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/80"></div>
-                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 3 (Tahun Ajaran)</label><input type="text" id="inp-judul3" oninput="updateState('judul3', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/80"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 1</label><input type="text" id="inp-judul1" oninput="updateState('judul1', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 2</label><input type="text" id="inp-judul2" oninput="updateState('judul2', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Baris 3</label><input type="text" id="inp-judul3" oninput="updateState('judul3', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none"></div>
                         
                         <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
                             <label class="block text-xs font-bold text-blue-800 mb-1.5">Bulan & Tahun Absensi</label>
-                            <input type="month" id="inp-bulan-tahun" onchange="updateBulanTahun(this.value)" class="w-full p-3 border border-blue-200 rounded-xl text-sm outline-none focus:border-blue-500 font-bold text-blue-700 bg-white">
+                            <div class="flex gap-2">
+                                <input type="month" id="inp-bulan-tahun" onchange="updateBulanTahun(this.value)" class="w-full p-3 border border-blue-200 rounded-xl text-sm outline-none font-bold text-blue-700 bg-white">
+                                <!-- TOMBOL RESET BULAN INI -->
+                                <button onclick="resetBulanIni()" class="bg-red-500 hover:bg-red-600 text-white px-4 rounded-xl font-bold shadow-sm whitespace-nowrap text-sm flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Reset
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-blue-600 mt-2 italic">*Aplikasi otomatis pindah ke bulan saat ini. Tombol Reset menghapus semua absen di bulan yang sedang dipilih.</p>
                         </div>
 
                         <div class="bg-red-50 p-4 rounded-xl border border-red-100 mt-2">
-                            <label class="block text-xs font-bold text-red-800 mb-1.5 flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> Atur Hari Libur / Tanggal Merah</label>
-                            <div class="flex flex-col sm:flex-row gap-2 mb-3">
-                                <input type="date" id="inp-holiday" class="w-full p-3 border border-red-200 rounded-xl text-sm outline-none focus:border-red-500 bg-white">
-                                <button onclick="addHoliday()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl font-bold whitespace-nowrap shadow-sm">Tambah Libur</button>
+                            <label class="block text-xs font-bold text-red-800 mb-1.5">Atur Hari Libur / Tanggal Merah</label>
+                            <div class="flex gap-2 mb-3">
+                                <input type="date" id="inp-holiday" class="w-full p-3 border border-red-200 rounded-xl text-sm outline-none">
+                                <button onclick="addHoliday()" class="bg-red-500 text-white px-4 py-3 rounded-xl font-bold">Tambah</button>
                             </div>
                             <div id="holiday-list" class="flex flex-wrap gap-2"></div>
-                            <p class="text-[10px] text-red-600 mt-2 italic">*Tanggal yang ditambah otomatis merah di tabel absen.</p>
                         </div>
                     </div>
 
-                    <h2 class="font-extrabold text-slate-800 border-b border-slate-200 pb-3 pt-6 flex items-center gap-2 mb-4">
-                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                        Tanda Tangan Pengesahan
-                    </h2>
+                    <h2 class="font-extrabold text-slate-800 border-b border-slate-200 pb-3 pt-6 flex items-center gap-2 mb-4"><svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Tanda Tangan</h2>
                     <div class="space-y-4">
-                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Tempat & Tanggal</label><input type="text" id="inp-tglcetak" oninput="updateState('tglCetak', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 bg-white/80"></div>
-                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Nama Kepala Sekolah</label><input type="text" id="inp-kepsek" oninput="updateState('kepsek', this.value)" class="w-full p-3 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 bg-white/80 font-bold"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Tempat & Tanggal</label><input type="text" id="inp-tglcetak" oninput="updateState('tglCetak', this.value)" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1.5">Kepala Sekolah</label><input type="text" id="inp-kepsek" oninput="updateState('kepsek', this.value)" class="w-full p-3 border rounded-xl text-sm outline-none font-bold"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- TAB 3: CETAK -->
             <div id="tab-cetak" class="hidden">
                 <div id="tab-cetak-controls" class="glass-card p-5 mb-6 flex flex-col gap-3">
-                    <h2 class="font-extrabold text-slate-800 text-lg mb-2">Aksi Cetak & Backup Data</h2>
-                    <button onclick="window.print()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3.5 rounded-xl font-bold shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Cetak Laporan (Print / PDF)
-                    </button>
-                    
+                    <button onclick="window.print()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2">Cetak Laporan / PDF</button>
                     <div class="grid grid-cols-2 gap-3 mt-2">
-                        <label for="import-file" class="cursor-pointer bg-white text-slate-700 px-3 py-3 rounded-xl font-bold shadow-sm border border-slate-200 flex items-center justify-center gap-2 text-sm text-center">
-                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Restore
-                        </label>
+                        <label for="import-file" class="cursor-pointer bg-white text-slate-700 py-3 rounded-xl font-bold border border-slate-200 flex items-center justify-center gap-2 text-sm text-center">Restore</label>
                         <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
-                        
-                        <button onclick="exportData()" class="bg-white text-slate-700 px-3 py-3 rounded-xl font-bold shadow-sm border border-slate-200 flex items-center justify-center gap-2 text-sm">
-                            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Backup
-                        </button>
+                        <button onclick="exportData()" class="bg-white text-slate-700 py-3 rounded-xl font-bold border border-slate-200 flex items-center justify-center gap-2 text-sm">Backup</button>
                     </div>
                 </div>
-
                 <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Preview Kertas A4:</div>
-                
                 <div id="print-wrapper" class="w-full overflow-x-auto pb-4 custom-scrollbar">
                     <div id="print-section" class="bg-white min-w-[1122px] max-w-[297mm] mx-auto p-8 border border-gray-200 shadow-xl rounded-sm">
                         <div class="print-header">
@@ -372,25 +317,16 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div id="bottom-nav" class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 flex justify-around pb-safe pt-1 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50 no-print">
-            <button id="btn-tab-pegawai" onclick="switchTab('pegawai')" class="nav-btn active">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <span class="nav-text">Pegawai</span>
-            </button>
-            <button id="btn-tab-pengaturan" onclick="switchTab('pengaturan')" class="nav-btn">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
-                <span class="nav-text">Pengaturan</span>
-            </button>
-            <button id="btn-tab-cetak" onclick="switchTab('cetak')" class="nav-btn">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                <span class="nav-text">Cetak</span>
-            </button>
+            <button id="btn-tab-pegawai" onclick="switchTab('pegawai')" class="nav-btn active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><span class="nav-text">Pegawai</span></button>
+            <button id="btn-tab-pengaturan" onclick="switchTab('pengaturan')" class="nav-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg><span class="nav-text">Pengaturan</span></button>
+            <button id="btn-tab-cetak" onclick="switchTab('cetak')" class="nav-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg><span class="nav-text">Cetak</span></button>
         </div>
     </div> 
 
+    <!-- MODAL EDIT DATA MANUAL -->
     <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[200] flex items-center justify-center p-4 hidden no-print backdrop-blur-sm">
         <div class="bg-[#f8fafc] rounded-3xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden border border-white">
             <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-white sticky top-0 z-10">
@@ -402,7 +338,6 @@
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
                         <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Nama Pegawai</label>
                         <input type="text" id="modal-emp-name" class="w-full p-3 border border-slate-200 rounded-xl font-bold text-slate-800 outline-none focus:border-blue-500 bg-slate-50 mb-5">
-                        
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-sm text-slate-800 bg-blue-100 text-blue-800 px-3 py-1 rounded-lg">1. Gambar Paraf</h3>
                             <button onclick="clearSignatureCanvas()" class="text-xs text-red-600 hover:bg-red-100 font-bold px-3 py-1.5 bg-red-50 rounded-lg">Hapus TTD</button>
@@ -412,7 +347,6 @@
                             <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-50"><span class="text-slate-500 font-bold text-sm">Coret paraf di sini</span></div>
                         </div>
                     </div>
-                    
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
                         <h3 class="font-bold text-sm text-slate-800 mb-4 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg inline-block">2. Isi Cepat Sebulan</h3>
                         <div class="flex flex-col sm:flex-row gap-3">
@@ -422,7 +356,6 @@
                             <button onclick="applyQuickFill()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-3 rounded-xl text-sm font-bold border border-indigo-200 whitespace-nowrap">Terapkan Semua</button>
                         </div>
                     </div>
-
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-sm text-slate-800 bg-green-100 text-green-800 px-3 py-1 rounded-lg">3. Edit Jam Manual Per Hari</h3>
@@ -440,13 +373,15 @@
     </div>
 
     <script>
+        // PWA SERVICE WORKER
         if ('serviceWorker' in navigator) { const swCode=`self.addEventListener('fetch', function(e) {}); self.addEventListener('install', function(e) { self.skipWaiting(); });`; const blob=new Blob([swCode], {type:'application/javascript'}); navigator.serviceWorker.register(URL.createObjectURL(blob)); }
 
+        // KONFIGURASI SUPABASE
         const SUPABASE_URL = 'https://mmhayivbzlwfzbuyjall.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1taGF5aXZiemx3ZnpidXlqYWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzU5MTgsImV4cCI6MjA5MDQxMTkxOH0.pVWLpoZu0EVynxWQ_LwmsXYQWNR363WBLS1RaGm4iNI'; 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v6_Agenda';
+        const LOCAL_STORAGE_KEY = 'DataAbsensi_v7_AutoMonth';
         
         const defaultEmployeesList = [
             { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
@@ -456,14 +391,11 @@
             { id: 5, name: "Muhammad Kholilur Rohman", signature: "", att: {} }
         ];
 
-        const now = new Date();
-        const defaultTahunBulan = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
-
         let state = {
             judul1: "DAFTAR HADIR GURU DAN KARYAWAN",
             judul2: "TK BAITURROHMAN PULODARAT",
             judul3: "TAHUN 2025 / 2026",
-            tahunBulan: defaultTahunBulan,
+            tahunBulan: "", // Akan diisi dinamis
             tglCetak: "Pulodarat, 28 FEBRUARI 2026",
             kepsek: "Rosydianah, S.Ag.",
             holidays: [], 
@@ -471,9 +403,24 @@
             employees: JSON.parse(JSON.stringify(defaultEmployeesList))
         };
 
+        function migrateDataFormat() {
+            let migrated = false;
+            state.employees.forEach(emp => {
+                if(!emp.att) emp.att = {};
+                const hasOldKeys = Object.keys(emp.att).some(k => !isNaN(k) && k.length <= 2);
+                if (hasOldKeys) {
+                    const oldData = { ...emp.att };
+                    emp.att = {};
+                    emp.att[state.tahunBulan] = oldData;
+                    migrated = true;
+                }
+            });
+            return migrated;
+        }
+
         let currentDaysList = [];
         function getMonthName(mIndex) { const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; return months[parseInt(mIndex) - 1]; }
-        function updateDaysList() { if(!state.tahunBulan) state.tahunBulan=defaultTahunBulan; const [y, m]=state.tahunBulan.split('-'); const daysCount=new Date(y, m, 0).getDate(); currentDaysList=Array.from({length: daysCount}, (_, i) => i + 1); }
+        function updateDaysList() { const [y, m]=state.tahunBulan.split('-'); const daysCount=new Date(y, m, 0).getDate(); currentDaysList=Array.from({length: daysCount}, (_, i) => i + 1); }
         
         function isHoliday(day) {
             const [y, m] = state.tahunBulan.split('-');
@@ -504,50 +451,19 @@
         function switchTab(tabName) { ['pegawai','pengaturan','cetak'].forEach(t => { document.getElementById('tab-'+t).classList.add('hidden'); document.getElementById('btn-tab-'+t).classList.remove('active'); }); document.getElementById('tab-'+tabName).classList.remove('hidden'); document.getElementById('btn-tab-'+tabName).classList.add('active'); window.scrollTo(0,0); }
         function showToast(message, isSuccess = true) { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast-enter text-white px-6 py-3 rounded-full shadow-2xl font-bold text-sm ${isSuccess ? 'bg-green-600' : 'bg-red-600'} border border-white/20`; toast.innerHTML = isSuccess ? `✅ ${message}` : `⚠️ ${message}`; container.appendChild(toast); setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000); }
 
-        function saveAgenda() {
-            const val = document.getElementById('inp-agenda').value;
-            updateState('agendaMessage', val);
-            showToast('Pengumuman berhasil dikirim ke semua guru!');
-            renderNotif();
-        }
-
+        function saveAgenda() { const val = document.getElementById('inp-agenda').value; updateState('agendaMessage', val); showToast('Pengumuman terkirim!'); renderNotif(); }
         function renderNotif() {
-            const msg = state.agendaMessage;
-            const badge = document.getElementById('notif-badge');
-            const textEl = document.getElementById('notif-text');
-            
-            if (msg && msg.trim() !== '') {
-                if(badge) badge.classList.remove('hidden');
-                if(textEl) textEl.innerText = msg;
-            } else {
-                if(badge) badge.classList.add('hidden');
-                if(textEl) textEl.innerText = "Tidak ada pengumuman saat ini.";
-            }
-            
-            const inp = document.getElementById('inp-agenda');
-            if (inp && document.activeElement !== inp && inp.value !== msg) {
-                inp.value = msg || "";
-            }
+            const msg = state.agendaMessage; const badge = document.getElementById('notif-badge'); const textEl = document.getElementById('notif-text');
+            if (msg && msg.trim() !== '') { if(badge) badge.classList.remove('hidden'); if(textEl) textEl.innerText = msg; } else { if(badge) badge.classList.add('hidden'); if(textEl) textEl.innerText = "Tidak ada pengumuman saat ini."; }
+            const inp = document.getElementById('inp-agenda'); if (inp && document.activeElement !== inp && inp.value !== msg) { inp.value = msg || ""; }
         }
-
         function openNotifModal() { document.getElementById('modal-notif').classList.remove('hidden'); }
         function closeNotifModal() { document.getElementById('modal-notif').classList.add('hidden'); }
 
         function openNameSelectModal() {
-            const listContainer = document.getElementById('list-nama-landing');
-            listContainer.innerHTML = '';
-            
-            if (state.employees.length === 0) {
-                listContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-sm">Belum ada data pegawai.</p>';
-            } else {
-                state.employees.forEach(emp => {
-                    const btn = document.createElement('button');
-                    btn.className = "w-full text-left px-4 py-3.5 bg-slate-700 hover:bg-blue-600 text-white rounded-xl transition-colors font-bold text-sm shadow-sm flex items-center gap-3";
-                    btn.innerHTML = `<div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-blue-300 font-extrabold text-xs shadow-inner">${emp.name.charAt(0)}</div> <span class="truncate">${emp.name}</span>`;
-                    btn.onclick = () => selectLandingName(emp.id, emp.name);
-                    listContainer.appendChild(btn);
-                });
-            }
+            const listContainer = document.getElementById('list-nama-landing'); listContainer.innerHTML = '';
+            if (state.employees.length === 0) { listContainer.innerHTML = '<p class="text-slate-400 text-center py-4 text-sm">Belum ada data pegawai.</p>';
+            } else { state.employees.forEach(emp => { const btn = document.createElement('button'); btn.className = "w-full text-left px-4 py-3.5 bg-slate-700 hover:bg-blue-600 text-white rounded-xl font-bold text-sm shadow-sm flex items-center gap-3"; btn.innerHTML = `<div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-blue-300 font-extrabold text-xs shadow-inner">${emp.name.charAt(0)}</div> <span class="truncate">${emp.name}</span>`; btn.onclick = () => selectLandingName(emp.id, emp.name); listContainer.appendChild(btn); }); }
             document.getElementById('modal-pilih-nama').classList.remove('hidden');
         }
         function closeNameSelectModal() { document.getElementById('modal-pilih-nama').classList.add('hidden'); }
@@ -560,8 +476,7 @@
             closeHalanganMenu(); playCuteSound(); clockAction(currentSelectedLandingId, status); 
             const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name; const panggilNama = empName.split(',')[0];
             let statusText = status === 'S' ? 'Sakit' : (status === 'I' ? 'Izin' : 'Alpa');
-            speakSoftly(`Semoga segala urusan dilancarkan, ${panggilNama}. Keterangan ${statusText} sudah dicatat.`);
-            showToast(`Sukses Tandai ${statusText} - ${empName}`);
+            speakSoftly(`Semoga segala urusan dilancarkan, ${panggilNama}. Keterangan ${statusText} sudah dicatat.`); showToast(`Sukses Tandai ${statusText} - ${empName}`);
             setTimeout(() => { currentSelectedLandingId = null; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
         }
 
@@ -569,8 +484,7 @@
             if(!currentSelectedLandingId) { showToast("Silakan klik tengah dan pilih nama dulu!", false); return; }
             playCuteSound(); clockAction(currentSelectedLandingId, type);
             const empName = state.employees.find(e => e.id === currentSelectedLandingId)?.name; const panggilNama = empName.split(',')[0];
-            speakSoftly(type === 'in' ? `Selamat bertugas, ${panggilNama}.` : `Terima kasih atas kerja kerasnya, ${panggilNama}.`);
-            showToast(`Sukses Tandai - ${empName}`);
+            speakSoftly(type === 'in' ? `Selamat bertugas, ${panggilNama}.` : `Terima kasih atas kerja kerasnya, ${panggilNama}.`); showToast(`Sukses Tandai - ${empName}`);
             setTimeout(() => { currentSelectedLandingId = null; document.getElementById('orbit-center-text').innerText = "SILAKAN PILIH NAMA"; }, 2000);
         }
 
@@ -578,7 +492,7 @@
 
         async function saveData() {
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); updateLandingStatus("Menyimpan ke Cloud...", "loading");
-            try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Sudah Absen", "online"); } 
+            try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Sistem Siap Digunakan", "online"); } 
             catch (err) { updateLandingStatus("Offline", "offline"); }
         }
 
@@ -589,10 +503,19 @@
             } catch (err) { updateLandingStatus("Sistem Offline (Mode Lokal)", "offline"); }
             
             if(!loaded) { const sd = localStorage.getItem(LOCAL_STORAGE_KEY); if (sd) try { Object.assign(state, JSON.parse(sd)); } catch (e) {} }
-            if(!state.tahunBulan) state.tahunBulan = defaultTahunBulan; if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
+            
+            // OTOMATIS GANTI BULAN SESUAI WAKTU SEKARANG SETIAP APLIKASI DIBUKA
+            const nowReal = new Date();
+            const currentRealTb = `${nowReal.getFullYear()}-${(nowReal.getMonth() + 1).toString().padStart(2, '0')}`;
+            state.tahunBulan = currentRealTb;
+            
+            if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
             updateDaysList();
             
-            let needsSave = false; defaultEmployeesList.forEach(d => { if(!state.employees.find(e => e.name===d.name)){ state.employees.push(d); needsSave=true; } }); if(needsSave) saveData();
+            let needsSave = false; 
+            if(migrateDataFormat()) needsSave = true;
+            defaultEmployeesList.forEach(d => { if(!state.employees.find(e => e.name===d.name)){ state.employees.push(d); needsSave=true; } }); 
+            if(needsSave) saveData();
 
             ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-tglcetak', 'inp-kepsek'].forEach(id => { const el=document.getElementById(id); if(el && state[id.replace('inp-','')]) el.value = state[id.replace('inp-','')]; });
             const inpB = document.getElementById('inp-bulan-tahun'); if(inpB) inpB.value = state.tahunBulan;
@@ -604,8 +527,12 @@
             if(isModalEditOpen) return; 
             try { const { data } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
                 if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { 
-                    Object.assign(state, data.data); if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
-                    updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); 
+                    const tempTb = state.tahunBulan; // Simpan bulan yang sedang dibuka admin
+                    Object.assign(state, data.data); 
+                    state.tahunBulan = tempTb; // Kembalikan agar layar admin tidak lompat-lompat
+                    
+                    if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
+                    migrateDataFormat(); updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); 
                     renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); renderNotif();
                 }
             } catch(e) {}
@@ -614,6 +541,15 @@
         function addHoliday() { const val = document.getElementById('inp-holiday').value; if(val && !state.holidays.includes(val)) { state.holidays.push(val); saveData(); renderHolidayList(); renderPrintTable(); } }
         function removeHoliday(val) { state.holidays = state.holidays.filter(h => h !== val); saveData(); renderHolidayList(); renderPrintTable(); }
         function renderHolidayList() { const hl = document.getElementById('holiday-list'); if(!hl) return; hl.innerHTML = state.holidays.map(h => `<span class="bg-red-100 border border-red-200 text-red-700 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2 shadow-sm">${h} <button onclick="removeHoliday('${h}')" class="text-red-400 hover:text-red-700 bg-white rounded-full w-4 h-4 flex items-center justify-center border border-red-100">×</button></span>`).join(''); }
+
+        // FUNGSI RESET BULAN
+        function resetBulanIni() {
+            const [y, m] = state.tahunBulan.split('-');
+            if(confirm(`YAKIN INGIN MENGHAPUS SEMUA ABSEN BULAN ${getMonthName(m).toUpperCase()} ${y}?\n\nData tidak bisa dikembalikan!`)) {
+                state.employees.forEach(emp => { if(emp.att && emp.att[state.tahunBulan]) emp.att[state.tahunBulan] = {}; });
+                saveData(); renderEmployeeList(); renderPrintTable(); showToast(`Data absen ${getMonthName(m)} direset!`);
+            }
+        }
 
         let editingId = null; let tempAtt = {}; let isSignatureCleared = false;
         
@@ -639,16 +575,20 @@
 
         function clockAction(empId, type) {
             const today = getTodayDate(); const now = new Date(); const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            // PASTIKAN SELALU MENGGUNAKAN BULAN SAAT INI UNTUK ABSEN HARIAN
+            const realTb = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+            
             const emp = state.employees.find(e => e.id === empId);
             if(emp) {
-                if(!emp.att[today]) emp.att[today] = { status: '', in: '', out: '' };
+                if(!emp.att[realTb]) emp.att[realTb] = {};
+                if(!emp.att[realTb][today]) emp.att[realTb][today] = { status: '', in: '', out: '' };
                 
                 if(type === 'S' || type === 'I' || type === 'A') {
-                    emp.att[today].status = type; emp.att[today].in = ''; emp.att[today].out = '';
+                    emp.att[realTb][today].status = type; emp.att[realTb][today].in = ''; emp.att[realTb][today].out = '';
                 } else {
-                    if(!emp.att[today].status || (emp.att[today].status !== 'H' && emp.att[today].status !== '')) emp.att[today].status = 'H'; 
-                    if(type === 'in') emp.att[today].in = timeStr; 
-                    if(type === 'out') emp.att[today].out = timeStr; 
+                    if(!emp.att[realTb][today].status || (emp.att[realTb][today].status !== 'H' && emp.att[realTb][today].status !== '')) emp.att[realTb][today].status = 'H'; 
+                    if(type === 'in') emp.att[realTb][today].in = timeStr; 
+                    if(type === 'out') emp.att[realTb][today].out = timeStr; 
                 }
                 saveData(); renderEmployeeList(); renderPrintTable();
             }
@@ -656,9 +596,14 @@
 
         function renderEmployeeList() {
             const list = document.getElementById('employee-list'); if(!list) return; list.innerHTML = ''; const today = getTodayDate();
+            
+            // Selalu tampilkan status hari ini berdasarkan bulan asli
+            const now = new Date();
+            const realTb = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+
             state.employees.forEach((emp, index) => {
                 const statusParaf = emp.signature ? '<span class="text-green-600 bg-green-100 border border-green-200 px-2 py-0.5 rounded text-[9px] font-bold">✅ TTD</span>' : '<span class="text-red-500 bg-red-100 border border-red-200 px-2 py-0.5 rounded text-[9px] font-bold">❌ KOSONG</span>';
-                const todayAtt = emp.att[today] || { status: '', in: '', out: '' };
+                const todayAtt = (emp.att[realTb] && emp.att[realTb][today]) ? emp.att[realTb][today] : { status: '', in: '', out: '' };
                 
                 let btnMasuk = "", btnPulang = "";
                 if(todayAtt.status === 'S' || todayAtt.status === 'I' || todayAtt.status === 'A') {
@@ -697,30 +642,31 @@
         function renderPrintTable() {
             const th = document.getElementById('print-tgl-header'); const col = document.getElementById('print-tgl-colspan'); if(!th) return;
             col.setAttribute('colspan', currentDaysList.length);
+            const tb = state.tahunBulan;
             
             let hHTML = ''; currentDaysList.forEach(d => hHTML += `<th class="${isHoliday(d)?'holiday-col text-red-600':''}">${d}</th>`);
             th.innerHTML = hHTML + `<th>S</th><th>I</th><th>A</th>`;
 
             let rHTML = '';
             state.employees.forEach((emp, i) => {
-                let s=0, iz=0, a=0; currentDaysList.forEach(d => { const st=emp.att[d]?.status; if(st==='S')s++; if(st==='I')iz++; if(st==='A')a++; });
+                let s=0, iz=0, a=0; currentDaysList.forEach(d => { const st=emp.att[tb]?.[d]?.status; if(st==='S')s++; if(st==='I')iz++; if(st==='A')a++; });
                 
                 rHTML += `<tr class="row-dtg"><td rowspan="4"><b>${i + 1}</b></td><td rowspan="4" class="col-nama"><b>${emp.name}</b></td><td class="col-tipe">Jam<br>Dtg</td>`;
-                currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].in||'') : ''}</td>`);
+                currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[tb]?.[d]?.status === 'H' ? (emp.att[tb]?.[d]?.in||'') : ''}</td>`);
                 rHTML += `<td rowspan="4"><b>${s||''}</b></td><td rowspan="4"><b>${iz||''}</b></td><td rowspan="4"><b>${a||''}</b></td><td rowspan="4"><b>${s+iz+a||''}</b></td></tr>`;
 
                 rHTML += `<tr class="row-prf1"><td class="col-tipe">Prf</td>`;
                 currentDaysList.forEach(d => {
-                    const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, hol=isHoliday(d)?'holiday-col':'';
+                    const st=emp.att[tb]?.[d]?.status, ht=emp.att[tb]?.[d]?.in||emp.att[tb]?.[d]?.out, hol=isHoliday(d)?'holiday-col':'';
                     if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${hol}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${hol}"><b>${st}</b></td>`; else rHTML+=`<td class="${hol}"></td>`;
                 }); rHTML += `</tr>`;
 
                 rHTML += `<tr class="row-plg"><td class="col-tipe">Jam<br>Plg</td>`;
-                currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[d]?.status === 'H' ? (emp.att[d].out||'') : ''}</td>`); rHTML += `</tr>`;
+                currentDaysList.forEach(d => rHTML += `<td class="${isHoliday(d)?'holiday-col':''}">${emp.att[tb]?.[d]?.status === 'H' ? (emp.att[tb]?.[d]?.out||'') : ''}</td>`); rHTML += `</tr>`;
 
                 rHTML += `<tr class="row-prf2"><td class="col-tipe">Prf</td>`;
                 currentDaysList.forEach(d => {
-                    const st=emp.att[d]?.status, ht=emp.att[d]?.in||emp.att[d]?.out, hol=isHoliday(d)?'holiday-col':'';
+                    const st=emp.att[tb]?.[d]?.status, ht=emp.att[tb]?.[d]?.in||emp.att[tb]?.[d]?.out, hol=isHoliday(d)?'holiday-col':'';
                     if(st==='H'&&emp.signature&&ht) rHTML+=`<td class="${hol}"><img src="${emp.signature}" class="paraf-img"></td>`; else if(st&&st!=='H') rHTML+=`<td class="${hol}"><b>${st}</b></td>`; else rHTML+=`<td class="${hol}"></td>`;
                 }); rHTML += `</tr>`;
             });
@@ -733,14 +679,28 @@
         function deleteEmployee(id) { if(confirm('Hapus pegawai?')) { state.employees = state.employees.filter(e => e.id !== id); saveData(); renderEmployeeList(); renderPrintTable(); } }
         
         function openModal(id) {
-            isModalEditOpen=true; isSignatureCleared=false; const emp=state.employees.find(e=>e.id===id); editingId=id; tempAtt=JSON.parse(JSON.stringify(emp.att));
+            isModalEditOpen=true; isSignatureCleared=false; const emp=state.employees.find(e=>e.id===id); editingId=id; 
+            const tb = state.tahunBulan;
+            if(!emp.att[tb]) emp.att[tb] = {};
+            tempAtt=JSON.parse(JSON.stringify(emp.att[tb]));
+            
             document.getElementById('modal-emp-name').value=emp.name; const [y,m]=state.tahunBulan.split('-'); document.getElementById('modal-bulan-info').innerText=`${getMonthName(m)} ${y}`;
             if(sigCtx) sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); hasDrawing=false; const ph=document.getElementById('canvas-placeholder');
             if(emp.signature){ const img=new Image(); img.onload=()=>sigCtx.drawImage(img,0,0,sigCanvas.width,sigCanvas.height); img.src=emp.signature; if(ph)ph.classList.add('hidden'); } else { if(ph)ph.classList.remove('hidden'); }
             renderDaysGrid(); const mdl=document.getElementById('modal-edit'); if(mdl) mdl.classList.remove('hidden');
         }
         function closeModal() { isModalEditOpen=false; const mdl=document.getElementById('modal-edit'); if(mdl) mdl.classList.add('hidden'); editingId=null; }
-        function saveModalData() { const emp=state.employees.find(e=>e.id===editingId); if(emp){ emp.name=document.getElementById('modal-emp-name').value; emp.att=JSON.parse(JSON.stringify(tempAtt)); if(hasDrawing) emp.signature=sigCanvas.toDataURL('image/png'); else if(isSignatureCleared) emp.signature=""; } saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Tersimpan'); }
+        function saveModalData() { 
+            const emp=state.employees.find(e=>e.id===editingId); 
+            const tb = state.tahunBulan;
+            if(emp){ 
+                emp.name=document.getElementById('modal-emp-name').value; 
+                emp.att[tb]=JSON.parse(JSON.stringify(tempAtt)); 
+                if(hasDrawing) emp.signature=sigCanvas.toDataURL('image/png'); 
+                else if(isSignatureCleared) emp.signature=""; 
+            } 
+            saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Tersimpan'); 
+        }
 
         function renderDaysGrid() {
             let h = '';
