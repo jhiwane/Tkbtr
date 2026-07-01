@@ -811,7 +811,7 @@
                         <div class="flex justify-between items-center border-b border-slate-200/80 pb-4 mb-4">
                             <span class="font-extrabold text-sm ${hol?'text-red-600':'text-slate-600'} flex items-center gap-2">
                                 <span class="bg-white px-3 py-1.5 rounded-xl border shadow-sm">TGL ${d}</span> 
-                                ${hol?'<span class="text-[10px] md:text-xs text-red-500 bg-red-100 px-2 py-1 rounded-lg">Libur</span>':''}
+                                ${hol?'<span class="text-[10px] md:text-xs text-red-500 bg-red-100 px-2 py-1 rounded-lg"></span>':''}
                             </span>
                             <select onchange="updateDay(${d}, 'status', this.value)" class="text-sm outline-none rounded-xl bg-white font-extrabold px-3 py-2.5 border-2 shadow-sm focus:border-blue-500">
                                 <option value="H" ${dD.status==='H'?'selected':''}>Hadir</option>
