@@ -364,7 +364,7 @@
                 <div class="bg-white p-5 md:p-7 rounded-3xl shadow-sm border border-slate-200">
                     <h3 class="font-extrabold text-sm md:text-base text-slate-800 mb-4 flex items-center gap-2"><span class="bg-indigo-100 text-indigo-700 w-6 h-6 flex items-center justify-center rounded-full text-xs">2</span> Isi Cepat Sebulan</h3>
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <select id="quick-status" class="flex-1 p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base bg-slate-50 font-bold outline-none focus:border-indigo-500"><option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Libur/Ksg</option></select>
+                        <select id="quick-status" class="flex-1 p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base bg-slate-50 font-bold outline-none focus:border-indigo-500"><option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Kosong</option></select>
                         <div class="flex gap-3 flex-1">
                             <input type="time" id="quick-in" value="07:00" class="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base outline-none font-mono focus:border-indigo-500 text-center">
                             <input type="time" id="quick-out" value="16:00" class="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base outline-none font-mono focus:border-indigo-500 text-center">
@@ -818,7 +818,7 @@
                                 <option value="S" ${dD.status==='S'?'selected':''}>Sakit</option>
                                 <option value="I" ${dD.status==='I'?'selected':''}>Izin</option>
                                 <option value="A" ${dD.status==='A'?'selected':''}>Alpa</option>
-                                <option value="" ${dD.status===''?'selected':''}>Libur/Ksg</option>
+                                <option value="" ${dD.status===''?'selected':''}>Kosong</option>
                             </select>
                         </div>
                         ${dD.status==='H'?`
