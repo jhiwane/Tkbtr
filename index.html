@@ -88,8 +88,6 @@
         .nav-btn svg { width: 24px; height: 24px; margin-bottom: 2px; transition: transform 0.2s; }
         .nav-btn.active svg { transform: scale(1.15); stroke-width: 2.5; }
         .nav-text { font-size: 10px; font-weight: 700; }
-        .canvas-container { border: 2px dashed #cbd5e1; background-color: rgba(248, 250, 252, 0.8); border-radius: 1rem; position: relative; overflow: hidden; }
-        #signature-pad { touch-action: none; width: 100%; height: 150px; cursor: crosshair; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -278,10 +276,9 @@
             <div id="tab-cetak" class="hidden">
                 <div id="tab-cetak-controls" class="glass-card p-5 mb-6 flex flex-col gap-3">
                     <button onclick="window.print()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3.5 rounded-xl font-bold shadow-lg flex items-center justify-center gap-2">Cetak Laporan / PDF</button>
-                    <div class="grid grid-cols-2 gap-3 mt-2">
-                        <label for="import-file" class="cursor-pointer bg-white text-slate-700 py-3 rounded-xl font-bold border border-slate-200 flex items-center justify-center gap-2 text-sm text-center">Restore</label>
-                        <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
-                        <button onclick="exportData()" class="bg-white text-slate-700 py-3 rounded-xl font-bold border border-slate-200 flex items-center justify-center gap-2 text-sm">Backup</button>
+                    <!-- Tombol Import dinonaktifkan sementara karena kita pindah ke SQL Relasional -->
+                    <div class="grid grid-cols-1 gap-3 mt-2">
+                        <button onclick="exportData()" class="bg-white text-slate-700 py-3 rounded-xl font-bold border border-slate-200 flex items-center justify-center gap-2 text-sm">Backup (Download JSON)</button>
                     </div>
                 </div>
                 <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Preview Kertas A4:</div>
@@ -326,48 +323,62 @@
         </div>
     </div> 
 
-    <!-- MODAL EDIT DATA MANUAL -->
-    <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 z-[200] flex items-center justify-center p-4 hidden no-print backdrop-blur-sm">
-        <div class="bg-[#f8fafc] rounded-3xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden border border-white">
-            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-white sticky top-0 z-10">
-                <h2 class="text-lg font-extrabold text-slate-800 flex items-center gap-2">Kelola Data Manual</h2>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 bg-slate-100 hover:bg-red-50 p-2 rounded-full transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-            </div>
-            <div class="p-4 md:p-6 overflow-y-auto flex-1">
-                <div class="space-y-6">
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Nama Pegawai</label>
-                        <input type="text" id="modal-emp-name" class="w-full p-3 border border-slate-200 rounded-xl font-bold text-slate-800 outline-none focus:border-blue-500 bg-slate-50 mb-5">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-bold text-sm text-slate-800 bg-blue-100 text-blue-800 px-3 py-1 rounded-lg">1. Gambar Paraf</h3>
-                            <button onclick="clearSignatureCanvas()" class="text-xs text-red-600 hover:bg-red-100 font-bold px-3 py-1.5 bg-red-50 rounded-lg">Hapus TTD</button>
-                        </div>
-                        <div class="canvas-container shadow-inner">
-                            <canvas id="signature-pad" width="400" height="150"></canvas>
-                            <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-50"><span class="text-slate-500 font-bold text-sm">Coret paraf di sini</span></div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <h3 class="font-bold text-sm text-slate-800 mb-4 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg inline-block">2. Isi Cepat Sebulan</h3>
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <select id="quick-status" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm bg-slate-50 font-bold outline-none"><option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Libur/Ksg</option></select>
-                            <input type="time" id="quick-in" value="07:00" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm outline-none font-mono">
-                            <input type="time" id="quick-out" value="16:00" class="flex-1 p-3 border border-slate-200 rounded-xl text-sm outline-none font-mono">
-                            <button onclick="applyQuickFill()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-3 rounded-xl text-sm font-bold border border-indigo-200 whitespace-nowrap">Terapkan Semua</button>
-                        </div>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-sm text-slate-800 bg-green-100 text-green-800 px-3 py-1 rounded-lg">3. Edit Jam Manual Per Hari</h3>
-                            <span class="text-xs text-slate-500 font-bold bg-slate-100 px-2 py-1 rounded" id="modal-bulan-info"></span>
-                        </div>
-                        <div id="days-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
-                    </div>
+    <!-- ================= VIEW 3: FULL PAGE EDIT MANUAL ================= -->
+    <div id="modal-edit" class="fixed inset-0 bg-slate-50 z-[200] hidden flex-col overflow-hidden no-print transition-all duration-300">
+        <!-- Sticky Header Area -->
+        <div class="px-4 py-4 border-b border-slate-200 bg-white flex justify-between items-center shadow-sm shrink-0 sticky top-0 z-20">
+            <div class="flex items-center gap-3">
+                <button onclick="closeModal()" class="text-slate-500 hover:text-slate-800 hover:bg-slate-100 p-2 rounded-full transition-colors bg-slate-50 border border-slate-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div>
+                    <h2 class="text-lg md:text-xl font-extrabold text-slate-800 leading-tight">Edit Data Guru</h2>
+                    <p class="text-[10px] md:text-xs font-bold text-slate-400" id="modal-bulan-info">Bulan</p>
                 </div>
             </div>
-            <div class="p-5 border-t border-slate-200 bg-white flex justify-end gap-3 sticky bottom-0 z-10">
-                <button onclick="closeModal()" class="px-6 py-3 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl font-bold">Batal</button>
-                <button onclick="saveModalData()" class="px-8 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-bold shadow-md">Simpan Perubahan</button>
+            <button onclick="saveModalData()" class="px-6 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-extrabold shadow-lg shadow-blue-600/30 text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Simpan
+            </button>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-6 pb-24 custom-scrollbar">
+            <div class="max-w-4xl mx-auto space-y-6 md:space-y-8">
+                
+                <!-- 1. IDENTITAS & PARAF -->
+                <div class="bg-white p-5 md:p-7 rounded-3xl shadow-sm border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Nama Pegawai</label>
+                    <input type="text" id="modal-emp-name" class="w-full p-4 border-2 border-slate-200 rounded-2xl font-bold text-slate-800 text-lg outline-none focus:border-blue-500 bg-slate-50 mb-6">
+                    
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-extrabold text-sm md:text-base text-slate-800 flex items-center gap-2"><span class="bg-blue-100 text-blue-700 w-6 h-6 flex items-center justify-center rounded-full text-xs">1</span> Gambar Paraf</h3>
+                        <button onclick="clearSignatureCanvas()" class="text-xs text-red-600 hover:bg-red-100 font-bold px-4 py-2 bg-red-50 rounded-xl border border-red-100 transition-colors">Hapus TTD</button>
+                    </div>
+                    <div class="canvas-container shadow-inner bg-slate-50 border-2 border-slate-200 rounded-2xl overflow-hidden relative h-[180px]">
+                        <canvas id="signature-pad" width="600" height="200" class="w-full h-full touch-none"></canvas>
+                        <div id="canvas-placeholder" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-50"><span class="text-slate-500 font-extrabold text-sm bg-white/80 px-4 py-2 rounded-full shadow-sm">Coret paraf di sini</span></div>
+                    </div>
+                </div>
+
+                <!-- 2. ISI CEPAT -->
+                <div class="bg-white p-5 md:p-7 rounded-3xl shadow-sm border border-slate-200">
+                    <h3 class="font-extrabold text-sm md:text-base text-slate-800 mb-4 flex items-center gap-2"><span class="bg-indigo-100 text-indigo-700 w-6 h-6 flex items-center justify-center rounded-full text-xs">2</span> Isi Cepat Sebulan</h3>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <select id="quick-status" class="flex-1 p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base bg-slate-50 font-bold outline-none focus:border-indigo-500"><option value="H">Hadir</option><option value="S">Sakit</option><option value="I">Izin</option><option value="A">Alpa</option><option value="">Libur/Ksg</option></select>
+                        <div class="flex gap-3 flex-1">
+                            <input type="time" id="quick-in" value="07:00" class="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base outline-none font-mono focus:border-indigo-500 text-center">
+                            <input type="time" id="quick-out" value="16:00" class="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm md:text-base outline-none font-mono focus:border-indigo-500 text-center">
+                        </div>
+                        <button onclick="applyQuickFill()" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-6 py-4 rounded-2xl text-sm md:text-base font-extrabold border border-indigo-200 whitespace-nowrap shadow-sm transition-colors">Terapkan Semua</button>
+                    </div>
+                </div>
+
+                <!-- 3. EDIT PER HARI GRID -->
+                <div class="bg-white p-5 md:p-7 rounded-3xl shadow-sm border border-slate-200">
+                    <h3 class="font-extrabold text-sm md:text-base text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-100 pb-4"><span class="bg-green-100 text-green-700 w-6 h-6 flex items-center justify-center rounded-full text-xs">3</span> Edit Jam Manual Per Hari</h3>
+                    
+                    <div id="days-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -380,17 +391,7 @@
         const SUPABASE_URL = 'https://mmhayivbzlwfzbuyjall.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1taGF5aXZiemx3ZnpidXlqYWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzU5MTgsImV4cCI6MjA5MDQxMTkxOH0.pVWLpoZu0EVynxWQ_LwmsXYQWNR363WBLS1RaGm4iNI'; 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const LOCAL_STORAGE_KEY = 'DataAbsensi_v7_AutoMonth';
         
-        const defaultEmployeesList = [
-            { id: 1, name: "Rosydianah, S.Ag.", signature: "", att: {} },
-            { id: 2, name: "Umniyatul Mas'udah, S.Ag.", signature: "", att: {} },
-            { id: 3, name: "Siti Mastuhah, S.Pd.", signature: "", att: {} },
-            { id: 4, name: "Zaitun", signature: "", att: {} },
-            { id: 5, name: "Muhammad Kholilur Rohman", signature: "", att: {} }
-        ];
-
         let state = {
             judul1: "DAFTAR HADIR GURU DAN KARYAWAN",
             judul2: "TK BAITURROHMAN PULODARAT",
@@ -400,23 +401,8 @@
             kepsek: "Rosydianah, S.Ag.",
             holidays: [], 
             agendaMessage: "", 
-            employees: JSON.parse(JSON.stringify(defaultEmployeesList))
+            employees: []
         };
-
-        function migrateDataFormat() {
-            let migrated = false;
-            state.employees.forEach(emp => {
-                if(!emp.att) emp.att = {};
-                const hasOldKeys = Object.keys(emp.att).some(k => !isNaN(k) && k.length <= 2);
-                if (hasOldKeys) {
-                    const oldData = { ...emp.att };
-                    emp.att = {};
-                    emp.att[state.tahunBulan] = oldData;
-                    migrated = true;
-                }
-            });
-            return migrated;
-        }
 
         let currentDaysList = [];
         function getMonthName(mIndex) { const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; return months[parseInt(mIndex) - 1]; }
@@ -490,64 +476,105 @@
 
         function initCanvasBackground() { const c=document.getElementById('bg-canvas'); if(!c)return; const ctx=c.getContext('2d'); function resize(){c.width=window.innerWidth; c.height=window.innerHeight;} window.addEventListener('resize',resize); resize(); let flakes=[]; for(let i=0;i<80;i++) flakes.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+1,d:Math.random()*1+0.5,vx:Math.random()*1-0.5,vy:Math.random()*1+0.5}); let angle=0; function draw(){ ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.beginPath(); angle+=0.01; flakes.forEach(p=>{ctx.moveTo(p.x,p.y); ctx.arc(p.x,p.y,p.r,0,Math.PI*2,true); p.y+=p.vy; p.x+=Math.sin(angle+p.d)*p.vx; if(p.y>c.height){p.y=-10;p.x=Math.random()*c.width;} }); ctx.fill(); requestAnimationFrame(draw); } draw(); }
 
-        async function saveData() {
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); updateLandingStatus("Menyimpan ke Cloud...", "loading");
-            try { const { error } = await supabaseClient.from('Tkbtrr').upsert({ id: 1, data: state }); if(error) throw error; updateLandingStatus("Sistem Siap Digunakan", "online"); } 
-            catch (err) { updateLandingStatus("Offline", "offline"); }
-        }
-
         async function loadData() {
-            let loaded = false; updateLandingStatus("Menghubungkan Database...", "loading");
-            try { const { data, error } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle(); if (error) throw error;
-                if(data && data.data) { Object.assign(state, data.data); loaded = true; updateLandingStatus("Online", "online"); }
-            } catch (err) { updateLandingStatus("Sistem Offline (Mode Lokal)", "offline"); }
-            
-            if(!loaded) { const sd = localStorage.getItem(LOCAL_STORAGE_KEY); if (sd) try { Object.assign(state, JSON.parse(sd)); } catch (e) {} }
-            
-            // OTOMATIS GANTI BULAN SESUAI WAKTU SEKARANG SETIAP APLIKASI DIBUKA
-            const nowReal = new Date();
-            const currentRealTb = `${nowReal.getFullYear()}-${(nowReal.getMonth() + 1).toString().padStart(2, '0')}`;
-            state.tahunBulan = currentRealTb;
-            
-            if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
-            updateDaysList();
-            
-            let needsSave = false; 
-            if(migrateDataFormat()) needsSave = true;
-            defaultEmployeesList.forEach(d => { if(!state.employees.find(e => e.name===d.name)){ state.employees.push(d); needsSave=true; } }); 
-            if(needsSave) saveData();
+            updateLandingStatus("Menghubungkan Database...", "loading");
+            try {
+                // 1. Ambil Pengaturan
+                const { data: set } = await supabaseClient.from('tb_pengaturan').select('*').eq('id', 1).maybeSingle();
+                if (set) {
+                    state.judul1 = set.judul1 || state.judul1;
+                    state.judul2 = set.judul2 || state.judul2;
+                    state.judul3 = set.judul3 || state.judul3;
+                    state.tglCetak = set.tgl_cetak || state.tglCetak;
+                    state.kepsek = set.kepsek || state.kepsek;
+                    state.holidays = set.holidays || [];
+                    state.agendaMessage = set.agenda_message || "";
+                } else {
+                    await supabaseClient.from('tb_pengaturan').insert({ id: 1, judul1: state.judul1, judul2: state.judul2, judul3: state.judul3, tgl_cetak: state.tglCetak, kepsek: state.kepsek, holidays: state.holidays, agenda_message: state.agendaMessage });
+                }
+                
+                // Pastikan Bulan
+                if(!state.tahunBulan) {
+                    const nowReal = new Date();
+                    state.tahunBulan = `${nowReal.getFullYear()}-${(nowReal.getMonth() + 1).toString().padStart(2, '0')}`;
+                }
+                updateDaysList();
+                
+                // 2. Ambil Data Pegawai & Absensi
+                await fetchPegawaiDanAbsensi();
 
-            ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-tglcetak', 'inp-kepsek'].forEach(id => { const el=document.getElementById(id); if(el && state[id.replace('inp-','')]) el.value = state[id.replace('inp-','')]; });
+                updateLandingStatus("Sistem Online", "online");
+            } catch (err) {
+                console.error(err);
+                updateLandingStatus("Sistem Offline", "offline");
+            }
+            
+            ['inp-judul1', 'inp-judul2', 'inp-judul3', 'inp-tglcetak', 'inp-kepsek'].forEach(id => { 
+                const el=document.getElementById(id); 
+                if(el) {
+                    let key = id.replace('inp-','');
+                    if(key === 'tglcetak') key = 'tglCetak';
+                    el.value = state[key]; 
+                }
+            });
             const inpB = document.getElementById('inp-bulan-tahun'); if(inpB) inpB.value = state.tahunBulan;
-
-            renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); renderNotif();
+            renderNotif();
         }
 
+        async function fetchPegawaiDanAbsensi(isSilent = false) {
+            try {
+                const { data: peg } = await supabaseClient.from('tb_pegawai').select('*').order('id', { ascending: true });
+                const { data: abs } = await supabaseClient.from('tb_absensi').select('*').eq('tahun_bulan', state.tahunBulan);
+
+                if(peg) {
+                    state.employees = peg.map(p => {
+                        const att = {};
+                        att[state.tahunBulan] = {};
+                        if(abs) {
+                            abs.filter(a => a.pegawai_id === p.id).forEach(a => {
+                                att[state.tahunBulan][a.hari] = { status: a.status, in: a.jam_masuk, out: a.jam_pulang };
+                            });
+                        }
+                        return { id: p.id, name: p.name, signature: p.signature, att: att };
+                    });
+                }
+                if(!isSilent) {
+                    renderEmployeeList(); renderPrintTable(); renderHolidayList(); renderPrintHeader();
+                }
+            } catch (e) {
+                console.error("Gagal sinkron data pegawai", e);
+            }
+        }
+
+        async function updateState(key, value) { 
+            state[key] = value; 
+            const dbMap = {
+                'judul1': 'judul1', 'judul2': 'judul2', 'judul3': 'judul3',
+                'tglCetak': 'tgl_cetak', 'kepsek': 'kepsek', 'agendaMessage': 'agenda_message', 'holidays': 'holidays'
+            };
+            if(dbMap[key]) {
+                const updateObj = {}; updateObj[dbMap[key]] = value;
+                await supabaseClient.from('tb_pengaturan').update(updateObj).eq('id', 1);
+            }
+            if(['judul1', 'judul2', 'judul3', 'tglCetak', 'kepsek'].includes(key)) renderPrintHeader();
+        }
+
+        // POLLING SETIAP 15 DETIK AGAR LAYAR ADMIN SELALU UP-TO-DATE
         setInterval(async () => {
             if(isModalEditOpen) return; 
-            try { const { data } = await supabaseClient.from('Tkbtrr').select('data').eq('id', 1).maybeSingle();
-                if(data && data.data && JSON.stringify(data.data) !== JSON.stringify(state)) { 
-                    const tempTb = state.tahunBulan; // Simpan bulan yang sedang dibuka admin
-                    Object.assign(state, data.data); 
-                    state.tahunBulan = tempTb; // Kembalikan agar layar admin tidak lompat-lompat
-                    
-                    if(!state.holidays) state.holidays = []; if(typeof state.agendaMessage === 'undefined') state.agendaMessage = "";
-                    migrateDataFormat(); updateDaysList(); localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state)); 
-                    renderHolidayList(); renderEmployeeList(); renderPrintHeader(); renderPrintTable(); renderNotif();
-                }
-            } catch(e) {}
-        }, 10000);
+            await fetchPegawaiDanAbsensi(true);
+        }, 15000);
 
-        function addHoliday() { const val = document.getElementById('inp-holiday').value; if(val && !state.holidays.includes(val)) { state.holidays.push(val); saveData(); renderHolidayList(); renderPrintTable(); } }
-        function removeHoliday(val) { state.holidays = state.holidays.filter(h => h !== val); saveData(); renderHolidayList(); renderPrintTable(); }
+        function addHoliday() { const val = document.getElementById('inp-holiday').value; if(val && !state.holidays.includes(val)) { const newHol = [...state.holidays, val]; updateState('holidays', newHol); renderHolidayList(); renderPrintTable(); } }
+        function removeHoliday(val) { const newHol = state.holidays.filter(h => h !== val); updateState('holidays', newHol); renderHolidayList(); renderPrintTable(); }
         function renderHolidayList() { const hl = document.getElementById('holiday-list'); if(!hl) return; hl.innerHTML = state.holidays.map(h => `<span class="bg-red-100 border border-red-200 text-red-700 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2 shadow-sm">${h} <button onclick="removeHoliday('${h}')" class="text-red-400 hover:text-red-700 bg-white rounded-full w-4 h-4 flex items-center justify-center border border-red-100">×</button></span>`).join(''); }
 
-        // FUNGSI RESET BULAN
-        function resetBulanIni() {
+        async function resetBulanIni() {
             const [y, m] = state.tahunBulan.split('-');
             if(confirm(`YAKIN INGIN MENGHAPUS SEMUA ABSEN BULAN ${getMonthName(m).toUpperCase()} ${y}?\n\nData tidak bisa dikembalikan!`)) {
-                state.employees.forEach(emp => { if(emp.att && emp.att[state.tahunBulan]) emp.att[state.tahunBulan] = {}; });
-                saveData(); renderEmployeeList(); renderPrintTable(); showToast(`Data absen ${getMonthName(m)} direset!`);
+                await supabaseClient.from('tb_absensi').delete().eq('tahun_bulan', state.tahunBulan);
+                await fetchPegawaiDanAbsensi(); 
+                showToast(`Data absen ${getMonthName(m)} direset!`);
             }
         }
 
@@ -570,34 +597,47 @@
         function getTodayDate() { return new Date().getDate(); }
         window.onload = async () => { const bdg = document.getElementById('badge-hari-ini'); if (bdg) bdg.innerText = `TGL ${getTodayDate()}`; setInterval(updateClock, 1000); updateClock(); initSignatureCanvas(); initCanvasBackground(); await loadData(); };
 
-        function updateState(key, value) { state[key] = value; if(['judul1', 'judul2', 'judul3', 'tglCetak', 'kepsek'].includes(key)) renderPrintHeader(); saveData(); }
-        function updateBulanTahun(val) { state.tahunBulan = val; updateDaysList(); renderPrintHeader(); renderPrintTable(); saveData(); }
+        async function updateBulanTahun(val) { 
+            state.tahunBulan = val; 
+            updateDaysList(); 
+            renderPrintHeader();
+            await fetchPegawaiDanAbsensi(); 
+        }
 
-        function clockAction(empId, type) {
+        async function clockAction(empId, type) {
             const today = getTodayDate(); const now = new Date(); const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-            // PASTIKAN SELALU MENGGUNAKAN BULAN SAAT INI UNTUK ABSEN HARIAN
             const realTb = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
             
             const emp = state.employees.find(e => e.id === empId);
-            if(emp) {
-                if(!emp.att[realTb]) emp.att[realTb] = {};
-                if(!emp.att[realTb][today]) emp.att[realTb][today] = { status: '', in: '', out: '' };
-                
-                if(type === 'S' || type === 'I' || type === 'A') {
-                    emp.att[realTb][today].status = type; emp.att[realTb][today].in = ''; emp.att[realTb][today].out = '';
-                } else {
-                    if(!emp.att[realTb][today].status || (emp.att[realTb][today].status !== 'H' && emp.att[realTb][today].status !== '')) emp.att[realTb][today].status = 'H'; 
-                    if(type === 'in') emp.att[realTb][today].in = timeStr; 
-                    if(type === 'out') emp.att[realTb][today].out = timeStr; 
-                }
-                saveData(); renderEmployeeList(); renderPrintTable();
+            if(!emp) return;
+            if(!emp.att[realTb]) emp.att[realTb] = {};
+            if(!emp.att[realTb][today]) emp.att[realTb][today] = { status: '', in: '', out: '' };
+            
+            let tStatus = emp.att[realTb][today].status;
+            let tIn = emp.att[realTb][today].in;
+            let tOut = emp.att[realTb][today].out;
+
+            if(type === 'S' || type === 'I' || type === 'A') {
+                tStatus = type; tIn = ''; tOut = '';
+            } else {
+                if(!tStatus || (tStatus !== 'H' && tStatus !== '')) tStatus = 'H'; 
+                if(type === 'in') tIn = timeStr; 
+                if(type === 'out') tOut = timeStr; 
             }
+
+            emp.att[realTb][today] = { status: tStatus, in: tIn, out: tOut };
+            renderEmployeeList(); renderPrintTable();
+
+            const absensiId = `${empId}_${realTb}_${today}`;
+            await supabaseClient.from('tb_absensi').upsert({
+                id: absensiId, pegawai_id: empId, tahun_bulan: realTb, hari: today,
+                status: tStatus, jam_masuk: tIn, jam_pulang: tOut
+            });
         }
 
         function renderEmployeeList() {
             const list = document.getElementById('employee-list'); if(!list) return; list.innerHTML = ''; const today = getTodayDate();
             
-            // Selalu tampilkan status hari ini berdasarkan bulan asli
             const now = new Date();
             const realTb = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
 
@@ -673,42 +713,133 @@
             const b = document.getElementById('print-table-body'); if(b) b.innerHTML = rHTML;
         }
 
-        function exportData() { const [y, m] = state.tahunBulan.split('-'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], {type:"application/json"})); a.download = `Backup_${getMonthName(m)}_${y}.json`; a.click(); }
-        function importData(e) { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = evt => { try { Object.assign(state, JSON.parse(evt.target.result)); updateDaysList(); saveData(); location.reload(); } catch(err){ alert("Error!"); } }; r.readAsText(f); }
-        function addEmployee() { state.employees.push({ id: Date.now(), name: "Nama Pegawai", signature: "", att: {} }); saveData(); renderEmployeeList(); renderPrintTable(); }
-        function deleteEmployee(id) { if(confirm('Hapus pegawai?')) { state.employees = state.employees.filter(e => e.id !== id); saveData(); renderEmployeeList(); renderPrintTable(); } }
+        function exportData() { const [y, m] = state.tahunBulan.split('-'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], {type:"application/json"})); a.download = `Backup_State_${getMonthName(m)}_${y}.json`; a.click(); }
         
+        async function addEmployee() { 
+            const newId = Date.now();
+            await supabaseClient.from('tb_pegawai').insert({ id: newId, name: "Nama Pegawai Baru", signature: "" });
+            await fetchPegawaiDanAbsensi();
+        }
+        
+        async function deleteEmployee(id) { 
+            if(confirm('Yakin ingin menghapus pegawai ini beserta seluruh riwayat absennya?')) { 
+                await supabaseClient.from('tb_pegawai').delete().eq('id', id);
+                await fetchPegawaiDanAbsensi();
+            } 
+        }
+        
+        // BUKA HALAMAN EDIT FULL PAGE
         function openModal(id) {
             isModalEditOpen=true; isSignatureCleared=false; const emp=state.employees.find(e=>e.id===id); editingId=id; 
             const tb = state.tahunBulan;
             if(!emp.att[tb]) emp.att[tb] = {};
             tempAtt=JSON.parse(JSON.stringify(emp.att[tb]));
             
-            document.getElementById('modal-emp-name').value=emp.name; const [y,m]=state.tahunBulan.split('-'); document.getElementById('modal-bulan-info').innerText=`${getMonthName(m)} ${y}`;
+            document.getElementById('modal-emp-name').value=emp.name; const [y,m]=state.tahunBulan.split('-'); document.getElementById('modal-bulan-info').innerText=`${getMonthName(m).toUpperCase()} ${y}`;
             if(sigCtx) sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); hasDrawing=false; const ph=document.getElementById('canvas-placeholder');
             if(emp.signature){ const img=new Image(); img.onload=()=>sigCtx.drawImage(img,0,0,sigCanvas.width,sigCanvas.height); img.src=emp.signature; if(ph)ph.classList.add('hidden'); } else { if(ph)ph.classList.remove('hidden'); }
-            renderDaysGrid(); const mdl=document.getElementById('modal-edit'); if(mdl) mdl.classList.remove('hidden');
+            
+            renderDaysGrid(); 
+            
+            // Animasi & Tampilan Full Page
+            const mdl=document.getElementById('modal-edit'); 
+            if(mdl) { mdl.classList.remove('hidden'); mdl.classList.add('flex'); }
+            
+            // Kunci scroll background agar aman saat di HP
+            document.body.style.overflow = 'hidden';
         }
-        function closeModal() { isModalEditOpen=false; const mdl=document.getElementById('modal-edit'); if(mdl) mdl.classList.add('hidden'); editingId=null; }
-        function saveModalData() { 
+        
+        // TUTUP HALAMAN EDIT
+        function closeModal() { 
+            isModalEditOpen=false; 
+            const mdl=document.getElementById('modal-edit'); 
+            if(mdl) { mdl.classList.add('hidden'); mdl.classList.remove('flex'); } 
+            editingId=null; 
+            
+            // Buka kembali scroll background
+            document.body.style.overflow = '';
+        }
+        
+        async function saveModalData() { 
             const emp=state.employees.find(e=>e.id===editingId); 
             const tb = state.tahunBulan;
-            if(emp){ 
-                emp.name=document.getElementById('modal-emp-name').value; 
-                emp.att[tb]=JSON.parse(JSON.stringify(tempAtt)); 
-                if(hasDrawing) emp.signature=sigCanvas.toDataURL('image/png'); 
-                else if(isSignatureCleared) emp.signature=""; 
-            } 
-            saveData(); closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Tersimpan'); 
+            if(!emp) return;
+            
+            emp.name=document.getElementById('modal-emp-name').value; 
+            if(hasDrawing) emp.signature=sigCanvas.toDataURL('image/png'); 
+            else if(isSignatureCleared) emp.signature=""; 
+
+            emp.att[tb]=JSON.parse(JSON.stringify(tempAtt)); 
+            
+            // 1. Simpan Nama & TTD
+            await supabaseClient.from('tb_pegawai').upsert({ id: editingId, name: emp.name, signature: emp.signature });
+            
+            // 2. Kumpulkan Array Data Absen
+            const batch = [];
+            currentDaysList.forEach(d => {
+               const dData = tempAtt[d] || {status: '', in: '', out: ''};
+               if(dData.status || dData.in || dData.out) {
+                   batch.push({
+                       id: `${editingId}_${tb}_${d}`, pegawai_id: editingId, tahun_bulan: tb, hari: d,
+                       status: dData.status, jam_masuk: dData.in, jam_pulang: dData.out
+                   });
+               } else {
+                   batch.push({
+                       id: `${editingId}_${tb}_${d}`, pegawai_id: editingId, tahun_bulan: tb, hari: d,
+                       status: "", jam_masuk: "", jam_pulang: ""
+                   });
+               }
+            });
+
+            // 3. Simpan Massal (Batch)
+            if(batch.length > 0) {
+                await supabaseClient.from('tb_absensi').upsert(batch);
+            }
+
+            closeModal(); renderEmployeeList(); renderPrintTable(); showToast('Tersimpan dengan aman!'); 
         }
 
+        // RENDER GRID DENGAN KOTAK SUPER LEGA UNTUK HP
         function renderDaysGrid() {
             let h = '';
             currentDaysList.forEach(d => {
-                const dD=tempAtt[d]||{status:'',in:'',out:''}; const hol=isHoliday(d); const bg=hol?'bg-red-50 border-red-200':(dD.status!=='H'&&dD.status!==''?'bg-orange-50 border-orange-200':'bg-white');
-                h += `<div class="p-2.5 border rounded-xl ${bg} shadow-sm"><div class="flex justify-between items-center border-b pb-2 mb-2"><span class="font-extrabold text-[10px] ${hol?'text-red-600':'text-slate-600'}">TGL ${d} ${hol?'(Merah)':''}</span><select onchange="updateDay(${d}, 'status', this.value)" class="text-[10px] outline-none rounded bg-white font-bold p-0.5 border shadow-sm"><option value="H" ${dD.status==='H'?'selected':''}>Hadir</option><option value="S" ${dD.status==='S'?'selected':''}>Sakit</option><option value="I" ${dD.status==='I'?'selected':''}>Izin</option><option value="A" ${dD.status==='A'?'selected':''}>Alpa</option><option value="" ${dD.status===''?'selected':''}>Ksg/Lbr</option></select></div>${dD.status==='H'?`<div class="space-y-1"><div class="flex items-center justify-between"><span class="text-[9px] font-bold text-slate-400">IN</span><input type="time" value="${dD.in||''}" onchange="updateDay(${d}, 'in', this.value)" class="text-[10px] font-mono border rounded p-0.5 w-[65px]"></div><div class="flex items-center justify-between"><span class="text-[9px] font-bold text-slate-400">OUT</span><input type="time" value="${dD.out||''}" onchange="updateDay(${d}, 'out', this.value)" class="text-[10px] font-mono border rounded p-0.5 w-[65px]"></div></div>`:`<div class="text-center text-[10px] py-2 font-bold ${hol ? 'text-red-500' : 'text-slate-400'} tracking-widest">${dD.status||'LIBUR'}</div>`}</div>`;
-            }); document.getElementById('days-grid').innerHTML = h;
+                const dD=tempAtt[d]||{status:'',in:'',out:''}; 
+                const hol=isHoliday(d); 
+                const bg=hol?'bg-red-50 border-red-200':(dD.status!=='H'&&dD.status!==''?'bg-orange-50 border-orange-200':'bg-slate-50 border-slate-200');
+                
+                h += `<div class="p-4 border-2 rounded-3xl ${bg} shadow-sm transition-all">
+                        <div class="flex justify-between items-center border-b border-slate-200/80 pb-4 mb-4">
+                            <span class="font-extrabold text-sm ${hol?'text-red-600':'text-slate-600'} flex items-center gap-2">
+                                <span class="bg-white px-3 py-1.5 rounded-xl border shadow-sm">TGL ${d}</span> 
+                                ${hol?'<span class="text-[10px] md:text-xs text-red-500 bg-red-100 px-2 py-1 rounded-lg">Libur</span>':''}
+                            </span>
+                            <select onchange="updateDay(${d}, 'status', this.value)" class="text-sm outline-none rounded-xl bg-white font-extrabold px-3 py-2.5 border-2 shadow-sm focus:border-blue-500">
+                                <option value="H" ${dD.status==='H'?'selected':''}>Hadir</option>
+                                <option value="S" ${dD.status==='S'?'selected':''}>Sakit</option>
+                                <option value="I" ${dD.status==='I'?'selected':''}>Izin</option>
+                                <option value="A" ${dD.status==='A'?'selected':''}>Alpa</option>
+                                <option value="" ${dD.status===''?'selected':''}>Libur/Ksg</option>
+                            </select>
+                        </div>
+                        ${dD.status==='H'?`
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                                <span class="text-[11px] md:text-xs font-extrabold text-slate-400 ml-2">JAM MASUK</span>
+                                <input type="time" value="${dD.in||''}" onchange="updateDay(${d}, 'in', this.value)" class="text-sm md:text-base font-mono font-bold border-2 border-slate-200 rounded-xl p-2 w-[120px] text-center focus:border-blue-500 outline-none">
+                            </div>
+                            <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                                <span class="text-[11px] md:text-xs font-extrabold text-slate-400 ml-2">JAM PULANG</span>
+                                <input type="time" value="${dD.out||''}" onchange="updateDay(${d}, 'out', this.value)" class="text-sm md:text-base font-mono font-bold border-2 border-slate-200 rounded-xl p-2 w-[120px] text-center focus:border-blue-500 outline-none">
+                            </div>
+                        </div>`
+                        :`<div class="text-center text-sm md:text-base py-6 font-extrabold ${hol ? 'text-red-400' : 'text-slate-400'} tracking-widest bg-white/40 rounded-2xl border-2 border-dashed border-slate-300">
+                            ${dD.status==='S'?'🤒 SAKIT':(dD.status==='I'?'📝 IZIN':(dD.status==='A'?'🚫 ALPA':'KOSONG / LIBUR'))}
+                        </div>`}
+                    </div>`;
+            }); 
+            document.getElementById('days-grid').innerHTML = h;
         }
+
         function updateDay(d, f, v) { if(!tempAtt[d]) tempAtt[d]={status:'H',in:'',out:''}; tempAtt[d][f]=v; if(f==='status') renderDaysGrid(); }
         function applyQuickFill() { const st=document.getElementById('quick-status').value, i=document.getElementById('quick-in').value, o=document.getElementById('quick-out').value; currentDaysList.forEach(d => { if(isHoliday(d) && st === 'H') return; tempAtt[d] = {status:st, in:st==='H'?i:'', out:st==='H'?o:''}; }); renderDaysGrid(); }
 
